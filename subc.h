@@ -32,17 +32,17 @@ struct ste {
 
 /* structure for declaration */
 struct decl {
-	int		declclass;
+	int		declClass;
 	struct decl	*type;
 	int		value;
-	float		real_value;
+	float		realValue;
 	struct ste	*formals;
-	struct decl	*returntype;
-	int		typeclass;
-	struct decl	*elementvar;
-	int		num_index;
-	struct ste	*fieldlist;
-	struct decl	*ptrto;
+	struct decl	*returnType;
+	int		typeClass;
+	struct decl	*elementVar;
+	int		numIndex;
+	struct ste	*fieldList;
+	struct decl	*ptrTo;
 	int		size;
 	struct ste	**scope;
 	struct decl	*next;
@@ -72,7 +72,7 @@ struct decl* makeTypeDecl(int typeClass);
 struct decl* makeVarDecl(struct decl* varType);   
 struct decl* makeConstDecl(struct decl* arrDecl);   
 struct decl* makeArrDecl(int elementNum, struct decl* elementType);
-struct decl* makePtrDecl(struct decl* pointingTypte);
+struct decl* makePtrDecl(struct decl* pointingType);
 struct decl* makeStructDecl(struct ste* fieldList);
 
 void addTypeToVar(struct decl* type, struct decl* varListHead);
