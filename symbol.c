@@ -57,6 +57,7 @@ struct decl* makeArrDecl(int elementNum, struct decl* elementType){
 
 	struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
 	declPtr->declClass = DECL_TYPE;
+	declPtr->typeClass = DECL_TYPE_ARRAY;
 	declPtr->type = elementType;
 	declPtr->numIndex = elementNum;
 	return declPtr; 
@@ -78,20 +79,51 @@ struct decl* makeStructDecl(struct ste* fieldList){
 }
 
 void addTypeToVar(struct decl* type, struct decl* varListHead){
+	//check if the varList is empty.	
+	if(varListHead == NULL){
+		printf("There's no VarList.\n");
+		return;
+	}
+	//assign correct type to entry of valList.	
+	struct decl* curVar = varListHead;
+	while(curVar->next != NULL){
+		curVar->type = type;
+		curVar = curVar->next;
+	}
+	curVar->type = type;	
 }
 
 struct decl* findCurDecl(struct decl* declPtr){
 }
 
 void checkIsType(struct decl* declPtr){
-} 
+	if(declPtr->declClass != DECL_TYPE){
+	printf("error. declClass is notTYPE.\n");  
+	}
+}
+ 
 void checkIsVar(struct decl* declPtr){
+	if(declPtr->declClass != DECL_TYPE){
+	printf("error. declClass is notTYPE.\n"); 
+	}
 } 
 void checkIsConst(struct decl* declPtr){
+	if(declPtr->declClass != DECL_CONST){
+	printf("error. declClass is notCONST.\n"); 
+	}
 } 
 void checkIsArr(struct decl* declPtr){
+	if(declPtr->declClass != DECL_TYPE ||declPtr->typeClass != DECL_TYPE_ARRAY){
+	printf("error. declClass is notTYPE.\n"); 
+	}
 } 
 void checkIsPtr(struct decl* declPtr){
+	if(declPtr->declClass != DECL_TYPE){
+	printf("error. declClass is notTYPE.\n"); 
+	}
 } 
 void checkIsStruct(struct decl* declPtr){
+	if(declPtr->declClass != DECL_TYPE){
+	printf("error. declClass is notTYPE.\n"); 
+	}
 } 

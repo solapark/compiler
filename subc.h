@@ -12,10 +12,14 @@
 
 
 /* for declclass*/ 
-#define DECL_VAR	0
-#define DECL_CONST	1
-#define DECL_FUNC	2
-#define DECL_TYPE	3	
+#define DECL_VAR		0
+#define DECL_CONST		1
+#define DECL_FUNC		2
+#define DECL_TYPE		3	
+#define DECL_TYPE_INT		4	
+#define DECL_TYPE_ARRAY		5	
+#define DECL_TYPE_PTR		6	
+#define DECL_TYPE_STRUCT	7	
 
 /* structure for ID */
 struct id {
