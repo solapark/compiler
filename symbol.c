@@ -1,20 +1,16 @@
 #include "subc.h"
 
-struct symbolTable{
-	struct ste* head;
-	struct ste* cur;
-	struct ste* tail;
-};
-
-struct scopeStack{
-	struct sse* top;
-	struct sse* bottom; 
-};
-
 static struct symbolTable *symbolTPtr;
 static struct scopeStack *scopeSPtr;
 
 /* For symbol table */
+void initType(){
+	struct decl* intType, voidType, charType; 
+	intType = makeTypeDecl(DECL_TYPE_INT);
+	voidType = makeTypeDecl(DECL_TYPE_VOID);
+	charType = makeTypeDecl(DECL_TYPE_CHAR);
+	
+}
 void pushScope(){
 }
 struct ste* popScope(){
@@ -23,6 +19,8 @@ void insert(struct id* name, struct decl* type){
 }
 struct ste* lookupSymbol(struct id* name){
 }
+
+
 
 void declare(struct id* name, struct decl* type){
 }
@@ -114,16 +112,16 @@ void checkIsConst(struct decl* declPtr){
 } 
 void checkIsArr(struct decl* declPtr){
 	if(declPtr->declClass != DECL_TYPE ||declPtr->typeClass != DECL_TYPE_ARRAY){
-	printf("error. declClass is notTYPE.\n"); 
+	printf("error. declClass is notARRAY.\n"); 
 	}
 } 
 void checkIsPtr(struct decl* declPtr){
-	if(declPtr->declClass != DECL_TYPE){
-	printf("error. declClass is notTYPE.\n"); 
+	if(declPtr->declClass != DECL_TYPE || declPtr->typeClass != DECL_TYPE_PTR){
+	printf("error. declClass is notPOINTER.\n"); 
 	}
 } 
 void checkIsStruct(struct decl* declPtr){
-	if(declPtr->declClass != DECL_TYPE){
-	printf("error. declClass is notTYPE.\n"); 
+	if(declPtr->declClass != DECL_TYPE|| declPtr->typeClass != DECL_TYPE_STRUCT){
+	printf("error. declClass is notSTRUCT.\n"); 
 	}
 } 

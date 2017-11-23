@@ -52,9 +52,11 @@ struct decl {
 	struct decl	*next;
 };
 
-/* structure for scope stack entry */
-struct sse{
-	struct ste* bound;
+/* structure for scope stack & args list */
+struct node {
+	node*	next;
+	node*	prev;
+	void*	data;	
 };
 
 /* For hash table */
@@ -65,6 +67,8 @@ struct id *lookup(char *name);
 int read_line();
 
 /* For symbol table */
+void initType();
+
 void pushScope();
 struct ste* popScope();
 void insert(struct id* name, struct decl* type);
@@ -73,11 +77,12 @@ struct ste* lookupSymbol(struct id* name);
 void declare(struct id* name, struct decl* type);
 
 struct decl* makeTypeDecl(int typeClass);   
-struct decl* makeVarDecl(struct decl* varType);   
-struct decl* makeConstDecl(struct decl* arrDecl);   
-struct decl* makeArrDecl(int elementNum, struct decl* elementType);
+truct decl* makeArrDecl(int elementNum, struct decl* elementType);
 struct decl* makePtrDecl(struct decl* pointingType);
 struct decl* makeStructDecl(struct ste* fieldList);
+struct decl* makeVarDecl(struct decl* varType);
+struct decl* makeConstDecl(struct decl* arrDecl);
+struct decl* makeFuncDecl();  
 
 void addTypeToVar(struct decl* type, struct decl* varListHead);
 

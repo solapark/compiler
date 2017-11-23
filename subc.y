@@ -15,8 +15,22 @@ void 	REDUCE(char* s);
 /* yylval types */
 %union {
 	int		intVal;
-	char	*stringVal;
+	char		*stringVal;
+	struct id	*idPtr;
+	struct decl	*declPtr;
+	struct ste	*stePtr;
+	struct node 	*nodePtr;
 }
+
+/* Token and Types */
+%token	<stringVal>	TYPE VOID STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP EQUOP INCOP DECOP STRUCTOP
+%token	<idPtr>		ID
+%token	<intVal>	INTEGER_CONST
+%token	<stringVal>	STRING CHAR_CONST
+
+%type	<declPtr>	program	ext_def_list ext_def type_specifier struct_specifier func_decl param_list param_decl def_list def compound_stmt local_defs stmt_list stmt expr_e const_expr expr or_expr or_list and_expr and_list binary unary
+%type	<nodePtr>	args		
+%type 	<intVal>	pointers
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -33,13 +47,6 @@ void 	REDUCE(char* s);
 %right	'!' INCOP DECOP 
 %left 	'[' ']' '(' ')' '.' STRUCTOP
 
-/* Token and Types */
-%token<stringVal>	STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP EQUOP STRUCTOP
-%token<stringVal>	TYPE ID CHAR_CONST STRING VOID 
-%token<intVal>		INTEGER_CONST
-/*
-%type<stringVal>	program ext_def_list ext_def type_specifier struct_specifier funct_decl pointers param_list param_decl def_list def compound_stmt local_defs stmt_list stmt expr_e const_expr expr or_expr or_list and_expr and_list binary unary args 
-*/
 %%
 program:	ext_def_list	{
             REDUCE("program->ext_def_list");
@@ -52,11 +59,23 @@ ext_def_list:	ext_def_list ext_def	{
             REDUCE("ext_def_list->epsilon");
         }
    ;
+
 ext_def:	type_specifier pointers ID ';' {
             REDUCE("ext_def->type_specifier pointers ID ';' ");
+		if(pointers == 1){
+			declare($3, makeVarDecl(makePtrDecl($1)));
+		}else{
+			declare($3, makeVarDecl($1));
+		}	
 	}
+
 		| type_specifier pointers ID '[' const_expr ']' ';' {
             REDUCE("ext_def->type_specifier pointers ID '[' const_expr ']' ';' ");
+		if(pointers == 1){
+			declare($3, makeVarDecl(makePtrDecl($1)));
+		}else{
+			declare($3, makeVarDecl($1));
+		}	
 	}
 		| func_decl ';' {
             REDUCE("ext_def->func_decl ';' ");
@@ -70,13 +89,22 @@ ext_def:	type_specifier pointers ID ';' {
    ;
 type_specifier:	TYPE	{
             REDUCE("type_specifier->TYPE");
+		//find ste for TYPE.
+		struct ste* typeSte = lookupSymbol($1);
+		//save type decl ptr.
+		$$ = typeSte->decl;	
         }
 		| VOID	{
             REDUCE("type_specifier->VOID");
+		//find ste for VOID.
+		struct ste* typeSte = lookupSymbol($1);
+		//save type decl ptr.
+		$$ = typeSte->decl;
 	}
 		| struct_specifier	{
-		//printf("%s \n", $1);
             REDUCE("type_specifier->struct_specifier");
+		//save struct decl ptr.
+		$$ = $1;
         }
    ;
 struct_specifier: STRUCT ID '{' def_list '}'	{
@@ -98,9 +126,11 @@ func_decl:	type_specifier pointers ID '(' ')'	{
    ;
 pointers: 	'*'	{
             REDUCE("pointers->'*'");
+		$$ = 1;
 	}
 		| /* empty */ {
             REDUCE("pointers->epsilon");
+		$$ = 0;
 	}
    ;
 param_list:	param_decl	{
@@ -244,6 +274,7 @@ binary:		binary RELOP binary	{
    ;
 unary:		'(' expr ')'	{
             REDUCE("unary->'(' expr ')'");
+		
         }
 		| '(' unary ')'	{
             REDUCE("unary->'(' unary ')'");
