@@ -46,16 +46,12 @@ special_char	\\[nt]
 "->"		{ printf("%s\n", yytext);yylval.stringVal = yytext;return STRUCTOP; }	
 {id}		{
 		//Search the hash table to find the pointer of entry for yytext.
-		struct id* entered = lookup(yytext);
+		struct id* entered = enter(0, yytext, strlen(yytext));
 	
-		//If the pointer == NULL, it means that there is no entry matching the yytext in hash table. So, //enter a new identifier entry to hash table 
-		if(entered == NULL)
-		{
-			entered = enter(ID, yytext, strlen(yytext));
-		}
 		printf("%s\n", yytext);
 		yylval.stringVal = entered->name;
-		return entered->lextype;
+		//return entered->lextype;
+		return ID;
 }
 {integer_const}	{printf("%s\n", yytext);
 		   yylval.intVal = atoi(yytext);
@@ -129,7 +125,7 @@ int main(int argc, char* argv[])
    static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP, RELOP, RELOP, RELOP, EQUOP, EQUOP, INCOP, DECOP, STRUCTOP, 0 };
    int i;
    for(i = 0; keyword[i] != NULL; i++)
-      enter(tokentype[i], keyword[i], strlen(keyword[i]));
+      enter(0, keyword[i], strlen(keyword[i]));
 
    if(argc >= 2) yyin = fopen(argv[1], "r");
    else yyin = stdin;

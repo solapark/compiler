@@ -77,8 +77,8 @@ union YYSTYPE
 {
 #line 16 "subc.y" /* yacc.c:1909  */
 
-	int	intVal;
-	char	*stringVal;
+	int		intVal;
+	char		*stringVal;
 	struct id	*idPtr;
 	struct decl	*declPtr;
 	struct ste	*stePtr;

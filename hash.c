@@ -33,6 +33,10 @@ unsigned hash(char *name) {
 
 struct id *enter(int lextype, char *name, int length) {
    /* implementation is given here */
+	struct id* lookupResult = lookup(name);
+	if(lookupResult)
+		return lookupResult;
+ 
 	int tokenType = lextype;
 	//find the key
 	unsigned key = hash(name);

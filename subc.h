@@ -17,9 +17,40 @@
 #define DECL_FUNC		2
 #define DECL_TYPE		3	
 #define DECL_TYPE_INT		4	
-#define DECL_TYPE_ARRAY		5	
-#define DECL_TYPE_PTR		6	
-#define DECL_TYPE_STRUCT	7	
+#define DECL_TYPE_VOID		5	
+#define DECL_TYPE_CHAR		6	
+#define DECL_TYPE_ARRAY		7	
+#define DECL_TYPE_PTR		8	
+#define DECL_TYPE_STRUCT	9	
+
+/*for error type*/
+#define SUCCESS			100	
+#define NOT_DECLARED		0
+#define REDECL			1
+#define NOT_SAME_TYPE		2
+#define LHS_NOT_VAR		3
+#define RHS_NOT_VAR_CONST	4
+#define NOT_STRUC_FIELD		6	 
+#define INCOMPLETE_STRUCT	7
+#define WRONG_RETURN_VALUE	8
+#define MULTIPLE_RETURN_TYPE	9
+#define IMCOPATIBLE_COMPARE	10
+#define	NOT_COMPUTABLE		11
+#define NOT_VAR			12
+#define NOT_CONST_VAR		13
+#define NOT_PROPER_TYPE		14
+#define NOT_FORMAL_ARGS		15			
+
+#define NOT_CONST		16
+#define NOT_FUNC		17
+#define NOT_TYPE		18
+#define NOT_INT			19	
+#define NOT_VOID		20	
+#define NOT_CHAR		21	
+#define NOT_ARRAY		22	
+#define NOT_PTR			23	
+#define NOT_STRUCT		24	
+
 
 /* structure for ID */
 struct id {
@@ -27,11 +58,19 @@ struct id {
       int lextype;
 };
 
+/* structure for scope stack & args list */
+struct node {
+	struct node	*next;
+	struct node	*prev;
+	void		*data;	
+};
+
 /* structure for symbol table entry */
 struct ste {
 	struct id	*name;
 	struct decl	*decl;
-	struct std 	*prev;
+	struct ste 	*prev;
+	struct node 	*scope;
 };
 
 /* structure for declaration */
@@ -52,13 +91,6 @@ struct decl {
 	struct decl	*next;
 };
 
-/* structure for scope stack & args list */
-struct node {
-	node*	next;
-	node*	prev;
-	void*	data;	
-};
-
 /* For hash table */
 unsigned hash(char *name);
 struct id *enter(int lextype, char *name, int length);
@@ -67,33 +99,80 @@ struct id *lookup(char *name);
 int read_line();
 
 /* For symbol table */
-void initType();
 
+void initType();
 void pushScope();
+
 struct ste* popScope();
-void insert(struct id* name, struct decl* type);
+
+void changeSSTopPnting(struct ste* newSte);
+
 struct ste* lookupSymbol(struct id* name);
 
-void declare(struct id* name, struct decl* type);
+int declare(struct id* name, struct decl* type);
 
-struct decl* makeTypeDecl(int typeClass);   
-truct decl* makeArrDecl(int elementNum, struct decl* elementType);
-struct decl* makePtrDecl(struct decl* pointingType);
-struct decl* makeStructDecl(struct ste* fieldList);
+void setSteScope();
+
+//Make Var decl.
 struct decl* makeVarDecl(struct decl* varType);
-struct decl* makeConstDecl(struct decl* arrDecl);
-struct decl* makeFuncDecl();  
 
-void addTypeToVar(struct decl* type, struct decl* varListHead);
+//Make const declaration struct.
+struct decl* makeConstDecl(struct decl* arrDecl, int intValue);
 
-struct decl* findCurDecl(struct decl* declPtr);
+//Make Func decl.
+struct decl* makeFuncDecl();
 
-void checkIsType(struct decl* declPtr); 
-void checkIsVar(struct decl* declPtr); 
-void checkIsConst(struct decl* declPtr); 
-void checkIsArr(struct decl* declPtr); 
-void checkIsPtr(struct decl* declPtr); 
-void checkIsStruct(struct decl* declPtr); 
+//Make type decl(int, void, char)
+struct decl* makeTypeDecl(int typeClass);
+
+//Make type decl(array)
+struct decl* makeArrDecl(int elementNum, struct decl* elementType);
+
+//Make type decl(ptr)
+struct decl* makePtrDecl(struct decl* pointingType);
+
+//Make type decl(struct)
+struct decl* makeStructDecl(struct ste* fieldList);
+
+int checkIsVar(struct decl* declPtr);
+
+int checkIsConst(struct decl* declPtr);
+
+int checkIsFunc(struct decl* declPtr);
+
+int checkIsType(struct decl* declPtr);
+
+int checkIsArray(struct decl* declPtr);
+
+int checkIsPtr(struct decl* declPtr);
+
+int checkIsStruct(struct decl* declPtr);
+
+int checkIsType(struct decl* declPtr);
+
+int checkIsArr(struct decl* declPtr);
+
+int checkIsPtr(struct decl* declPtr);
+
+int checkIsStruct(struct decl* declPtr);
+
+
+//node operation
+void addToTail(struct node **head, struct node *newNode);
+
+void addToHead(struct node **head, struct node *newNode);
+
+void removeFromHead(struct node **head);
+
+void resetList (struct node **head);
+
+int checkIsListEmpty (struct node **head);
+
+int checkIsTail (struct node **head, struct node* targeNode);
+
+struct node* findPointingTo(struct node** head, struct node* targetNode);
+
+struct node* getTail(struct node** head);
 
 #endif
 
