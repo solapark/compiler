@@ -103,6 +103,7 @@ struct ste* lookupSymbol(struct id* name){
 
 
 int declare(struct id* name, struct decl* type){
+	printf("declare************\n");	
 	//1. Check redeclaration.
 	if( lookupSymbol(name)){
 		return REDECL;
@@ -126,6 +127,16 @@ int declare(struct id* name, struct decl* type){
 
 	//4. add ste to scope stack && set ste scope.
 	setSteScope();
+
+
+	//5. print symbol table 
+	struct ste* cur = symbolTableHead;
+	while(!(cur->prev)){
+		printf("symbol table : %s\n", cur->name->name);
+		cur=cur->prev;
+	}
+	printf("sybol table : %s\n", cur->name->name);
+
 
 	return SUCCESS;
 }

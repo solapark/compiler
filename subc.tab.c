@@ -1391,7 +1391,7 @@ yyreduce:
 		}
 		//2. TYPE ID;
 		else{
-			//declare($3, makeVarDecl($1));
+			declare((yyvsp[-1].idPtr), makeVarDecl((yyvsp[-3].declPtr)));
 		}	
 	}
 #line 1398 "subc.tab.c" /* yacc.c:1646  */

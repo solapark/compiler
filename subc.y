@@ -68,7 +68,7 @@ ext_def:	type_specifier pointers ID ';' {
 		}
 		//2. TYPE ID;
 		else{
-			//declare($3, makeVarDecl($1));
+			declare($3, makeVarDecl($1));
 		}	
 	}
 
