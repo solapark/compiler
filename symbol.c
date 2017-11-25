@@ -210,6 +210,7 @@ struct decl* makePtrDecl(struct decl* pointingType){
 	struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
 	declPtr->declClass = DECL_TYPE;
 	declPtr->type = pointingType;
+	declPtr->typeClass = DECL_TYPE_PTR;
 	return declPtr; 
 }
 
@@ -217,6 +218,7 @@ struct decl* makePtrDecl(struct decl* pointingType){
 struct decl* makeStructDecl(struct ste* fieldList){
 	struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
 	declPtr->declClass = DECL_TYPE;
+	declPtr->typeClass = DECL_TYPE_STRUCT;
 	declPtr->fieldList = fieldList;
 	return declPtr; 
 }
@@ -296,13 +298,18 @@ void printSymbolTable(){
 	if(curSte != NULL){
 		int leng;
 		printf("****symbol table****\n"); 
+		printf("name\tdecl\ttype\tvarType\n");
 		while(curSte->prev != NULL){
 			leng = curSte->name->leng;
-			printf("%.*s\n", leng, curSte->name->name);
+			printf("%.*s\t%d\t%d\t", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+			if(curSte->decl->type){
+				printf("%d\t",curSte->decl->type->typeClass);
+			}
+			printf("\n");
 			curSte = curSte->prev;
 		}
 		leng = curSte->name->leng;
-		printf("%.*s\n", leng, curSte->name->name);
+		printf("%.*s\t%d\t%d\n", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
 
 
 	printf("******************\n");

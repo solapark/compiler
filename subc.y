@@ -62,17 +62,13 @@ ext_def_list:	ext_def_list ext_def	{
 
 ext_def:	type_specifier pointers ID ';' {
             REDUCE("ext_def->type_specifier pointers ID ';' ");
+		printf("%d\n", $1->typeClass);
 		//1. TYPE *ID; 
 		if($2 == 1){
-			//struct id* target = enter(0, $3->name, strlen($3->name)); 
 			declare($3, makeVarDecl(makePtrDecl($1)));
 		}
 		//2. TYPE ID;
 		else{
-		//if($3 == enter(0, "a", 1)){
-	//		printf("same\n");
-	//	}
-	//		printf("idPtr->name :%s, entered->name : %s\n", $3->name, enter(0, "a", 1)->name);
 			declare($3, makeVarDecl($1));
 		}	
 	}
@@ -80,9 +76,9 @@ ext_def:	type_specifier pointers ID ';' {
 		| type_specifier pointers ID '[' const_expr ']' ';' {
             REDUCE("ext_def->type_specifier pointers ID '[' const_expr ']' ';' ");
 		if($2 == 1){
-			//declare($3, makeVarDecl(makePtrDecl($1)));
+			declare($3, makeVarDecl(makePtrDecl($1)));
 		}else{
-			//declare($3, makeVarDecl($1));
+			declare($3, makeConstDecl(makeArrDecl($5, makeVarDecl($1)),0));
 		}	
 	}
 		| func_decl ';' {
@@ -98,21 +94,24 @@ ext_def:	type_specifier pointers ID ';' {
 type_specifier:	TYPE	{
             REDUCE("type_specifier->TYPE");
 		//find ste for TYPE.
-		//struct ste* typeSte = lookupSymbol($1);
+		printf("TYPE : %s\n",$1); 
+		if(enter(0, $1, strlen($1))) printf("found.\n"); 
+		struct ste* typeSte = lookupSymbol(enter(0, $1, strlen($1)));
 		//save type decl ptr.
-		//$$ = typeSte->decl;	
+		printf("%d\n", typeSte->decl->typeClass);
+		$$ = typeSte->decl;	
         }
 		| VOID	{
             REDUCE("type_specifier->VOID");
 		//find ste for VOID.
-		//struct ste* typeSte = lookupSymbol($1);
+		struct ste* typeSte = lookupSymbol(enter(0, $1, strlen($1)));
 		//save type decl ptr.
-		//$$ = typeSte->decl;
+		$$ = typeSte->decl;
 	}
 		| struct_specifier	{
             REDUCE("type_specifier->struct_specifier");
 		//save struct decl ptr.
-		//$$ = $1;
+		$$ = $1;
         }
    ;
 struct_specifier: STRUCT ID '{' def_list '}'	{

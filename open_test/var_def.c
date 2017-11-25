@@ -4,6 +4,7 @@ int *x;
 int *k;
 int *j;
 int y;
+int aaaa[20];
 
 int main() {
     int a;

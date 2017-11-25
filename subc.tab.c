@@ -466,15 +466,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    51,    51,    55,    58,    63,    80,    88,    91,    94,
-      98,   105,   112,   118,   121,   125,   128,   131,   135,   139,
-     144,   147,   151,   154,   158,   161,   165,   168,   171,   174,
-     178,   182,   186,   189,   193,   196,   199,   202,   205,   208,
-     211,   214,   217,   220,   223,   227,   230,   234,   238,   241,
-     245,   249,   252,   256,   260,   263,   267,   270,   273,   276,
-     279,   283,   287,   290,   293,   296,   300,   304,   307,   310,
-     313,   316,   319,   322,   325,   328,   331,   334,   337,   340,
-     344,   347
+       0,    51,    51,    55,    58,    63,    76,    84,    87,    90,
+      94,   104,   111,   117,   120,   124,   127,   130,   134,   138,
+     143,   146,   150,   153,   157,   160,   164,   167,   170,   173,
+     177,   181,   185,   188,   192,   195,   198,   201,   204,   207,
+     210,   213,   216,   219,   222,   226,   229,   233,   237,   240,
+     244,   248,   251,   255,   259,   262,   266,   269,   272,   275,
+     278,   282,   286,   289,   292,   295,   299,   303,   306,   309,
+     312,   315,   318,   321,   324,   327,   330,   333,   336,   339,
+     343,   346
 };
 #endif
 
@@ -1385,653 +1385,652 @@ yyreduce:
 #line 63 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("ext_def->type_specifier pointers ID ';' ");
+		printf("%d\n", (yyvsp[-3].declPtr)->typeClass);
 		//1. TYPE *ID; 
 		if((yyvsp[-2].intVal) == 1){
-			//struct id* target = enter(0, $3->name, strlen($3->name)); 
 			declare((yyvsp[-1].idPtr), makeVarDecl(makePtrDecl((yyvsp[-3].declPtr))));
 		}
 		//2. TYPE ID;
 		else{
-		//if($3 == enter(0, "a", 1)){
-	//		printf("same\n");
-	//	}
-	//		printf("idPtr->name :%s, entered->name : %s\n", $3->name, enter(0, "a", 1)->name);
 			declare((yyvsp[-1].idPtr), makeVarDecl((yyvsp[-3].declPtr)));
 		}	
 	}
-#line 1403 "subc.tab.c" /* yacc.c:1646  */
+#line 1399 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 80 "subc.y" /* yacc.c:1646  */
+#line 76 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("ext_def->type_specifier pointers ID '[' const_expr ']' ';' ");
 		if((yyvsp[-5].intVal) == 1){
-			//declare($3, makeVarDecl(makePtrDecl($1)));
+			declare((yyvsp[-4].idPtr), makeVarDecl(makePtrDecl((yyvsp[-6].declPtr))));
 		}else{
-			//declare($3, makeVarDecl($1));
+			declare((yyvsp[-4].idPtr), makeConstDecl(makeArrDecl((yyvsp[-2].declPtr), makeVarDecl((yyvsp[-6].declPtr))),0));
 		}	
 	}
-#line 1416 "subc.tab.c" /* yacc.c:1646  */
+#line 1412 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 88 "subc.y" /* yacc.c:1646  */
+#line 84 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("ext_def->func_decl ';' ");
 	}
-#line 1424 "subc.tab.c" /* yacc.c:1646  */
+#line 1420 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 91 "subc.y" /* yacc.c:1646  */
+#line 87 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("ext_def->type_specifier ';' ");
 	}
-#line 1432 "subc.tab.c" /* yacc.c:1646  */
+#line 1428 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 94 "subc.y" /* yacc.c:1646  */
+#line 90 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("ext_def->func_decl compound_stmt ");
 	}
-#line 1440 "subc.tab.c" /* yacc.c:1646  */
+#line 1436 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 98 "subc.y" /* yacc.c:1646  */
+#line 94 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("type_specifier->TYPE");
 		//find ste for TYPE.
-		//struct ste* typeSte = lookupSymbol($1);
+		printf("TYPE : %s\n",(yyvsp[0].stringVal)); 
+		if(enter(0, (yyvsp[0].stringVal), strlen((yyvsp[0].stringVal)))) printf("found.\n"); 
+		struct ste* typeSte = lookupSymbol(enter(0, (yyvsp[0].stringVal), strlen((yyvsp[0].stringVal))));
 		//save type decl ptr.
-		//$$ = typeSte->decl;	
+		printf("%d\n", typeSte->decl->typeClass);
+		(yyval.declPtr) = typeSte->decl;	
         }
-#line 1452 "subc.tab.c" /* yacc.c:1646  */
+#line 1451 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 105 "subc.y" /* yacc.c:1646  */
+#line 104 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("type_specifier->VOID");
 		//find ste for VOID.
-		//struct ste* typeSte = lookupSymbol($1);
+		struct ste* typeSte = lookupSymbol(enter(0, (yyvsp[0].stringVal), strlen((yyvsp[0].stringVal))));
 		//save type decl ptr.
-		//$$ = typeSte->decl;
+		(yyval.declPtr) = typeSte->decl;
 	}
-#line 1464 "subc.tab.c" /* yacc.c:1646  */
+#line 1463 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 112 "subc.y" /* yacc.c:1646  */
+#line 111 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("type_specifier->struct_specifier");
 		//save struct decl ptr.
-		//$$ = $1;
+		(yyval.declPtr) = (yyvsp[0].declPtr);
         }
-#line 1474 "subc.tab.c" /* yacc.c:1646  */
+#line 1473 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 118 "subc.y" /* yacc.c:1646  */
+#line 117 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("struct_specifier->STRUCT ID '{' def_list '}'");
         }
-#line 1482 "subc.tab.c" /* yacc.c:1646  */
+#line 1481 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 121 "subc.y" /* yacc.c:1646  */
+#line 120 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("struct_specifier->STRUCT ID ");
         }
-#line 1490 "subc.tab.c" /* yacc.c:1646  */
+#line 1489 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 125 "subc.y" /* yacc.c:1646  */
+#line 124 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("funct_decl->type_specifier pointers ID '(' ')'");
         }
-#line 1498 "subc.tab.c" /* yacc.c:1646  */
+#line 1497 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 128 "subc.y" /* yacc.c:1646  */
+#line 127 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("funct_decl->type_specifier pointers ID '(' VOID ')'");
         }
-#line 1506 "subc.tab.c" /* yacc.c:1646  */
+#line 1505 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 131 "subc.y" /* yacc.c:1646  */
+#line 130 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("funct_decl->type_specifier pointers ID '(' param_list ')'");
         }
-#line 1514 "subc.tab.c" /* yacc.c:1646  */
+#line 1513 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 135 "subc.y" /* yacc.c:1646  */
+#line 134 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("pointers->'*'");
 		(yyval.intVal) = 1;
 	}
-#line 1523 "subc.tab.c" /* yacc.c:1646  */
+#line 1522 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 139 "subc.y" /* yacc.c:1646  */
+#line 138 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("pointers->epsilon");
 		(yyval.intVal) = 0;
 	}
-#line 1532 "subc.tab.c" /* yacc.c:1646  */
+#line 1531 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 144 "subc.y" /* yacc.c:1646  */
+#line 143 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("param_list->param_decl");
 	}
-#line 1540 "subc.tab.c" /* yacc.c:1646  */
+#line 1539 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 147 "subc.y" /* yacc.c:1646  */
+#line 146 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("param_list->param_list ',' param_decl");
 	}
-#line 1548 "subc.tab.c" /* yacc.c:1646  */
+#line 1547 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 151 "subc.y" /* yacc.c:1646  */
+#line 150 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("param_decl -> type_specifier pointers ID");
 	}
-#line 1556 "subc.tab.c" /* yacc.c:1646  */
+#line 1555 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 154 "subc.y" /* yacc.c:1646  */
+#line 153 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("param_decl -> type_specifier pointers ID '[' const_expr ']'	");
 	}
-#line 1564 "subc.tab.c" /* yacc.c:1646  */
+#line 1563 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 158 "subc.y" /* yacc.c:1646  */
+#line 157 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def_list->def_list def");
         }
-#line 1572 "subc.tab.c" /* yacc.c:1646  */
+#line 1571 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 161 "subc.y" /* yacc.c:1646  */
+#line 160 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def_list->epsilon");
         }
-#line 1580 "subc.tab.c" /* yacc.c:1646  */
+#line 1579 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 165 "subc.y" /* yacc.c:1646  */
+#line 164 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def->type_specifier pointers ID ';'	");
         }
-#line 1588 "subc.tab.c" /* yacc.c:1646  */
+#line 1587 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 168 "subc.y" /* yacc.c:1646  */
+#line 167 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
         }
-#line 1596 "subc.tab.c" /* yacc.c:1646  */
+#line 1595 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 171 "subc.y" /* yacc.c:1646  */
+#line 170 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def->type_specifier ';'");
         }
-#line 1604 "subc.tab.c" /* yacc.c:1646  */
+#line 1603 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 174 "subc.y" /* yacc.c:1646  */
+#line 173 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("def->func_decl ';'	");
         }
-#line 1612 "subc.tab.c" /* yacc.c:1646  */
+#line 1611 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 178 "subc.y" /* yacc.c:1646  */
+#line 177 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("compound_stmt->'{' local_defs stmt_list '}'");
         }
-#line 1620 "subc.tab.c" /* yacc.c:1646  */
+#line 1619 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 182 "subc.y" /* yacc.c:1646  */
+#line 181 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("local_defs->def_list");
         }
-#line 1628 "subc.tab.c" /* yacc.c:1646  */
+#line 1627 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 186 "subc.y" /* yacc.c:1646  */
+#line 185 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt_list->stmt_list stmt");
         }
-#line 1636 "subc.tab.c" /* yacc.c:1646  */
+#line 1635 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 189 "subc.y" /* yacc.c:1646  */
+#line 188 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt_list->epsilon");
         }
-#line 1644 "subc.tab.c" /* yacc.c:1646  */
+#line 1643 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 193 "subc.y" /* yacc.c:1646  */
+#line 192 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->expr ';'");
         }
-#line 1652 "subc.tab.c" /* yacc.c:1646  */
+#line 1651 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 196 "subc.y" /* yacc.c:1646  */
+#line 195 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->compound_stmt");
         }
-#line 1660 "subc.tab.c" /* yacc.c:1646  */
+#line 1659 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 199 "subc.y" /* yacc.c:1646  */
+#line 198 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->RETURN ';'");
         }
-#line 1668 "subc.tab.c" /* yacc.c:1646  */
+#line 1667 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 202 "subc.y" /* yacc.c:1646  */
+#line 201 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->RETURN expr ';'");
         }
-#line 1676 "subc.tab.c" /* yacc.c:1646  */
+#line 1675 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 205 "subc.y" /* yacc.c:1646  */
+#line 204 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->';'");
         }
-#line 1684 "subc.tab.c" /* yacc.c:1646  */
+#line 1683 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 208 "subc.y" /* yacc.c:1646  */
+#line 207 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->IF '(' expr ')' stmt	");
         }
-#line 1692 "subc.tab.c" /* yacc.c:1646  */
+#line 1691 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 211 "subc.y" /* yacc.c:1646  */
+#line 210 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->IF '(' expr ')' stmt ELSE stmt");
         }
-#line 1700 "subc.tab.c" /* yacc.c:1646  */
+#line 1699 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 214 "subc.y" /* yacc.c:1646  */
+#line 213 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->WHILE '(' expr ')' stmt");
         }
-#line 1708 "subc.tab.c" /* yacc.c:1646  */
+#line 1707 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 217 "subc.y" /* yacc.c:1646  */
+#line 216 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt");
         }
-#line 1716 "subc.tab.c" /* yacc.c:1646  */
+#line 1715 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 220 "subc.y" /* yacc.c:1646  */
+#line 219 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->BREAK ';'");
         }
-#line 1724 "subc.tab.c" /* yacc.c:1646  */
+#line 1723 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 223 "subc.y" /* yacc.c:1646  */
+#line 222 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("stmt->CONTINUE ';'");
         }
-#line 1732 "subc.tab.c" /* yacc.c:1646  */
+#line 1731 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 227 "subc.y" /* yacc.c:1646  */
+#line 226 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("test->expr");
         }
-#line 1740 "subc.tab.c" /* yacc.c:1646  */
+#line 1739 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 230 "subc.y" /* yacc.c:1646  */
+#line 229 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("test->epsilon");
         }
-#line 1748 "subc.tab.c" /* yacc.c:1646  */
+#line 1747 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 234 "subc.y" /* yacc.c:1646  */
+#line 233 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("const_expr->expr");
         }
-#line 1756 "subc.tab.c" /* yacc.c:1646  */
+#line 1755 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 238 "subc.y" /* yacc.c:1646  */
+#line 237 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("expr->unary '=' expr");
         }
-#line 1764 "subc.tab.c" /* yacc.c:1646  */
+#line 1763 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 241 "subc.y" /* yacc.c:1646  */
+#line 240 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("expr->or_expr");
         }
-#line 1772 "subc.tab.c" /* yacc.c:1646  */
+#line 1771 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 245 "subc.y" /* yacc.c:1646  */
+#line 244 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("or_expr->or_list");
         }
-#line 1780 "subc.tab.c" /* yacc.c:1646  */
+#line 1779 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 249 "subc.y" /* yacc.c:1646  */
+#line 248 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("or_list->or_list LOGICAL_OR and_expr");
         }
-#line 1788 "subc.tab.c" /* yacc.c:1646  */
+#line 1787 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 252 "subc.y" /* yacc.c:1646  */
+#line 251 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("or_list->and_expr");
         }
-#line 1796 "subc.tab.c" /* yacc.c:1646  */
+#line 1795 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 256 "subc.y" /* yacc.c:1646  */
+#line 255 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("and_expr->and_list");
         }
-#line 1804 "subc.tab.c" /* yacc.c:1646  */
+#line 1803 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 260 "subc.y" /* yacc.c:1646  */
+#line 259 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("and_list->and_list LOGICAL_AND binary");
         }
-#line 1812 "subc.tab.c" /* yacc.c:1646  */
+#line 1811 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 263 "subc.y" /* yacc.c:1646  */
+#line 262 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("and_list->binary");
         }
-#line 1820 "subc.tab.c" /* yacc.c:1646  */
+#line 1819 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 267 "subc.y" /* yacc.c:1646  */
+#line 266 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("binary->binary RELOP binary");
         }
-#line 1828 "subc.tab.c" /* yacc.c:1646  */
+#line 1827 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 270 "subc.y" /* yacc.c:1646  */
+#line 269 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("binary->binary EQUOP binary");
         }
-#line 1836 "subc.tab.c" /* yacc.c:1646  */
+#line 1835 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 273 "subc.y" /* yacc.c:1646  */
+#line 272 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("binary->binary '+' binary");
         }
-#line 1844 "subc.tab.c" /* yacc.c:1646  */
+#line 1843 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 276 "subc.y" /* yacc.c:1646  */
+#line 275 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("binary->binary '-' binary");
         }
-#line 1852 "subc.tab.c" /* yacc.c:1646  */
+#line 1851 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 279 "subc.y" /* yacc.c:1646  */
+#line 278 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("binary->unary");
         }
-#line 1860 "subc.tab.c" /* yacc.c:1646  */
+#line 1859 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 283 "subc.y" /* yacc.c:1646  */
+#line 282 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'(' expr ')'");
 		
         }
-#line 1869 "subc.tab.c" /* yacc.c:1646  */
+#line 1868 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 287 "subc.y" /* yacc.c:1646  */
+#line 286 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'(' unary ')'");
         }
-#line 1877 "subc.tab.c" /* yacc.c:1646  */
+#line 1876 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 290 "subc.y" /* yacc.c:1646  */
+#line 289 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->INTEGER_CONST");
         }
-#line 1885 "subc.tab.c" /* yacc.c:1646  */
+#line 1884 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 293 "subc.y" /* yacc.c:1646  */
+#line 292 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->CHAR_CONST");
         }
-#line 1893 "subc.tab.c" /* yacc.c:1646  */
+#line 1892 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 296 "subc.y" /* yacc.c:1646  */
+#line 295 "subc.y" /* yacc.c:1646  */
     {
             //printf("unary->ID %s \n", $1);
             REDUCE("unary->ID");
         }
-#line 1902 "subc.tab.c" /* yacc.c:1646  */
+#line 1901 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 300 "subc.y" /* yacc.c:1646  */
+#line 299 "subc.y" /* yacc.c:1646  */
     {
             //printf("unary->STRING %s \n", $1);
             REDUCE("unary->STRING");
         }
-#line 1911 "subc.tab.c" /* yacc.c:1646  */
+#line 1910 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 304 "subc.y" /* yacc.c:1646  */
+#line 303 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'-' unary");
         }
-#line 1919 "subc.tab.c" /* yacc.c:1646  */
+#line 1918 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 307 "subc.y" /* yacc.c:1646  */
+#line 306 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'!' unary");
         }
-#line 1927 "subc.tab.c" /* yacc.c:1646  */
+#line 1926 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 310 "subc.y" /* yacc.c:1646  */
+#line 309 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary INCOP");
         }
-#line 1935 "subc.tab.c" /* yacc.c:1646  */
+#line 1934 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 313 "subc.y" /* yacc.c:1646  */
+#line 312 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary DECOP");
         }
-#line 1943 "subc.tab.c" /* yacc.c:1646  */
+#line 1942 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 316 "subc.y" /* yacc.c:1646  */
+#line 315 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->INCOP unary ");
         }
-#line 1951 "subc.tab.c" /* yacc.c:1646  */
+#line 1950 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 319 "subc.y" /* yacc.c:1646  */
+#line 318 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->DECOP unary ");
         }
-#line 1959 "subc.tab.c" /* yacc.c:1646  */
+#line 1958 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 322 "subc.y" /* yacc.c:1646  */
+#line 321 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'&' unary");
         }
-#line 1967 "subc.tab.c" /* yacc.c:1646  */
+#line 1966 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 325 "subc.y" /* yacc.c:1646  */
+#line 324 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->'*' unary");
         }
-#line 1975 "subc.tab.c" /* yacc.c:1646  */
+#line 1974 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 328 "subc.y" /* yacc.c:1646  */
+#line 327 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary '[' expr ']'");
         }
-#line 1983 "subc.tab.c" /* yacc.c:1646  */
+#line 1982 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 331 "subc.y" /* yacc.c:1646  */
+#line 330 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary '.' ID");
         }
-#line 1991 "subc.tab.c" /* yacc.c:1646  */
+#line 1990 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 334 "subc.y" /* yacc.c:1646  */
+#line 333 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary STRUCTOP ID");
         }
-#line 1999 "subc.tab.c" /* yacc.c:1646  */
+#line 1998 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 337 "subc.y" /* yacc.c:1646  */
+#line 336 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary '(' args ')'");
         }
-#line 2007 "subc.tab.c" /* yacc.c:1646  */
+#line 2006 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 340 "subc.y" /* yacc.c:1646  */
+#line 339 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("unary->unary '(' ')'");
         }
-#line 2015 "subc.tab.c" /* yacc.c:1646  */
+#line 2014 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 344 "subc.y" /* yacc.c:1646  */
+#line 343 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("args->expr");
         }
-#line 2023 "subc.tab.c" /* yacc.c:1646  */
+#line 2022 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 347 "subc.y" /* yacc.c:1646  */
+#line 346 "subc.y" /* yacc.c:1646  */
     {
             REDUCE("args->args ',' expr");
         }
-#line 2031 "subc.tab.c" /* yacc.c:1646  */
+#line 2030 "subc.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2035 "subc.tab.c" /* yacc.c:1646  */
+#line 2034 "subc.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2259,7 +2258,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 351 "subc.y" /* yacc.c:1906  */
+#line 350 "subc.y" /* yacc.c:1906  */
 
 
 /*  Additional C Codes 
