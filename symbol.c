@@ -6,6 +6,10 @@ static struct node *typeListHead;
 
 /* For symbol table */
 void initType(){
+	symbolTableHead = NULL;
+	ssTop=NULL;
+	typeListHead = NULL;
+
 	pushScope();
 	struct decl *intType, *voidType, *charType; 
 	intType = makeTypeDecl(DECL_TYPE_INT);
@@ -23,7 +27,7 @@ void pushScope(){
 	struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
 	//Check if there's entry in stack.
-	if(ssTop ) 
+	if(ssTop!=NULL ) 
 	{
 		//if there's entry in stack, assign ste pointed by stack top to new stack entry.
 		newNodePtr->data = ssTop->data; 
@@ -305,13 +309,15 @@ void addToTail(struct node **head, struct node *newNode) {
 }
 
 void addToHead(struct node **head, struct node *newNode) {
-	if (*head) {
+	if ((*head)) {
+		printf("head not NULL\n"); 
 		newNode -> prev = (*head) -> prev;
 		newNode  -> next = (*head);
 		newNode  -> prev -> next = newNode ;
 		newNode  -> next -> prev = newNode ;
 		(*head) = newNode ;
 	} else {
+		printf("head NULL\n");	
 		(*head) = newNode ;
 		newNode  -> prev = newNode ;
 		newNode  -> next = newNode ;

@@ -49,7 +49,8 @@ special_char	\\[nt]
 		struct id* entered = enter(0, yytext, strlen(yytext));
 	
 		printf("%s\n", yytext);
-		yylval.stringVal = entered->name;
+		yylval.idPtr = entered;
+		//yylval.stringVal = entered->name;
 		//return entered->lextype;
 		return ID;
 }
@@ -133,7 +134,8 @@ int main(int argc, char* argv[])
       printf("Can't open input stream!\n");
       exit(1);
    }
-	
+
+   initType();	
    yyparse();
    fclose(yyin);
    return 0;
