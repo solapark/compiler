@@ -137,7 +137,7 @@ int declare(struct id* name, struct decl* type){
 
 	//5. print symbol table 
 	struct ste* cur = symbolTableHead;
-	while(!(cur->prev)){
+	while((cur->prev)!=NULL){
 		printf("symbol table : %s\n", cur->name->name);
 		cur=cur->prev;
 	}
