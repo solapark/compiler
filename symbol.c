@@ -23,18 +23,24 @@ void initType(){
 }
 
 void pushScope(){
-	//Make new stack entry.
+	printf("push scope\n");
+	//1. Make new stack entry.
 	struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
-	//Check if there's entry in stack.
-	if(ssTop!=NULL ) 
+	//2. Check if there's entry in stack.
+	if(ssTop ) 
 	{
-		//if there's entry in stack, assign ste pointed by stack top to new stack entry.
+		//assign ste pointed by stack top to new stack entry.
 		newNodePtr->data = ssTop->data; 
 	}
 
 	//add new stack entry to stack.	
 	addToHead(&ssTop, newNodePtr);
+
+	//print scope stack
+	printf("*****scope Stack******\n");
+	printList(&ssTop);	
+
 }
 
 struct ste* popScope(){
@@ -106,12 +112,73 @@ struct ste* lookupSymbol(struct id* name){
 	return NULL;
 }
 
+int checkIsRedecl(struct id* name){
+	printf("check is redecl\n");
+        struct ste* curSte = symbolTableHead;
+	printf("%p\n", curSte);
+	printf("%p\n", symbolTableHead);
+        if(curSte != NULL){
+		printf("%p\n", curSte);
+		struct node* scope = curSte->scope;
+                while(scope == ssTop){
+                        if(curSte->name == name){
+				printf("redecl in scope\n");
+                                return 1;
+                        }
+                        curSte = curSte -> prev;
+			scope = curSte->scope;
+                }
+        }
 
+/*
+	if((ssTop == NULL)){
+		return 0;
+	}
+*/
+/*
+	//1. find symbol in scope.
+	struct ste* curSte = symbolTableHead;
+	if(curSte == NULL){
+		printf("NULL");
+		return 0;
+	}
+
+	printf("NOT NULL");
+	while(curSte ->scope == ssTop ){
+		if(curSte->name == name){
+			return 1;
+		}
+		curSte = curSte -> prev;
+	}
+*/
+	//2. find symbol in type list.
+	struct node* curTle = typeListHead;
+	if(curTle!=NULL){
+		struct node* tailTle = curTle->prev;
+
+		struct ste* curTleSte = curTle -> data; 
+		while(curTle != tailTle){//if not tail,
+			if(curTleSte -> name == name){
+				printf("redecl in type\n");
+				return 1;
+			}
+			curTle = curTle->next;
+			curTleSte = curTle-> data;
+		}
+		curTleSte = curTle -> data;
+		if(curTleSte->name == name){
+			printf("redecl in type\n");
+			return 1;
+		}
+	} 
+
+	return 0;
+}
 
 int declare(struct id* name, struct decl* type){
-	printf("declare************\n");	
+	//printf("declare************\n");	
 	//1. Check redeclaration.
-	if( lookupSymbol(name)){
+	if( checkIsRedecl(name)){
 		return REDECL;
 	} 
 
@@ -129,13 +196,14 @@ int declare(struct id* name, struct decl* type){
 		struct node* newNode = (struct node*) malloc(sizeof(struct node));
 		newNode->data = newSte;
 		addToHead(&typeListHead, newNode);
-	printf("*****type List******\n");
-	printList(&typeListHead);	
+		printf("*****type List******\n");
+		printList(&typeListHead);	
 	}
 
 	//4. add ste to scope stack && set ste scope.
 	setSteScope();
-
+	printf("*****scope Stack******\n");
+	printList(&ssTop);
 
 	//5. print symbol table 
 	printSymbolTable();
@@ -148,6 +216,7 @@ void setSteScope(){
 	ssTop->data = symbolTableHead;
 	//2. set scope of new ste.
 	symbolTableHead->scope = ssTop; 
+	printf("ssTop :%p\n", ssTop);
 }
 
 
@@ -256,54 +325,54 @@ struct decl* findCurDecl(struct decl* declPtr){
 */
 
 int checkIsVar(struct decl* declPtr){
-	if(declPtr->declClass != DECL_VAR){
+	if(declPtr == NULL || declPtr->declClass != DECL_VAR){
 		return (NOT_VAR);	
 	}
 	return SUCCESS;
 } 
 
 int checkIsConst(struct decl* declPtr){
-	if(declPtr->declClass != DECL_CONST){
+	if(declPtr == NULL || declPtr->declClass != DECL_CONST){
 		return NOT_CONST;	
 	}
 	return SUCCESS;
 } 
 
 int checkIsFunc(struct decl* declPtr){
-	if(declPtr->declClass != DECL_FUNC){
+	if(declPtr == NULL || declPtr->declClass != DECL_FUNC){
 		return NOT_FUNC;	
 	}
 	return SUCCESS;
 } 
 
 int checkIsType(struct decl* declPtr){
-	if(declPtr->declClass != DECL_TYPE){
+	if(declPtr == NULL || declPtr->declClass != DECL_TYPE){
 		return NOT_TYPE;	
 	}
 	return SUCCESS;
 }
 int checkIsInt(struct decl* declPtr){
-	if(declPtr->declClass != DECL_TYPE || declPtr->type->typeClass != DECL_TYPE_INT){
+	if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->type->typeClass != DECL_TYPE_INT){
 		return NOT_INT;	
 	}
 	return SUCCESS;
 }
 int checkIsArray(struct decl* declPtr){
-	if(declPtr->typeClass != DECL_TYPE_ARRAY){
+	if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_ARRAY){
 		return NOT_ARRAY;	
 	}
 	return SUCCESS;
 }
 
 int checkIsPtr(struct decl* declPtr){
-	if(declPtr->typeClass != DECL_TYPE_PTR){
+	if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_PTR){
 		return NOT_PTR;	
 	}
 	return SUCCESS;
 }
 
 int checkIsStruct(struct decl* declPtr){
-	if(declPtr->typeClass != DECL_TYPE_STRUCT){
+	if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_STRUCT){
 		return NOT_STRUCT;	
 	}
 	return SUCCESS;
@@ -328,14 +397,14 @@ void printSymbolTable(){
 		printf("%.*s\t%d\t%d\n", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
 
 
-	printf("******************\n");
+	printf("******************\n\n");
 	}
 }
 
 
 void printList(struct node **head){
 	struct node* curNode = *head;
-	if(curNode != NULL){
+	if(curNode != NULL&&curNode -> data != NULL){
 		struct ste* stePtr;
 		int leng;
 		while(checkIsTail(head,curNode) ==0){
@@ -347,8 +416,8 @@ void printList(struct node **head){
 		stePtr = curNode->data;
 		leng = stePtr->name->leng;
 		printf("%.*s\n", leng, stePtr->name->name);
-		printf("******************\n");
 	}
+	printf("******************\n\n");
 }
 
 void addToTail(struct node **head, struct node *newNode) {
@@ -366,14 +435,14 @@ void addToTail(struct node **head, struct node *newNode) {
 
 void addToHead(struct node **head, struct node *newNode) {
 	if ((*head)) {
-		printf("head not NULL\n"); 
+		//printf("head not NULL\n"); 
 		newNode -> prev = (*head) -> prev;
 		newNode  -> next = (*head);
 		newNode  -> prev -> next = newNode ;
 		newNode  -> next -> prev = newNode ;
 		(*head) = newNode ;
 	} else {
-		printf("head NULL\n");	
+		//printf("head NULL\n");	
 		(*head) = newNode ;
 		newNode  -> prev = newNode ;
 		newNode  -> next = newNode ;
@@ -444,7 +513,7 @@ struct node* getTail(struct node** head){
 struct decl* findDecl(struct id* name){
 	struct ste* curSte = lookupSymbol(name);
 	if(curSte == NULL){
-		printf("thers no decl\n");
+		//printf("thers no decl\n");
 		return NULL;	
 	}	
 	return curSte->decl;
@@ -463,7 +532,7 @@ void semErr(int errNum){
 	if(errNum == SUCCESS ){
 		return;
 	}else{
-		printf("%d: error: ", read_line());
+		printf("++++++++++++++++++++++++%d: error: ", read_line());
 		switch(errNum){
 		case NOT_DECLARED :            
 			printf("NOT_DECLARED \n");
@@ -543,7 +612,3 @@ void semErr(int errNum){
 	}
 }
 
-void printLine(){
-	printf("%d",read_line());
-
-}

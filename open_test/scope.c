@@ -9,6 +9,11 @@ int main() {
     int c;
     char d;
 
+    if(1){
+	int a;
+	int b;
+    }
+
     a = b;
     a = e;	/* error */
     a = 1;

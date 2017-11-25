@@ -163,6 +163,7 @@ def_list:	def_list def	{
         }
 		| /* empty */	{
             REDUCE("def_list->epsilon");
+		pushScope();
         }
    ;
 def:	type_specifier pointers ID ';'	{
@@ -298,6 +299,18 @@ binary:		binary RELOP binary	{
         }
 		| unary	%prec '='	{
             REDUCE("binary->unary");
+                if($1){                     
+                        int isConst = checkIsConst($1);     
+                        int isVar = checkIsVar($1);          
+                        if(isConst == SUCCESS || isVar ==SUCCESS ){
+				$$ = $1 -> type;
+			}else{ 	                       
+        			semErr(RHS_NOT_VAR_CONST);
+	                        $$ = NULL;                                            	        	                                               
+                        }                            
+                }else{                                              
+                        $$ = NULL;                                    
+                }    
         }
    ;
 unary:		'(' expr ')'	{
@@ -319,6 +332,10 @@ unary:		'(' expr ')'	{
             //printf("unary->ID %s \n", $1);
             REDUCE("unary->ID");
 		$$ = findDecl($1);
+		if($$ == NULL){
+			semErr(NOT_DECLARED);
+		}
+
         }
 		| STRING	{
             //printf("unary->STRING %s \n", $1);
