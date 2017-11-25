@@ -160,6 +160,16 @@ struct decl* makeVarDecl(struct decl* varType){
 	return declPtr; 
 }
 
+//Make CHAR const declaration struct.
+struct decl* makeCharConstDecl(char* str){
+	//1. Make const decl.
+	struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
+	declPtr->declClass = DECL_CONST;
+
+	declPtr->charValue = str;
+ 
+	return declPtr;
+}
 //Make const declaration struct.
 struct decl* makeConstDecl(struct decl* arrDecl, int intValue){
 	//1. Make const decl.
@@ -247,7 +257,7 @@ struct decl* findCurDecl(struct decl* declPtr){
 
 int checkIsVar(struct decl* declPtr){
 	if(declPtr->declClass != DECL_VAR){
-		return NOT_VAR;	
+		return (NOT_VAR);	
 	}
 	return SUCCESS;
 } 
@@ -269,6 +279,12 @@ int checkIsFunc(struct decl* declPtr){
 int checkIsType(struct decl* declPtr){
 	if(declPtr->declClass != DECL_TYPE){
 		return NOT_TYPE;	
+	}
+	return SUCCESS;
+}
+int checkIsInt(struct decl* declPtr){
+	if(declPtr->declClass != DECL_TYPE || declPtr->type->typeClass != DECL_TYPE_INT){
+		return NOT_INT;	
 	}
 	return SUCCESS;
 }
@@ -425,4 +441,109 @@ struct node* getTail(struct node** head){
 }
 
 
+struct decl* findDecl(struct id* name){
+	struct ste* curSte = lookupSymbol(name);
+	if(curSte == NULL){
+		printf("thers no decl\n");
+		return NULL;	
+	}	
+	return curSte->decl;
+}
+struct decl* findDeclByStr(char* name){
+	struct id* curId = enter(0, name, strlen(name));
+	struct ste* curSte = lookupSymbol(curId);
+	if(curSte == NULL){
+		printf("thers no decl\n");
+		return NULL;	
+	}	
+	return curSte->decl;
+}
 
+void semErr(int errNum){
+	if(errNum == SUCCESS ){
+		return;
+	}else{
+		printf("%d: error: ", read_line());
+		switch(errNum){
+		case NOT_DECLARED :            
+			printf("NOT_DECLARED \n");
+			break;                 
+		case REDECL:                  		
+			printf("REDECL\n");
+			break;                 
+		case NOT_SAME_TYPE:           
+			printf("NOT_SAME_TYPE\n");
+			break;                 
+		case LHS_NOT_VAR:             
+			printf("LHS_NOT_VAR\n");
+			break;                 
+		case RHS_NOT_VAR_CONST:       
+			printf("RHS_NOT_VAR_CONST\n");
+			break;                 
+		case NOT_STRUC_FIELD:         
+			printf("NOT_STRUC_FIELD\n");
+			break;                 
+		case INCOMPLETE_STRUCT:       
+			printf("INCOMPLETE_STRUCT\n");
+			break;                 
+		case WRONG_RETURN_VALUE:      
+			printf("WRONG_RETURN_VALUE\n");
+			break;                 
+		case MULTIPLE_RETURN_TYPE:    
+			printf("MULTIPLE_RETURN_TYPE\n");
+			break;                 
+		case IMCOPATIBLE_COMPARE:     
+			printf("IMCOPATIBLE_COMPARE\n");
+			break;                 
+		case NOT_COMPUTABLE: 
+			printf("NOT_COMPUTABLE\n");
+			break;                 
+		case NOT_VAR:        
+			printf("NOT_VAR\n");
+			break;                 
+		case NOT_CONST_VAR:  
+			printf("NOT_CONST_VAR\n");
+			break;                 
+		case NOT_PROPER_TYPE:
+			printf("NOT_PROPER_TYPE\n");
+			break;                 
+		case NOT_FORMAL_ARGS:
+			printf("NOT_FORMAL_ARGS\n");
+			break;                 
+		case NOT_CONST: 
+			printf("NOT_CONST\n");
+			break;                 
+		case NOT_FUNC:  
+			printf("NOT_FUNC\n");
+			break;                 
+		case NOT_TYPE:  
+			printf("NOT_TYPE\n");
+			break;                 
+		case NOT_INT:   
+			printf("NOT_INT\n");
+			break;                 
+		case NOT_VOID:  
+			printf("NOT_VOID\n");
+			break;                 
+		case NOT_CHAR : 
+			printf("NOT_CHAR\n");
+			break;                 
+		case NOT_ARRAY: 
+			printf("NOT_ARRAY\n");
+			break;                 
+		case NOT_PTR:   
+			printf("NOT_PTR\n");
+			break;                 
+		case NOT_STRUCT:
+			printf("NOT_STRUCT\n");
+			break;                 
+		defualt :
+			printf("not success, but no matching error num\n");
+		}
+	}
+}
+
+void printLine(){
+	printf("%d",read_line());
+
+}

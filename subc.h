@@ -79,7 +79,7 @@ struct decl {
 	int		declClass;
 	struct decl	*type;
 	int		value;
-	float		realValue;
+	char		*charValue;
 	struct ste	*formals;
 	struct decl	*returnType;
 	int		typeClass;
