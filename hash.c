@@ -70,6 +70,7 @@ struct id *enter(int lextype, char *name, int length) {
 	struct id* curId = (struct id*) malloc(sizeof(struct id));	
 	curId->lextype = lextype; 
 	curId->name = name;
+	curId->leng = length; 
 //	curId->count = 0;
 
 	//entyer the new id struct to data of pNlist

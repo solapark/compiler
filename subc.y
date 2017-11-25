@@ -64,10 +64,15 @@ ext_def:	type_specifier pointers ID ';' {
             REDUCE("ext_def->type_specifier pointers ID ';' ");
 		//1. TYPE *ID; 
 		if($2 == 1){
+			//struct id* target = enter(0, $3->name, strlen($3->name)); 
 			declare($3, makeVarDecl(makePtrDecl($1)));
 		}
 		//2. TYPE ID;
 		else{
+		//if($3 == enter(0, "a", 1)){
+	//		printf("same\n");
+	//	}
+	//		printf("idPtr->name :%s, entered->name : %s\n", $3->name, enter(0, "a", 1)->name);
 			declare($3, makeVarDecl($1));
 		}	
 	}

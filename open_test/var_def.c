@@ -1,6 +1,9 @@
 /* variable redefine */
-int a;
-
+int a ;
+int *x;
+int *k;
+int *j;
+int y;
 
 int main() {
     int a;

@@ -56,6 +56,7 @@
 struct id {
       char *name;
       int lextype;
+      int leng;
 };
 
 /* structure for scope stack & args list */
@@ -156,7 +157,8 @@ int checkIsPtr(struct decl* declPtr);
 
 int checkIsStruct(struct decl* declPtr);
 
-
+void printSymbolTable();
+void printList(struct node **head);
 //node operation
 void addToTail(struct node **head, struct node *newNode);
 

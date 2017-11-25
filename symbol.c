@@ -129,6 +129,8 @@ int declare(struct id* name, struct decl* type){
 		struct node* newNode = (struct node*) malloc(sizeof(struct node));
 		newNode->data = newSte;
 		addToHead(&typeListHead, newNode);
+	printf("*****type List******\n");
+	printList(&typeListHead);	
 	}
 
 	//4. add ste to scope stack && set ste scope.
@@ -136,13 +138,7 @@ int declare(struct id* name, struct decl* type){
 
 
 	//5. print symbol table 
-	struct ste* cur = symbolTableHead;
-	while((cur->prev)!=NULL){
-		printf("symbol table : %s\n", cur->name->name);
-		cur=cur->prev;
-	}
-	printf("sybol table : %s\n", cur->name->name);
-
+	printSymbolTable();
 
 	return SUCCESS;
 }
@@ -293,6 +289,43 @@ int checkIsStruct(struct decl* declPtr){
 		return NOT_STRUCT;	
 	}
 	return SUCCESS;
+}
+
+void printSymbolTable(){
+	struct ste* curSte = symbolTableHead;
+	if(curSte != NULL){
+		int leng;
+		printf("****symbol table****\n"); 
+		while(curSte->prev != NULL){
+			leng = curSte->name->leng;
+			printf("%.*s\n", leng, curSte->name->name);
+			curSte = curSte->prev;
+		}
+		leng = curSte->name->leng;
+		printf("%.*s\n", leng, curSte->name->name);
+
+
+	printf("******************\n");
+	}
+}
+
+
+void printList(struct node **head){
+	struct node* curNode = *head;
+	if(curNode != NULL){
+		struct ste* stePtr;
+		int leng;
+		while(checkIsTail(head,curNode) ==0){
+			stePtr = curNode->data;
+			leng = stePtr->name->leng;
+			printf("%.*s\n", leng, stePtr->name->name);
+			curNode = curNode->next;
+		}
+		stePtr = curNode->data;
+		leng = stePtr->name->leng;
+		printf("%.*s\n", leng, stePtr->name->name);
+		printf("******************\n");
+	}
 }
 
 void addToTail(struct node **head, struct node *newNode) {

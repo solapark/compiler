@@ -46,11 +46,12 @@ special_char	\\[nt]
 "->"		{ printf("%s\n", yytext);yylval.stringVal = yytext;return STRUCTOP; }	
 {id}		{
 		//Search the hash table to find the pointer of entry for yytext.
-		struct id* entered = enter(0, yytext, strlen(yytext));
+		struct id* entered = enter(0, yytext, yyleng);
 	
 		printf("%s\n", yytext);
 		yylval.idPtr = entered;
 		//yylval.stringVal = entered->name;
+		//printf("subc.l : yylval.idPtr->name : %s\n", (yylval.idPtr)->name);
 		//return entered->lextype;
 		return ID;
 }
@@ -96,7 +97,7 @@ special_char	\\[nt]
 "|"                     {printf("%s\n", yytext);return yytext[0];}
 "?"                     {printf("%s\n", yytext);return yytext[0];}
 ":"                     {printf("%s\n", yytext);return yytext[0];}
-";"                     {printf("%s\n", yytext);return yytext[0];}
+";"                     {printf("%s\n", yytext);return ';';}
 "="                     {printf("%s\n", yytext);return yytext[0];}
 "&="                    {printf("%s\n", yytext);return yytext[0];}
 "^="                    {printf("%s\n", yytext);return yytext[0];}
