@@ -68,19 +68,21 @@ void changeSSTopPnting(struct ste* newSte){
 struct ste* lookupSymbol(struct id* name){
 	//1. find symbol in symbol table.
 	struct ste* curSte = symbolTableHead;
-	while(curSte->prev != NULL){
-		if(curSte->name = name){
+	if(curSte != NULL){
+		while(curSte->prev != NULL){
+			if(curSte->name == name){
+				return curSte;
+			}
+			curSte = curSte -> prev;
+		}
+		if(curSte -> name == name){
 			return curSte;
 		}
-		curSte = curSte -> prev;
-	}
-	if(curSte -> name == name){
-		return curSte;
-	}
+	}	
 
 	//2. find symbol in type list.
 	struct node* curTle = typeListHead;
-	if(!curTle){
+	if(curTle!=NULL){
 		struct node* tailTle = curTle->prev;
 
 		struct ste* curTleSte = curTle -> data; 
