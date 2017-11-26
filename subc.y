@@ -62,21 +62,19 @@ ext_def_list:	ext_def_list ext_def	{
 
 ext_def:	type_specifier pointers ID ';' {
             REDUCE("ext_def->type_specifier pointers ID ';' ");
-		int errNum;
-		//1. TYPE *ID; 
-		if($2 == 1){
-			errNum = declare($3, makeVarDecl(makePtrDecl($1)));
-	//		declare($3, makeVarDecl(makePtrDecl($1)));
+		if($1 !=NULL){
+			int errNum;
+			//1. TYPE *ID; 
+			if($2 == 1){
+				errNum = declare($3, makeVarDecl(makePtrDecl($1)));
 		}
-		//2. TYPE ID;
-		else{
-			//declare($3, makeVarDecl($1));
-
-			errNum =declare($3, makeVarDecl($1));
-		}	
-		//printf("%d", errNum);
-		semErr(errNum);
-	}
+			//2. TYPE ID;
+			else{
+				errNum =declare($3, makeVarDecl($1));
+			}	
+			semErr(errNum);
+		}
+	}	
 		| type_specifier pointers ID '[' const_expr ']' ';'	{
             REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
 		int errNum;
@@ -118,12 +116,30 @@ type_specifier:	TYPE	{
 		$$ = $1;
         }
    ;
-struct_specifier: STRUCT ID '{' def_list '}'	{
+struct_specifier: STRUCT ID '{' def_list '}'  {
             REDUCE("struct_specifier->STRUCT ID '{' def_list '}'");
+                struct ste *fields = popScope();
+                declare($2, ($$ = makeStructDecl(fields)));      
         }
 		| STRUCT ID	{
             REDUCE("struct_specifier->STRUCT ID ");
-        }
+		//1. find decl
+		struct decl *curDecl = findDecl($2);
+		if(curDecl == NULL){
+			semErr(NOT_DECLARED);
+			$$ =NULL;
+		}else{
+		//2. check is struct.
+			int err = checkIsStruct(curDecl); 
+			if(err != SUCCESS){
+				semErr(err);
+				$$ = NULL;
+			}else{
+				$$ = curDecl;
+        		}
+
+		}
+	}
    ;	//<= In the second case, the struct must have been defined before.
 func_decl:	type_specifier pointers ID '(' ')'	{
             REDUCE("funct_decl->type_specifier pointers ID '(' ')'");
@@ -168,16 +184,19 @@ def_list:	def_list def	{
    ;
 def:	type_specifier pointers ID ';'	{
             REDUCE("def->type_specifier pointers ID ';'	");
- 		//1. TYPE *ID; 
-		int errNum;
-		if($2 == 1){
-			errNum = declare($3, makeVarDecl(makePtrDecl($1)));
+		if($1 != NULL){
+ 			//1. TYPE *ID; 
+			int errNum;
+			if($2 == 1){
+				errNum = declare($3, makeVarDecl(makePtrDecl($1)));
+			}
+			//2. TYPE ID;
+			else{
+				errNum = declare($3, makeVarDecl($1));
+			}       
+			semErr(errNum);
 		}
-		//2. TYPE ID;
-		else{
-			errNum = declare($3, makeVarDecl($1));
-		}       
-		semErr(errNum);
+
 	}
 		| type_specifier pointers ID '[' const_expr ']' ';'	{
             REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
@@ -198,7 +217,7 @@ def:	type_specifier pointers ID ';'	{
    ;
 compound_stmt:	'{' local_defs stmt_list '}'	{
             REDUCE("compound_stmt->'{' local_defs stmt_list '}'");
-		//popScope();
+		popScope();
         }
    ;
 local_defs:	def_list	{

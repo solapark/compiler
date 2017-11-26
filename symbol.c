@@ -428,7 +428,7 @@ void addToHead(struct node **head, struct node *newNode) {
 }
 
 void removeFromHead(struct node **head){
-	if (!checkIsListEmpty(head)) {
+	if (checkIsListEmpty(head)!=1) {
 		if(checkIsTail(head, *head)){//if there's only one struct node int list.
 			resetList(head); //remove it.
 		}else{
@@ -446,7 +446,7 @@ void resetList (struct node **head){
 }
 
 int checkIsListEmpty (struct node **head){
-	if((*head) = NULL)
+	if((*head) == NULL)
 		return 1;
 	else
 		return 0;

@@ -9,10 +9,20 @@ int main() {
     int c;
     char d;
 
+    struct temp {
+	int a;
+	int b;
+    };
+
+    struct notStr str1;
+
     if(1){
 	int a;
 	int b;
+	int ddd;
     }
+
+    ddd=1;
 
     a = b;
     a = e;	/* error */
