@@ -23,7 +23,7 @@ void initType(){
 }
 
 void pushScope(){
-	printf("push scope\n");
+	printf("PUSH SCOPE\n");
 	//1. Make new stack entry.
 	struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
@@ -44,6 +44,7 @@ void pushScope(){
 }
 
 struct ste* popScope(){
+	printf("POP SCOPE\n");
 	//1. Save poped ste list.
 	struct node* popedTop=ssTop;
 
@@ -66,7 +67,12 @@ struct ste* popScope(){
 		curStePtr->prev = NULL;
 	}
 
+	//printf scope stack 
+	printf("*****scope Stack******\n");
+	printList(&ssTop);
+
 	return popedTop->data;
+
 }
 
 void changeSSTopPnting(struct ste* newSte){
@@ -115,42 +121,14 @@ struct ste* lookupSymbol(struct id* name){
 int checkIsRedecl(struct id* name){
 	printf("check is redecl\n");
         struct ste* curSte = symbolTableHead;
-	printf("%p\n", curSte);
-	printf("%p\n", symbolTableHead);
-        if(curSte != NULL){
-		printf("%p\n", curSte);
-		struct node* scope = curSte->scope;
-                while(scope == ssTop){
-                        if(curSte->name == name){
-				printf("redecl in scope\n");
-                                return 1;
-                        }
-                        curSte = curSte -> prev;
-			scope = curSte->scope;
-                }
+        while(curSte && curSte->scope == ssTop){
+               if(curSte->name == name){
+			printf("redecl in scope\n");
+                        return 1;
+               }
+               curSte = curSte -> prev;
         }
 
-/*
-	if((ssTop == NULL)){
-		return 0;
-	}
-*/
-/*
-	//1. find symbol in scope.
-	struct ste* curSte = symbolTableHead;
-	if(curSte == NULL){
-		printf("NULL");
-		return 0;
-	}
-
-	printf("NOT NULL");
-	while(curSte ->scope == ssTop ){
-		if(curSte->name == name){
-			return 1;
-		}
-		curSte = curSte -> prev;
-	}
-*/
 	//2. find symbol in type list.
 	struct node* curTle = typeListHead;
 	if(curTle!=NULL){
@@ -216,7 +194,7 @@ void setSteScope(){
 	ssTop->data = symbolTableHead;
 	//2. set scope of new ste.
 	symbolTableHead->scope = ssTop; 
-	printf("ssTop :%p\n", ssTop);
+	//printf("ssTop :%p\n", ssTop);
 }
 
 

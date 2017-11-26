@@ -1,6 +1,6 @@
 /* variable redefine */
 int a;
-
+int ;
 int main() {
     int a;
     char a; /* error */

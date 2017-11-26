@@ -198,7 +198,7 @@ def:	type_specifier pointers ID ';'	{
    ;
 compound_stmt:	'{' local_defs stmt_list '}'	{
             REDUCE("compound_stmt->'{' local_defs stmt_list '}'");
-		//popScope();
+		popScope();
         }
    ;
 local_defs:	def_list	{
