@@ -1,5 +1,7 @@
 /* function operation */
 
+int func4(void);
+
 int func1(int a, char b) {
 	return 0;
 }
@@ -37,3 +39,8 @@ int main(void) {
 
 	return 0;
 }
+
+int func4(void){
+	return 1;
+}
+

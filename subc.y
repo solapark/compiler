@@ -93,8 +93,8 @@ ext_def:	type_specifier pointers ID ';' {
             REDUCE("ext_def->type_specifier ';' ");
 		//do nothing
 	}
-		| func_decl compound_stmt {
-            REDUCE("ext_def->func_decl compound_stmt ");
+		| func_decl '{' local_defs stmt_list '}' {
+            REDUCE("ext_def->func_decl '{' local_defs stmt_list '}'");
 	}
    ;
 type_specifier:	TYPE	{
