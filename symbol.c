@@ -59,9 +59,12 @@ struct ste* popScope(){
 	struct ste* pointedByFinal = ssTop->data; 
 	if(curStePtr->scope == ssTop){
 		printf("no var in scope.\n");
+		//printf scope stack 
+		printf("*****scope Stack******\n");
+		printList(&ssTop);	
 		return NULL;
 	}else{	
-		while(curStePtr->prev->scope!=popedTop){
+		while(curStePtr->prev->scope==popedTop){
 			curStePtr=curStePtr->prev;
 		}
 		curStePtr->prev = NULL;

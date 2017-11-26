@@ -116,7 +116,10 @@ type_specifier:	TYPE	{
 		$$ = $1;
         }
    ;
-struct_specifier: STRUCT ID '{' def_list '}'  {
+struct_specifier: STRUCT ID '{' {
+		pushScope();
+	}
+	 def_list '}'  {
             REDUCE("struct_specifier->STRUCT ID '{' def_list '}'");
                 struct ste *fields = popScope();
                 declare($2, ($$ = makeStructDecl(fields)));      
@@ -179,7 +182,6 @@ def_list:	def_list def	{
         }
 		| /* empty */	{
             REDUCE("def_list->epsilon");
-		pushScope();
         }
    ;
 def:	type_specifier pointers ID ';'	{
@@ -215,7 +217,10 @@ def:	type_specifier pointers ID ';'	{
             REDUCE("def->func_decl ';'	");
         }
    ;
-compound_stmt:	'{' local_defs stmt_list '}'	{
+compound_stmt:	'{' {
+		pushScope();
+	}
+	 local_defs stmt_list '}'	{
             REDUCE("compound_stmt->'{' local_defs stmt_list '}'");
 		popScope();
         }
