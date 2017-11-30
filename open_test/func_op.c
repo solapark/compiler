@@ -6,7 +6,7 @@ int func1(int a, char b) {
 	return 0;
 }
 
-char func2(void) {
+char func2(void x) {
 	return 'a';
 }
 

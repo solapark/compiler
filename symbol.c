@@ -180,11 +180,13 @@ int declare(struct id* name, struct decl* type){
 	//3. if (decl==struct||int||void||char), add ste to typeList
 	int typeClass = type->typeClass;
 	if( typeClass== DECL_TYPE_STRUCT||typeClass== DECL_TYPE_INT||typeClass== DECL_TYPE_VOID||typeClass== DECL_TYPE_CHAR){
-		struct node* newNode = (struct node*) malloc(sizeof(struct node));
-		newNode->data = newSte;
-		addToHead(&typeListHead, newNode);
-		printf("*****type List******\n");
-		printList(&typeListHead);	
+		if(name != enter(0, "returnId", 8)){
+			struct node* newNode = (struct node*) malloc(sizeof(struct node));
+			newNode->data = newSte;
+			addToHead(&typeListHead, newNode);
+			printf("*****type List******\n");
+			printList(&typeListHead);	
+		}
 	}
 
 	//4. add ste to scope stack && set ste scope.
@@ -206,6 +208,13 @@ void setSteScope(){
 	//printf("ssTop :%p\n", ssTop);
 }
 
+void pushSteList(struct ste* steList){
+	struct ste* curSte = steList;
+	while(curSte){
+		declare(curSte->name, curSte->decl);
+		curSte = curSte->prev;
+	}
+}
 
 //Make Var decl.
 struct decl* makeVarDecl(struct decl* varType){
@@ -498,12 +507,12 @@ struct node* getTail(struct node** head){
 
 struct ste* reverseSte(struct ste* steList){
 	if(steList == NULL||steList->prev==NULL){
-		return;
+		return	steList;
 	}	
 
 	struct ste* newHead;
 	newHead = recurReverSte(steList);
-	printf("new Head : %s\n" , newHead->name->name);
+	//printf("new Head : %s\n" , newHead->name->name);
 
 	steList->prev = NULL;
 	return newHead;
@@ -512,7 +521,7 @@ struct ste* reverseSte(struct ste* steList){
 struct ste* recurReverSte(struct ste* steList){
 	if(steList->prev->prev == NULL){
 		struct ste* newHead = steList -> prev;
-		printf("tail ->name : %s\n", newHead->name->name);
+		//printf("tail ->name : %s\n", newHead->name->name);
 		steList->prev->prev = steList;
 		return newHead;
 	}else{
