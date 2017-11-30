@@ -150,8 +150,31 @@ func_decl:	type_specifier pointers ID '(' ')'	{
 		| type_specifier pointers ID '(' VOID ')'	{
             REDUCE("funct_decl->type_specifier pointers ID '(' VOID ')'");
         }
-		| type_specifier pointers ID '(' param_list ')'	{
-            REDUCE("funct_decl->type_specifier pointers ID '(' param_list ')'");
+		| type_specifier pointers ID '(' {
+        	REDUCE("funct_decl->type_specifier pointers ID '(' param_list ')'");
+		//1. push fucndecl in symbol table.
+		struct decl* funcDecl = makeFuncDecl();
+		declare($3, funcDecl);
+		//2. push scope to collect formal list.
+		pushScope();
+		//3. push returnid to symbole table.
+		struct id* returnId = enter(0, "returnId", 8);
+		struct decl* returnType=$1; 
+		if($2 == 1){
+			returnType = makePtrDecl($1);
+		}
+		declare(returnId, returnType);
+		//4. specify type of $$.
+		$<declPtr>$ = funcDecl;	
+	}
+		param_list ')'	
+		{
+			//5. save formals list
+			struct ste *formals = popScope();
+			//6. save return type.
+			struct decl* funcDecl = $<declPtr>5;	 	
+			funcDecl->returnType = formals->decl;
+			funcDecl->formals = formals->prev;
         }
    ;
 pointers: 	'*'	{

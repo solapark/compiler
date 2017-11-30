@@ -19,6 +19,7 @@ void initType(){
 	declare(enter(0, "int", 3), intType);	
 	declare(enter(0, "void", 4), voidType);
 	declare(enter(0, "char", 4), charType);
+	enter(0, "returnId", 8);
 
 }
 
@@ -69,6 +70,11 @@ struct ste* popScope(){
 		}
 		curStePtr->prev = NULL;
 	}
+	//5. Reverse STE.
+	reverseSte(popedTop->data);
+	//print poped stes.
+	printf("*****poped ste******\n");
+	printSymbolTable(popedTop->data);
 
 	//printf scope stack 
 	printf("*****scope Stack******\n");
@@ -187,7 +193,7 @@ int declare(struct id* name, struct decl* type){
 	printList(&ssTop);
 
 	//5. print symbol table 
-	printSymbolTable();
+	printSymbolTable(symbolTableHead);
 
 	return SUCCESS;
 }
@@ -359,8 +365,8 @@ int checkIsStruct(struct decl* declPtr){
 	return SUCCESS;
 }
 
-void printSymbolTable(){
-	struct ste* curSte = symbolTableHead;
+void printSymbolTable(struct ste* head){
+	struct ste* curSte = head;
 	if(curSte != NULL){
 		int leng;
 		printf("****symbol table****\n"); 
@@ -490,6 +496,29 @@ struct node* getTail(struct node** head){
 	}
 }
 
+void reverseSte(struct ste* steList){
+	if(steList == NULL||steList->prev==NULL){
+		return;
+	}	
+
+	struct ste* newHead;
+	recurReverSte(steList, newHead);
+
+	steList->prev = NULL;
+	steList = newHead;
+}
+
+void recurReverSte(struct ste* steList, struct ste* newHead){
+	if(steList->prev->prev == NULL){
+		printf("steList->prev->prev == NULL\n");
+		newHead = steList -> prev;
+		steList->prev->prev = steList;
+		return;
+	}else{
+		reverseSte(steList->prev);
+		steList->prev->prev = steList;
+	}
+}
 
 struct decl* findDecl(struct id* name){
 	struct ste* curSte = lookupSymbol(name);

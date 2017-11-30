@@ -1,6 +1,6 @@
 /* function operation */
 
-int func4(void);
+/*int func4(void);*/
 
 int func1(int a, char b) {
 	return 0;
