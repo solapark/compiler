@@ -71,7 +71,7 @@ struct ste* popScope(){
 		curStePtr->prev = NULL;
 	}
 	//5. Reverse STE.
-	reverseSte(popedTop->data);
+	popedTop -> data = reverseSte(popedTop->data);
 	//print poped stes.
 	printf("*****poped ste******\n");
 	printSymbolTable(popedTop->data);
@@ -496,27 +496,29 @@ struct node* getTail(struct node** head){
 	}
 }
 
-void reverseSte(struct ste* steList){
+struct ste* reverseSte(struct ste* steList){
 	if(steList == NULL||steList->prev==NULL){
 		return;
 	}	
 
 	struct ste* newHead;
-	recurReverSte(steList, newHead);
+	newHead = recurReverSte(steList);
+	printf("new Head : %s\n" , newHead->name->name);
 
 	steList->prev = NULL;
-	steList = newHead;
+	return newHead;
 }
 
-void recurReverSte(struct ste* steList, struct ste* newHead){
+struct ste* recurReverSte(struct ste* steList){
 	if(steList->prev->prev == NULL){
-		printf("steList->prev->prev == NULL\n");
-		newHead = steList -> prev;
+		struct ste* newHead = steList -> prev;
+		printf("tail ->name : %s\n", newHead->name->name);
 		steList->prev->prev = steList;
-		return;
+		return newHead;
 	}else{
-		reverseSte(steList->prev);
+		struct ste* newHead = recurReverSte(steList->prev);
 		steList->prev->prev = steList;
+		return newHead;
 	}
 }
 

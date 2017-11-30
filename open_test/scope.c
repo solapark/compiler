@@ -12,6 +12,7 @@ int main() {
     struct temp {
 	int a;
 	int b;
+	int c;
     };
 
     struct notStr str1;
