@@ -95,9 +95,9 @@ ext_def:	type_specifier pointers ID ';' {
 		//do nothing
 	}
 		| func_decl '{' {
-       		REDUCE("ext_def->func_decl '{' local_defs stmt_list '}'");
-		pushScope();
-		pushSteList($1);
+            REDUCE("ext_def->func_decl '{' local_defs stmt_list '}'");
+			pushScope();
+			pushSteList($1);
 	}	local_defs stmt_list '}' {
 			popScope();
 	}
@@ -148,8 +148,8 @@ struct_specifier: STRUCT ID '{' {
 		}
 	}
    ;	//<= In the second case, the struct must have been defined before.
-func_decl: type_specifier pointers ID '(' ')'	{
-        	REDUCE("funct_decl->type_specifier pointers ID '(' ')'");
+func_decl:	type_specifier pointers ID '(' ')'	{
+            REDUCE("funct_decl->type_specifier pointers ID '(' ')'");
  		//1. push fucndecl in symbol table.
 		struct decl* funcDecl = makeFuncDecl();
 		int errNum = declare($3, funcDecl);
@@ -173,8 +173,8 @@ func_decl: type_specifier pointers ID '(' ')'	{
 			$$ = NULL;	
 		}      
 	 }
-		| type_specifier pointers ID '(' VOID ')' {
-        	REDUCE("funct_decl->type_specifier pointers ID '(' VOID ')'");
+		| type_specifier pointers ID '(' VOID ')' 	{
+            REDUCE("funct_decl->type_specifier pointers ID '(' VOID ')'");
  		//1. push fucndecl in symbol table.
 		struct decl* funcDecl = makeFuncDecl();
 		int errNum = declare($3, funcDecl);
@@ -219,19 +219,20 @@ func_decl: type_specifier pointers ID '(' ')'	{
 			semErr(errNum);
 			$<declPtr>$ = NULL;	
 		}	
-	} param_list ')'	{
-		if($<declPtr>5 != NULL){
-			//5. save formals list
-			struct ste *formals = popScope();
-			//6. save return type.
-			struct decl* funcDecl = $<declPtr>5;	 	
-			funcDecl->returnType = formals->decl;
-			funcDecl->formals = formals->prev;
-			$$ = formals;	
-		}else{
-			$$ = NULL;
-		}
-        }
+	} param_list ')'		
+		{
+			if($<declPtr>5 != NULL){
+				//5. save formals list
+				struct ste *formals = popScope();
+				//6. save return type.
+				struct decl* funcDecl = $<declPtr>5;	 	
+				funcDecl->returnType = formals->decl;
+				funcDecl->formals = formals->prev;
+				$$ = formals;	
+			}else{
+				$$ = NULL;
+			}
+        	}
    ;
 param_list:	param_decl	{
             REDUCE("param_list->param_decl");
