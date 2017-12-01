@@ -24,7 +24,7 @@ void initType(){
 }
 
 void pushScope(){
-	printf("PUSH SCOPE\n");
+	printf("\n\n*******PUSH SCOPE*******\n\n");
 	//1. Make new stack entry.
 	struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
@@ -39,13 +39,13 @@ void pushScope(){
 	addToHead(&ssTop, newNodePtr);
 
 	//print scope stack
-	printf("*****scope Stack******\n");
-	printList(&ssTop);	
+	//printf("*****scope Stack******\n");
+	//printList(&ssTop);	
 
 }
 
 struct ste* popScope(){
-	printf("POP SCOPE\n");
+	printf("\n\n*******POP SCOPE*******\n\n");
 	//1. Save poped ste list.
 	struct node* popedTop=ssTop;
 
@@ -73,12 +73,12 @@ struct ste* popScope(){
 	//5. Reverse STE.
 	popedTop -> data = reverseSte(popedTop->data);
 	//print poped stes.
-	printf("*****poped ste******\n");
-	printSymbolTable(popedTop->data);
+	//printf("*****poped ste******\n");
+	//printSymbolTable(popedTop->data);
 
 	//printf scope stack 
-	printf("*****scope Stack******\n");
-	printList(&ssTop);
+	//printf("*****scope Stack******\n");
+	//printList(&ssTop);
 
 	return popedTop->data;
 
@@ -128,7 +128,7 @@ struct ste* lookupSymbol(struct id* name){
 }
 
 int checkIsRedecl(struct id* name){
-	printf("check is redecl\n");
+	//printf("check is redecl\n");
         struct ste* curSte = symbolTableHead;
         while(curSte && curSte->scope == ssTop){
                if(curSte->name == name){
@@ -184,15 +184,15 @@ int declare(struct id* name, struct decl* type){
 			struct node* newNode = (struct node*) malloc(sizeof(struct node));
 			newNode->data = newSte;
 			addToHead(&typeListHead, newNode);
-			printf("*****type List******\n");
-			printList(&typeListHead);	
+			//printf("*****type List******\n");
+			//printList(&typeListHead);	
 		}
 	}
 
 	//4. add ste to scope stack && set ste scope.
 	setSteScope();
-	printf("*****scope Stack******\n");
-	printList(&ssTop);
+	//printf("*****scope Stack******\n");
+	//printList(&ssTop);
 
 	//5. print symbol table 
 	printSymbolTable(symbolTableHead);
@@ -399,10 +399,10 @@ void printSymbolTable(struct ste* head){
 	if(curSte != NULL){
 		int leng;
 		printf("****symbol table****\n"); 
-		printf("name\tdecl\ttype\tvarType\n");
+		printf("name\t\tdecl\ttype\tvarType\n");
 		while(curSte->prev != NULL){
 			leng = curSte->name->leng;
-			printf("%.*s\t%d\t%d\t", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+			printf("%.*s\t\t%d\t%d\t", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
 			if(curSte->decl->type){
 				printf("%d\t",curSte->decl->type->typeClass);
 			}
@@ -410,7 +410,7 @@ void printSymbolTable(struct ste* head){
 			curSte = curSte->prev;
 		}
 		leng = curSte->name->leng;
-		printf("%.*s\t%d\t%d\n", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+		printf("%.*s\t\t%d\t%d\n", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
 
 
 	printf("******************\n\n");
@@ -570,7 +570,7 @@ struct decl* findDeclByStr(char* name){
 }
 
 int checkSameType(struct decl* decl1, struct decl* decl2){
-    printf("decl1->typeClass = %d, decl2->typeClass = %d\n", decl1->typeClass, decl2->typeClass);
+    //printf("decl1->typeClass = %d, decl2->typeClass = %d\n", decl1->typeClass, decl2->typeClass);
     if(decl1== decl2){
         return SUCCESS;
     }else{
@@ -578,13 +578,28 @@ int checkSameType(struct decl* decl1, struct decl* decl2){
     }
 }
 
+struct decl* plusType(struct decl* typeDecl1, struct decl* typeDecl2){
+    if(typeDecl1->typeClass == DECL_TYPE_INT && typeDecl2->typeClass == DECL_TYPE_INT){
+        return findDeclByStr("int");
+    }else{
+        return NULL;
+    }
+}
+
+struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){
+    if(typeDecl1->typeClass == DECL_TYPE_INT && typeDecl2->typeClass == DECL_TYPE_INT){
+        return findDeclByStr("int");
+    }else{
+        return NULL;
+    }
+}
 
 void semErr(int errNum){
 	if(errNum == SUCCESS ){
-        printf("SUCCESS\n");
+        //printf("SUCCESS\n");
 		return;
 	}else{
-		printf("++++++++++++++++++++++++%d: error: ", read_line());
+		printf("+++++++++++++++%d: error: ", read_line());
 		switch(errNum){
 		case NOT_DECLARED :            
 			printf("NOT_DECLARED \n");

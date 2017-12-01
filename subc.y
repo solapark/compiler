@@ -548,10 +548,32 @@ binary:		binary RELOP binary
 | binary '+' binary	
 {
     REDUCE("binary->binary '+' binary");
+    if($1 != NULL && $3 != NULL){
+        struct decl* plusResult = plusType($1, $3);
+        if(plusResult){
+            $$ =plusResult;
+        }else{
+            semErr(NOT_COMPUTABLE);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | binary '-' binary	
 {
     REDUCE("binary->binary '-' binary");
+    if($1 != NULL && $3 != NULL){
+        struct decl* plusResult = minusType($1, $3);
+        if(plusResult){
+            $$ =plusResult;
+        }else{
+            semErr(NOT_COMPUTABLE);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | unary	%prec '='	
 {
@@ -604,15 +626,19 @@ unary:		'(' expr ')'	{
     REDUCE("unary->STRING");
     $$ = makeCharConstDecl($1);	
 }
-| '-' unary %prec '!'	{
+| '-' unary %prec '!'	
+{
     REDUCE("unary->'-' unary");
-    if( checkIsVar($2) == SUCCESS){
-        semErr(checkIsInt($2->type));
+    if($2 != NULL){
+        if( checkIsVar($2) == SUCCESS){
+            semErr(checkIsInt($2->type));
+        }else{
+            semErr(checkIsVar($2));
+        }
+        $$ = $2;
     }else{
-        semErr(checkIsVar($2));
+        $$ = NULL;
     }
-    $$ = $2;
-    ;
 }
 | '!' unary  
 {
