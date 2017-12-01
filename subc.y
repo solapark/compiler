@@ -630,12 +630,13 @@ unary:		'(' expr ')'	{
 {
     REDUCE("unary->'-' unary");
     if($2 != NULL){
-        if( checkIsVar($2) == SUCCESS){
-            semErr(checkIsInt($2->type));
+        int errNum = checkIsInt($2->type);
+        if(errNum == SUCCESS){
+            $$ = $2;
         }else{
-            semErr(checkIsVar($2));
+            semErr(errNum);
+            $$ = NULL;
         }
-        $$ = $2;
     }else{
         $$ = NULL;
     }

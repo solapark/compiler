@@ -368,7 +368,7 @@ int checkIsType(struct decl* declPtr){
 	return SUCCESS;
 }
 int checkIsInt(struct decl* declPtr){
-	if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->type->typeClass != DECL_TYPE_INT){
+	if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->typeClass != DECL_TYPE_INT){
 		return NOT_INT;	
 	}
 	return SUCCESS;
