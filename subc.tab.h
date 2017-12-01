@@ -66,9 +66,7 @@ extern int yydebug;
     INTEGER_CONST = 276,
     STRING = 277,
     CHAR_CONST = 278,
-    IFSIMPLE = 279,
-    PARAM_VOID = 280,
-    PARAM_NOT_VOID = 281
+    IFSIMPLE = 279
   };
 #endif
 
@@ -79,14 +77,15 @@ union YYSTYPE
 {
 #line 16 "subc.y" /* yacc.c:1909  */
 
-	int		intVal;
-	char		*stringVal;
-	struct id	*idPtr;
-	struct decl	*declPtr;
-	struct ste	*stePtr;
-	struct node 	*nodePtr;
+        int		intVal;
+        char		*stringVal;
+        struct id	*idPtr;
+        struct decl	*declPtr;
+        struct ste	*stePtr;
+        struct node 	*nodePtr;
+    
 
-#line 90 "subc.tab.h" /* yacc.c:1909  */
+#line 89 "subc.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
