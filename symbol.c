@@ -208,12 +208,31 @@ void setSteScope(){
 	//printf("ssTop :%p\n", ssTop);
 }
 
-void pushSteList(struct ste* steList){
+int pushSteList(struct ste* steList){
 	struct ste* curSte = steList;
+    int errorNum=SUCCESS;
 	while(curSte){
-		declare(curSte->name, curSte->decl);
+		errorNum = declare(curSte->name, curSte->decl);
+        if(errorNum != SUCCESS){
+            return errorNum;
+        }
 		curSte = curSte->prev;
 	}
+    return SUCCESS;
+}
+
+struct ste* makeSte(struct id* namePtr, struct decl* declPtr) {
+    struct ste* stePtr = (struct ste*) malloc(sizeof(struct ste));
+    stePtr->name = namePtr;
+    stePtr->decl = declPtr;
+    return stePtr;
+}
+
+void removeTopSte(){
+    //1. remove from symbol table
+    symbolTableHead = symbolTableHead->prev;
+    //2. remove from scope stack.
+    ssTop->data = symbolTableHead;
 }
 
 //Make Var decl.
