@@ -50,7 +50,7 @@
 #define NOT_ARRAY		22	
 #define NOT_PTR			23	
 #define NOT_STRUCT		24	
-
+#define NOT_INT_CHAR    25
 
 /* structure for ID */
 struct id {

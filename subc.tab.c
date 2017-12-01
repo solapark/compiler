@@ -475,8 +475,8 @@ static const yytype_uint16 yyrline[] =
      433,   442,   446,   450,   454,   458,   462,   466,   472,   477,
      482,   488,   493,   500,   507,   512,   519,   526,   531,   538,
      543,   548,   563,   578,   596,   600,   603,   609,   615,   624,
-     629,   644,   648,   652,   656,   660,   664,   668,   672,   676,
-     680,   684,   688,   694,   698
+     629,   644,   648,   663,   681,   696,   711,   715,   719,   723,
+     727,   731,   735,   741,   745
 };
 #endif
 
@@ -2215,108 +2215,155 @@ yyreduce:
 #line 649 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary INCOP");
+    if((yyvsp[-1].declPtr) != NULL){
+        int errNum = checkIsIntOrChar((yyvsp[-1].declPtr)->type);
+        if(errNum == SUCCESS){
+            (yyval.declPtr) = (yyvsp[-1].declPtr);
+        }else{
+            semErr(errNum);
+            (yyval.declPtr) = NULL;
+        }
+    }else{
+        (yyval.declPtr) = NULL;
+    }
 }
-#line 2220 "subc.tab.c" /* yacc.c:1646  */
+#line 2231 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 653 "subc.y" /* yacc.c:1646  */
+#line 664 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary DECOP");
+
+    if((yyvsp[-1].declPtr) != NULL){
+        int errNum = checkIsIntOrChar((yyvsp[-1].declPtr)->type);
+        if(errNum == SUCCESS){
+            (yyval.declPtr) = (yyvsp[-1].declPtr);
+        }else{
+            semErr(errNum);
+            (yyval.declPtr) = NULL;
+        }
+    }else{
+        (yyval.declPtr) = NULL;
+    }
+
+
 }
-#line 2228 "subc.tab.c" /* yacc.c:1646  */
+#line 2253 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 657 "subc.y" /* yacc.c:1646  */
+#line 682 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->INCOP unary ");
+    if((yyvsp[0].declPtr) != NULL){
+        int errNum = checkIsIntOrChar((yyvsp[0].declPtr)->type);
+        if(errNum == SUCCESS){
+            (yyval.declPtr) = (yyvsp[0].declPtr);
+        }else{
+            semErr(errNum);
+            (yyval.declPtr) = NULL;
+        }
+    }else{
+        (yyval.declPtr) = NULL;
+    }
 }
-#line 2236 "subc.tab.c" /* yacc.c:1646  */
+#line 2272 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 661 "subc.y" /* yacc.c:1646  */
+#line 697 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->DECOP unary ");
+    if((yyvsp[0].declPtr) != NULL){
+        int errNum = checkIsIntOrChar((yyvsp[0].declPtr)->type);
+        if(errNum == SUCCESS){
+            (yyval.declPtr) = (yyvsp[0].declPtr);
+        }else{
+            semErr(errNum);
+            (yyval.declPtr) = NULL;
+        }
+    }else{
+        (yyval.declPtr) = NULL;
+    }
 }
-#line 2244 "subc.tab.c" /* yacc.c:1646  */
+#line 2291 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 665 "subc.y" /* yacc.c:1646  */
+#line 712 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->'&' unary");
 }
-#line 2252 "subc.tab.c" /* yacc.c:1646  */
+#line 2299 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 669 "subc.y" /* yacc.c:1646  */
+#line 716 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->'*' unary");
 }
-#line 2260 "subc.tab.c" /* yacc.c:1646  */
+#line 2307 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 673 "subc.y" /* yacc.c:1646  */
+#line 720 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '[' expr ']'");
 }
-#line 2268 "subc.tab.c" /* yacc.c:1646  */
+#line 2315 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 677 "subc.y" /* yacc.c:1646  */
+#line 724 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '.' ID");
 }
-#line 2276 "subc.tab.c" /* yacc.c:1646  */
+#line 2323 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 681 "subc.y" /* yacc.c:1646  */
+#line 728 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary STRUCTOP ID");
 }
-#line 2284 "subc.tab.c" /* yacc.c:1646  */
+#line 2331 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 685 "subc.y" /* yacc.c:1646  */
+#line 732 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' args ')'");
 }
-#line 2292 "subc.tab.c" /* yacc.c:1646  */
+#line 2339 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 689 "subc.y" /* yacc.c:1646  */
+#line 736 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' ')'");
 }
-#line 2300 "subc.tab.c" /* yacc.c:1646  */
+#line 2347 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 695 "subc.y" /* yacc.c:1646  */
+#line 742 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->expr");
 }
-#line 2308 "subc.tab.c" /* yacc.c:1646  */
+#line 2355 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 699 "subc.y" /* yacc.c:1646  */
+#line 746 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->args ',' expr");
 }
-#line 2316 "subc.tab.c" /* yacc.c:1646  */
+#line 2363 "subc.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2320 "subc.tab.c" /* yacc.c:1646  */
+#line 2367 "subc.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2544,7 +2591,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 703 "subc.y" /* yacc.c:1906  */
+#line 750 "subc.y" /* yacc.c:1906  */
 
 
 /*  Additional C Codes 

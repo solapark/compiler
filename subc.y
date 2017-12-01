@@ -648,18 +648,65 @@ unary:		'(' expr ')'	{
 | unary INCOP 
 {
     REDUCE("unary->unary INCOP");
+    if($1 != NULL){
+        int errNum = checkIsIntOrChar($1->type);
+        if(errNum == SUCCESS){
+            $$ = $1;
+        }else{
+            semErr(errNum);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | unary DECOP	
 {
     REDUCE("unary->unary DECOP");
+
+    if($1 != NULL){
+        int errNum = checkIsIntOrChar($1->type);
+        if(errNum == SUCCESS){
+            $$ = $1;
+        }else{
+            semErr(errNum);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+
+
 }	
 | INCOP unary 
 {
     REDUCE("unary->INCOP unary ");
+    if($2 != NULL){
+        int errNum = checkIsIntOrChar($2->type);
+        if(errNum == SUCCESS){
+            $$ = $2;
+        }else{
+            semErr(errNum);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | DECOP unary 
 {
     REDUCE("unary->DECOP unary ");
+    if($2 != NULL){
+        int errNum = checkIsIntOrChar($2->type);
+        if(errNum == SUCCESS){
+            $$ = $2;
+        }else{
+            semErr(errNum);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | '&' unary %prec '!'	
 {

@@ -373,6 +373,21 @@ int checkIsInt(struct decl* declPtr){
 	}
 	return SUCCESS;
 }
+
+int checkIsChar(struct decl* declPtr){
+	if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->typeClass != DECL_TYPE_CHAR){
+		return NOT_CHAR;	
+	}
+	return SUCCESS;
+}
+
+int checkIsIntOrChar(struct decl* declPtr){
+    if(checkIsInt(declPtr) != SUCCESS && checkIsChar(declPtr) != SUCCESS){
+            return NOT_INT_CHAR;
+    }
+    return SUCCESS;
+}
+
 int checkIsArray(struct decl* declPtr){
 	if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_ARRAY){
 		return NOT_ARRAY;	
@@ -673,7 +688,10 @@ void semErr(int errNum){
 		case NOT_STRUCT:
 			printf("NOT_STRUCT\n");
 			break;                 
-		defualt :
+		case NOT_INT_CHAR:
+			printf("NOT_INT_CHAR\n");
+			break;
+        defualt :
 			printf("not success, but no matching error num\n");
 		}
 	}

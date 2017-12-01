@@ -8,6 +8,9 @@ int main() {
     int b;  /* error */
     int c;
     char d;
+    int* e;
+
+	e++;
 
     a = b;
     a = e;	/* error */
