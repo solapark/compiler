@@ -101,9 +101,16 @@ ext_def:	type_specifier pointers ID ';'
     REDUCE("ext_def->type_specifier ';' ");
     //do nothing
 }
-| func_decl '{' local_defs stmt_list '}' 
+| func_decl '{' 
 {
     REDUCE("ext_def->func_decl '{' local_defs stmt_list '}'");
+    pushScope();
+    pushSteList($1->formals);
+} 
+local_defs stmt_list '}' 
+{
+    popScope();
+    
 }
 ;
 
@@ -182,7 +189,8 @@ func_decl:	type_specifier pointers ID '(' ')'
         struct ste *formals = popScope();
         //6. save return type.
         funcDecl->returnType = formals->decl;
-        $$ = formals;
+        funcDecl->formals = formals;
+        $$ = funcDecl;
     }else{	
         semErr(errNum);
         $$ = NULL;	
@@ -209,7 +217,8 @@ func_decl:	type_specifier pointers ID '(' ')'
         struct ste *formals = popScope();
         //6. save return type.
         funcDecl->returnType = formals->decl;
-        $$ = formals;
+        funcDecl->formals = formals;
+        $$ = funcDecl;
     }else{	
         semErr(errNum);
         $$ = NULL;	
@@ -246,8 +255,8 @@ func_decl:	type_specifier pointers ID '(' ')'
             }else{
                 //6. save return type.
                 funcDecl->returnType = formals->decl;
-                funcDecl->formals = formals->prev;
-                $$ = formals;	
+                funcDecl->formals = formals;
+                $$ = funcDecl;	
             }
         }else{	
             semErr(errNum);
@@ -409,10 +418,17 @@ stmt:		expr ';'
 | RETURN ';'	
 {
     REDUCE("stmt->RETURN ';'");
+    int errNum = checkSameType(findDeclByStr("returnId"), findDeclByStr("void"));
+    semErr(errNum);
 }
 | RETURN expr ';'	
 {
     REDUCE("stmt->RETURN expr ';'");
+    //struct decl* declExpr = (struct decl*) malloc(sizeof(struct decl));
+    //declExpr->type = $2;
+    //int errNum = checkSameType(findDeclByStr("returnId"), declExpr);
+    int errNum = checkSameType(findDeclByStr("returnId"), $2);
+    semErr(errNum);
 }
 | ';'	
 {
@@ -463,52 +479,62 @@ const_expr:	expr
 expr:		unary '=' expr	
 {
     REDUCE("expr->unary '=' expr");
+    $$ = $1->type;
 }
 | or_expr	
 {
     REDUCE("expr->or_expr");
+    $$ = $1;
 }
 ;
 
 or_expr:	or_list		
 {
     REDUCE("or_expr->or_list");
+    $$ = $1;
 }
 ;
 
 or_list:	or_list LOGICAL_OR and_expr	
 {
     REDUCE("or_list->or_list LOGICAL_OR and_expr");
+    $$ = findDeclByStr("int");
 }
 | and_expr	
 {
     REDUCE("or_list->and_expr");
+    $$ = $1;
 }
 ;
 
 and_expr:	and_list	
 {
     REDUCE("and_expr->and_list");
+    $$ = $1;
 }
 ;
 
 and_list:	and_list LOGICAL_AND binary	
 {
     REDUCE("and_list->and_list LOGICAL_AND binary");
+    $$ = findDeclByStr("int");
 }
 | binary	
 {
     REDUCE("and_list->binary");
+    $$ = $1;
 }
 ;
 
 binary:		binary RELOP binary	
 {
     REDUCE("binary->binary RELOP binary");
+    $$ = findDeclByStr("int");
 }
 | binary EQUOP binary	
 {
     REDUCE("binary->binary EQUOP binary");
+    $$ = findDeclByStr("int");
 }
 | binary '+' binary	
 {
@@ -537,19 +563,23 @@ binary:		binary RELOP binary
 ;
 
 unary:		'(' expr ')'	{
-                REDUCE("unary->'(' expr ')'");
+    REDUCE("unary->'(' expr ')'");
 
-            }
+}
 | '(' unary ')'	{
     REDUCE("unary->'(' unary ')'");
 }
 | INTEGER_CONST	{
     REDUCE("unary->INTEGER_CONST");
-    $$ = makeConstDecl(NULL, $1);	
+    struct decl* constDecl = makeConstDecl(NULL, $1);
+    constDecl->type = findDeclByStr("int");
+    $$ = constDecl;
 }
 | CHAR_CONST	{
     REDUCE("unary->CHAR_CONST");
-    $$ = makeCharConstDecl($1);	
+    struct decl* constDecl = makeCharConstDecl($1);
+    constDecl->type = findDeclByStr("char");
+    $$ = constDecl;
 }
 | ID	{
     //printf("unary->ID %s \n", $1);

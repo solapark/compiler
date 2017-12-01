@@ -568,8 +568,19 @@ struct decl* findDeclByStr(char* name){
 	return curSte->decl;
 }
 
+int checkSameType(struct decl* decl1, struct decl* decl2){
+    printf("decl1->typeClass = %d, decl2->typeClass = %d\n", decl1->typeClass, decl2->typeClass);
+    if(decl1== decl2){
+        return SUCCESS;
+    }else{
+        return WRONG_RETURN_VALUE;
+    }
+}
+
+
 void semErr(int errNum){
 	if(errNum == SUCCESS ){
+        printf("SUCCESS\n");
 		return;
 	}else{
 		printf("++++++++++++++++++++++++%d: error: ", read_line());

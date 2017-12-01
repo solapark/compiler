@@ -7,7 +7,7 @@ int func1(int a, char b) {
 }
 
 char func2(void x) {
-	return 'a';
+	return 1;
 }
 
 void func3(int *a, int b) {
