@@ -104,13 +104,22 @@ ext_def:	type_specifier pointers ID ';'
 | func_decl '{' 
 {
     REDUCE("ext_def->func_decl '{' local_defs stmt_list '}'");
-    pushScope();
-    pushSteList($1->formals);
+    if($1 != NULL){
+        //1. pushScope && insert formals to symbol table.
+        pushScope();
+        pushSteList($1->formals);
+        $1 -> formals = $1 -> formals->prev;
+    }
 } 
 local_defs stmt_list '}' 
 {
-    popScope();
-    
+    if($1 != NULL){
+        //2. pop scope to remove funcion's local vars.
+        popScope();
+        //3. make constReturnDecl for function call. 
+        struct decl* declRetType=$1->returnType;
+        $1->returnType = makeConstDecl(declRetType, 0);
+    } 
 }
 ;
 
@@ -572,13 +581,13 @@ unary:		'(' expr ')'	{
 | INTEGER_CONST	{
     REDUCE("unary->INTEGER_CONST");
     struct decl* constDecl = makeConstDecl(NULL, $1);
-    constDecl->type = findDeclByStr("int");
+    //constDecl->type = findDeclByStr("int");
     $$ = constDecl;
 }
 | CHAR_CONST	{
     REDUCE("unary->CHAR_CONST");
     struct decl* constDecl = makeCharConstDecl($1);
-    constDecl->type = findDeclByStr("char");
+    //constDecl->type = findDeclByStr("char");
     $$ = constDecl;
 }
 | ID	{

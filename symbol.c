@@ -249,8 +249,8 @@ struct decl* makeCharConstDecl(char* str){
 	//1. Make const decl.
 	struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
 	declPtr->declClass = DECL_CONST;
-
 	declPtr->charValue = str;
+    declPtr->type = findDeclByStr("char");
  
 	return declPtr;
 }
@@ -267,6 +267,7 @@ struct decl* makeConstDecl(struct decl* arrDecl, int intValue){
 	//2-2. else assign intValue to value.
 	else{
 		declPtr->value = intValue;
+        declPtr->type = findDeclByStr("int");
 	}
  
 	return declPtr;

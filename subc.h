@@ -179,5 +179,7 @@ struct node* getTail(struct node** head);
 struct ste* reverseSte(struct ste* steList);
 
 struct ste* recurReverSte(struct ste* steList);
+
+struct decl* findDeclByStr(char* name);
 #endif
 
