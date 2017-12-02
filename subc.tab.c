@@ -476,7 +476,7 @@ static const yytype_uint16 yyrline[] =
      482,   488,   493,   500,   507,   512,   519,   526,   531,   538,
      543,   548,   563,   578,   596,   600,   603,   609,   615,   624,
      629,   644,   648,   663,   681,   696,   711,   715,   719,   723,
-     727,   731,   735,   741,   745
+     727,   731,   747,   764,   774
 };
 #endif
 
@@ -2334,36 +2334,72 @@ yyreduce:
 #line 732 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' args ')'");
+    if((yyvsp[-3].declPtr) != NULL && (yyvsp[-1].nodePtr) != NULL){
+        checkIsFunc((yyvsp[-3].declPtr));
+        struct decl* returnConstDecl = checkFunctionCall((yyvsp[-3].declPtr), (yyvsp[-1].nodePtr));
+        if(returnConstDecl){
+            (yyval.declPtr)=returnConstDecl;
+        }else{
+            semErr(NOT_FORMAL_ARGS);
+        }
+    }else{
+        (yyval.declPtr) =NULL;
+    }
+    resetArgList();
 }
-#line 2339 "subc.tab.c" /* yacc.c:1646  */
+#line 2351 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 736 "subc.y" /* yacc.c:1646  */
+#line 748 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' ')'");
+    if((yyvsp[-2].declPtr) != NULL ){
+        checkIsFunc((yyvsp[-2].declPtr));
+        struct decl* returnConstDecl = checkFunctionCall((yyvsp[-2].declPtr), NULL);
+        if(returnConstDecl){
+            (yyval.declPtr)=returnConstDecl;
+        }else{
+            semErr(NOT_FORMAL_ARGS);
+        }
+    }else{
+        (yyval.declPtr) =NULL;
+    }
 }
-#line 2347 "subc.tab.c" /* yacc.c:1646  */
+#line 2370 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 742 "subc.y" /* yacc.c:1646  */
+#line 765 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->expr");
+    if((yyvsp[0].declPtr) != NULL){
+        (yyval.nodePtr) =  addArg((yyvsp[0].declPtr));
+    }else{
+        printf("expr = NULL\n");
+        (yyval.nodePtr) = NULL;
+    }
 }
-#line 2355 "subc.tab.c" /* yacc.c:1646  */
+#line 2384 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 746 "subc.y" /* yacc.c:1646  */
+#line 775 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->args ',' expr");
+    if((yyvsp[-2].nodePtr) != NULL && (yyvsp[0].declPtr) != NULL){
+        (yyval.nodePtr) =  addArg((yyvsp[0].declPtr));
+    }else{
+        printf("expr = NULL\n");
+        (yyval.nodePtr) = NULL;
+    }
+
 }
-#line 2363 "subc.tab.c" /* yacc.c:1646  */
+#line 2399 "subc.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2367 "subc.tab.c" /* yacc.c:1646  */
+#line 2403 "subc.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2591,7 +2627,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 750 "subc.y" /* yacc.c:1906  */
+#line 786 "subc.y" /* yacc.c:1906  */
 
 
 /*  Additional C Codes 

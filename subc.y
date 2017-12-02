@@ -731,20 +731,56 @@ unary:		'(' expr ')'	{
 | unary '(' args ')' 
 {
     REDUCE("unary->unary '(' args ')'");
+    if($1 != NULL && $3 != NULL){
+        checkIsFunc($1);
+        struct decl* returnConstDecl = checkFunctionCall($1, $3);
+        if(returnConstDecl){
+            $$=returnConstDecl;
+        }else{
+            semErr(NOT_FORMAL_ARGS);
+        }
+    }else{
+        $$ =NULL;
+    }
+    resetArgList();
 }//	<= The type of unary is a function.
 | unary '(' ')'	
 {
     REDUCE("unary->unary '(' ')'");
+    if($1 != NULL ){
+        checkIsFunc($1);
+        struct decl* returnConstDecl = checkFunctionCall($1, NULL);
+        if(returnConstDecl){
+            $$=returnConstDecl;
+        }else{
+            semErr(NOT_FORMAL_ARGS);
+        }
+    }else{
+        $$ =NULL;
+    }
 }
 ;
 
 args:		expr	
 {
     REDUCE("args->expr");
+    if($1 != NULL){
+        $$ =  addArg($1);
+    }else{
+        printf("expr = NULL\n");
+        $$ = NULL;
+    }
 }
 | args ',' expr		
 {
     REDUCE("args->args ',' expr");
+    if($1 != NULL && $3 != NULL){
+        $$ =  addArg($3);
+    }else{
+        printf("expr = NULL\n");
+        $$ = NULL;
+    }
+
 }
 ;
 %%

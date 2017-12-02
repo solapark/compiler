@@ -9,8 +9,9 @@ int main() {
     int c;
     char d;
     int* e;
-
+	int f[10];
 	e++;
+	++f;
 
     a = b;
     a = e;	/* error */
