@@ -30,7 +30,7 @@
 #define NOT_SAME_TYPE		2
 #define LHS_NOT_VAR		3
 #define RHS_NOT_VAR_CONST	4
-#define NOT_STRUC_FIELD		6	 
+#define NOT_STRUCT_FIELD		6	 
 #define INCOMPLETE_STRUCT	7
 #define WRONG_RETURN_VALUE	8
 #define MULTIPLE_RETURN_TYPE	9
@@ -108,7 +108,7 @@ struct ste* popScope();
 
 void changeSSTopPnting(struct ste* newSte);
 
-struct ste* lookupSymbol(struct id* name);
+struct ste* lookupSymbol(struct ste* head, struct id* name);
 
 int declare(struct id* name, struct decl* type);
 

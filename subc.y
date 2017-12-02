@@ -723,6 +723,22 @@ unary:		'(' expr ')'	{
 | unary '.' ID	
 {
     REDUCE("unary->unary '.' ID");
+    if($1 != NULL && $3 != NULL ){
+        if(checkIsStruct($1->type) == SUCCESS){
+            struct decl* fieldPtr = structAccess($1, $3);
+            if(fieldPtr == SUCCESS){
+                $$ = fieldPtr;
+            }else{
+                semErr(NOT_STRUCT_FIELD);
+                $$ = NULL;
+            }
+        }else{
+            semErr(NOT_STRUCT);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }//	<= The type of unary is a struct.
 | unary STRUCTOP ID	
 {
@@ -732,12 +748,16 @@ unary:		'(' expr ')'	{
 {
     REDUCE("unary->unary '(' args ')'");
     if($1 != NULL && $3 != NULL){
-        checkIsFunc($1);
-        struct decl* returnConstDecl = checkFunctionCall($1, $3);
-        if(returnConstDecl){
-            $$=returnConstDecl;
+        if(checkIsFunc($1) == SUCCESS){
+            struct decl* returnConstDecl = checkFunctionCall($1, $3);
+            if(returnConstDecl){
+                $$=returnConstDecl;
+            }else{
+                semErr(NOT_FORMAL_ARGS);
+            } 
         }else{
-            semErr(NOT_FORMAL_ARGS);
+            semErr(NOT_FUNC);
+            $$ = NULL;
         }
     }else{
         $$ =NULL;
@@ -748,13 +768,19 @@ unary:		'(' expr ')'	{
 {
     REDUCE("unary->unary '(' ')'");
     if($1 != NULL ){
-        checkIsFunc($1);
-        struct decl* returnConstDecl = checkFunctionCall($1, NULL);
-        if(returnConstDecl){
-            $$=returnConstDecl;
+        if(checkIsFunc($1) == SUCCESS){
+            checkIsFunc($1);
+            struct decl* returnConstDecl = checkFunctionCall($1, NULL);
+            if(returnConstDecl){
+                $$=returnConstDecl;
+            }else{
+                semErr(NOT_FORMAL_ARGS);
+            }
         }else{
-            semErr(NOT_FORMAL_ARGS);
+            semErr(NOT_FUNC);
+            $$ = NULL;
         }
+
     }else{
         $$ =NULL;
     }

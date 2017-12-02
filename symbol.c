@@ -91,9 +91,9 @@ void changeSSTopPnting(struct ste* newSte){
     ssTop->data = newSte;
 }
 
-struct ste* lookupSymbol(struct id* name){
+struct ste* lookupSymbol(struct ste* head, struct id* name){
     //1. find symbol in symbol table.
-    struct ste* curSte = symbolTableHead;
+    struct ste* curSte = head;
     if(curSte != NULL){
         while(curSte->prev != NULL){
             if(curSte->name == name){
@@ -428,10 +428,10 @@ void printSymbolTable(struct ste* head){
         leng = curSte->name->leng;
         printf("%.*s\t\t%d\t%d", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
         if(curSte->decl->type){
-           printf("%d\t",curSte->decl->type->typeClass);
+            printf("%d\t",curSte->decl->type->typeClass);
         }
         printf("\n");
- 
+
 
         printf("******************\n\n");
     }
@@ -458,7 +458,7 @@ void printArgList(struct node **head){
             printf("%d\t",decl->type->typeClass);
         }
         printf("\n");
- 
+
     }
     printf("******************\n\n");
 }
@@ -597,7 +597,7 @@ struct ste* recurReverSte(struct ste* steList){
 }
 
 struct decl* findDecl(struct id* name){
-    struct ste* curSte = lookupSymbol(name);
+    struct ste* curSte = lookupSymbol(symbolTableHead, name);
     if(curSte == NULL){
         //printf("thers no decl\n");
         return NULL;	
@@ -606,7 +606,7 @@ struct decl* findDecl(struct id* name){
 }
 struct decl* findDeclByStr(char* name){
     struct id* curId = enter(0, name, strlen(name));
-    struct ste* curSte = lookupSymbol(curId);
+    struct ste* curSte = lookupSymbol(symbolTableHead, curId);
     if(curSte == NULL){
         printf("thers no decl\n");
         return NULL;	
@@ -663,6 +663,11 @@ struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){
     }else{
         return NULL;
     }
+}
+
+struct decl* structAccess(struct decl *structPtr, struct id *fieldId){
+    struct decl *typePtr = structPtr -> type;
+    return lookupSymbol(typePtr->fieldList, fieldId);
 }
 
 struct decl* checkFunctionCall(struct decl* func, struct node* args){
@@ -735,8 +740,8 @@ void semErr(int errNum){
             case RHS_NOT_VAR_CONST:       
                 printf("RHS_NOT_VAR_CONST\n");
                 break;                 
-            case NOT_STRUC_FIELD:         
-                printf("NOT_STRUC_FIELD\n");
+            case NOT_STRUCT_FIELD:         
+                printf("NOT_STRUCT_FIELD\n");
                 break;                 
             case INCOMPLETE_STRUCT:       
                 printf("INCOMPLETE_STRUCT\n");
