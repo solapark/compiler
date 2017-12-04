@@ -305,7 +305,7 @@ struct decl* makePtrDecl(struct decl* pointingType){
 
     struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
     declPtr->declClass = DECL_TYPE;
-    declPtr->type = pointingType;
+    declPtr->ptrTo = pointingType;
     declPtr->typeClass = DECL_TYPE_PTR;
     return declPtr; 
 }
@@ -397,6 +397,8 @@ int checkIsArray(struct decl* declPtr){
 }
 
 int checkIsPtr(struct decl* declPtr){
+    printf("checkISPTR\n");
+    printf("declPtr->declClass = %d, declPtr->typeClass = %d\n", declPtr->declClass, declPtr->typeClass);
     if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_PTR){
         return NOT_PTR;	
     }
@@ -404,6 +406,7 @@ int checkIsPtr(struct decl* declPtr){
 }
 
 int checkIsStruct(struct decl* declPtr){
+    //printf("declPtr-> declclass = %d, declptr -> typeClass = %d\n", declPtr->declClass, declPtr->typeClass);
     if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_STRUCT){
         return NOT_STRUCT;	
     }
@@ -665,11 +668,11 @@ struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){
     }
 }
 
-struct decl* structAccess(struct decl *structPtr, struct id *fieldId){
-    struct decl *typePtr = structPtr -> type;
+struct decl* structAccess(struct decl *typePtr, struct id *fieldId){
     printf("field List\n");
     printSymbolTable(typePtr->fieldList);
-    return lookupSymbol(typePtr->fieldList, fieldId);
+    //printf("lookupsymbol : %d", lookupSymbol(typePtr->fieldList, fieldId)->declClass);
+    return lookupSymbol(typePtr->fieldList, fieldId)->decl;
 }
 
 struct decl* checkFunctionCall(struct decl* func, struct node* args){
@@ -804,6 +807,9 @@ void semErr(int errNum){
                 break;
             case NOT_INT_CHAR_PTR:
                 printf("NOT_INT_CHAR_PTR\n");
+                break;
+            case NOT_VAR_CONST:
+                printf("NOT_VAR_CONST\n");
                 break;
 defualt :
                 printf("not success, but no matching error num\n");

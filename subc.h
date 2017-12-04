@@ -52,7 +52,7 @@
 #define NOT_STRUCT		24	
 #define NOT_INT_CHAR    25
 #define NOT_INT_CHAR_PTR    26
-
+#define NOT_VAR_CONST   27
 
 /* structure for ID */
 struct id {

@@ -606,6 +606,11 @@ unary:		'(' expr ')'	{
 }
 | '(' unary ')'	{
     REDUCE("unary->'(' unary ')'");
+    if($2){
+        $$ = $2;
+    }else{
+        $$ = NULL;
+    }
 }
 | INTEGER_CONST	{
     REDUCE("unary->INTEGER_CONST");
@@ -718,10 +723,29 @@ unary:		'(' expr ')'	{
 | '&' unary %prec '!'	
 {
     REDUCE("unary->'&' unary");
+    if($2){
+        if(checkIsVar($2) == SUCCESS || (checkIsConst($2)==SUCCESS&&checkIsArray($2->type)==SUCCESS)){
+            $$ = makeConstDecl(makePtrDecl($2->type), 0);
+        }else{
+            semErr(NOT_VAR_CONST);
+            $$ = makeConstDecl($2->type->ptrTo, 0);
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | '*' unary %prec '!'	
 {
     REDUCE("unary->'*' unary");
+    if($2){
+        int errNum = checkIsPtr($2->type);
+        if(errNum == SUCCESS){
+            $$ = makeConstDecl($2->type->ptrTo, 0);
+        }else{
+            semErr(NOT_PTR);
+            $$ = NULL;
+        }
+    }
 }		//<= The type of unary is pointer.
 | unary '[' expr ']'	
 {
@@ -732,7 +756,7 @@ unary:		'(' expr ')'	{
     REDUCE("unary->unary '.' ID");
     if($1 != NULL && $3 != NULL ){
         if(checkIsStruct($1->type) == SUCCESS){
-            struct decl* fieldPtr = structAccess($1, $3);
+            struct decl* fieldPtr = structAccess($1->type, $3);
             if(fieldPtr){
                 $$ = fieldPtr;
             }else{
@@ -750,6 +774,28 @@ unary:		'(' expr ')'	{
 | unary STRUCTOP ID	
 {
     REDUCE("unary->unary STRUCTOP ID");
+    if($1 != NULL && $3 != NULL ){
+        if(checkIsPtr($1->type) == SUCCESS){
+            if(checkIsStruct($1->type->ptrTo) == SUCCESS){
+                struct decl* fieldPtr = structAccess($1->type->ptrTo, $3);
+                if(fieldPtr){
+                    //printf("fieldPtr->declClass = %d, fieldPtr->type->typeClass = %d\n", fieldPtr->declClass, fieldPtr->type->typeClass);
+                    $$ = fieldPtr;
+                }else{
+                    semErr(NOT_STRUCT_FIELD);
+                    $$ = NULL;
+                }
+            }else{
+                semErr(NOT_STRUCT);
+                $$ = NULL;
+            }
+        }else{
+            semErr(NOT_PTR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }//	<= The type of unary is a struct.
 | unary '(' args ')' 
 {
