@@ -40,8 +40,8 @@ void pushScope(){
     addToHead(&ssTop, newNodePtr);
 
     //print scope stack
-    //printf("*****scope Stack******\n");
-    //printList(&ssTop);	
+    printf("*****scope Stack******\n");
+    printList(&ssTop);	
 
 }
 
@@ -78,8 +78,8 @@ struct ste* popScope(){
     //printSymbolTable(popedTop->data);
 
     //printf scope stack 
-    //printf("*****scope Stack******\n");
-    //printList(&ssTop);
+    printf("*****scope Stack******\n");
+    printList(&ssTop);
 
     return popedTop->data;
 
@@ -667,6 +667,8 @@ struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){
 
 struct decl* structAccess(struct decl *structPtr, struct id *fieldId){
     struct decl *typePtr = structPtr -> type;
+    printf("field List\n");
+    printSymbolTable(typePtr->fieldList);
     return lookupSymbol(typePtr->fieldList, fieldId);
 }
 
@@ -799,6 +801,9 @@ void semErr(int errNum){
                 break;                 
             case NOT_INT_CHAR:
                 printf("NOT_INT_CHAR\n");
+                break;
+            case NOT_INT_CHAR_PTR:
+                printf("NOT_INT_CHAR_PTR\n");
                 break;
 defualt :
                 printf("not success, but no matching error num\n");

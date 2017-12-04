@@ -148,13 +148,20 @@ type_specifier:	TYPE
 
 struct_specifier: STRUCT ID '{' 
 {
+    REDUCE("struct_specifier->STRUCT ID '{' def_list '}'");
     pushScope();
 }
 def_list '}'  
 {
-    REDUCE("struct_specifier->STRUCT ID '{' def_list '}'");
     struct ste *fields = popScope();
-    declare($2, ($$ = makeStructDecl(fields)));      
+    struct decl *curDecl = findDecl($2);
+    if(curDecl==NULL){
+        declare($2, ($$ = makeStructDecl(fields)));      
+        removeTopSte();
+    }else{
+        semErr(REDECL);
+        $$ = NULL;
+    }
 }
 | STRUCT ID	
 {
@@ -168,7 +175,7 @@ def_list '}'
         //2. check is struct.
         int err = checkIsStruct(curDecl); 
         if(err != SUCCESS){
-            semErr(err);
+            semErr(NOT_STRUCT);
             $$ = NULL;
         }else{
             $$ = curDecl;
@@ -726,7 +733,7 @@ unary:		'(' expr ')'	{
     if($1 != NULL && $3 != NULL ){
         if(checkIsStruct($1->type) == SUCCESS){
             struct decl* fieldPtr = structAccess($1, $3);
-            if(fieldPtr == SUCCESS){
+            if(fieldPtr){
                 $$ = fieldPtr;
             }else{
                 semErr(NOT_STRUCT_FIELD);
