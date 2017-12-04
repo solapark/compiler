@@ -495,62 +495,123 @@ const_expr:	expr
 expr:		unary '=' expr	
 {
     REDUCE("expr->unary '=' expr");
-    $$ = $1->type;
+    if($1 && $3){
+        if(checkIsVar($1) == SUCCESS){
+            if(checkCompatible($1->type, $3) == SUCCESS){
+                $$ = $1->type;
+            }else{
+                semErr(LHS_RHS_NOT_SAME_TYPE);
+                $$ = NULL;
+            }
+        }else{
+            semErr(LHS_NOT_VAR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | or_expr	
 {
     REDUCE("expr->or_expr");
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
 or_expr:	or_list		
 {
     REDUCE("or_expr->or_list");
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
 or_list:	or_list LOGICAL_OR and_expr	
 {
     REDUCE("or_list->or_list LOGICAL_OR and_expr");
-    $$ = findDeclByStr("int");
+    if($1 && $3){
+        $$ = findDeclByStr("int");
+    }else{
+        $$ = NULL;
+    }
 }
 | and_expr	
 {
     REDUCE("or_list->and_expr");
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
 and_expr:	and_list	
 {
     REDUCE("and_expr->and_list");
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
 and_list:	and_list LOGICAL_AND binary	
 {
     REDUCE("and_list->and_list LOGICAL_AND binary");
-    $$ = findDeclByStr("int");
+    if($1 && $3){
+        $$ = findDeclByStr("int");
+    }else{
+        $$ = NULL;
+    }   
 }
 | binary	
 {
     REDUCE("and_list->binary");
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
 binary:		binary RELOP binary	
 {
     REDUCE("binary->binary RELOP binary");
-    $$ = findDeclByStr("int");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS)
+                || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | binary EQUOP binary	
 {
     REDUCE("binary->binary EQUOP binary");
-    $$ = findDeclByStr("int");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS) || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS) || (checkIsPtr($1) == SUCCESS && checkIsPtr($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR_PTR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | binary '+' binary	
 {
@@ -601,9 +662,15 @@ binary:		binary RELOP binary
 ;
 
 unary:		'(' expr ')'	{
-    REDUCE("unary->'(' expr ')'");
+                REDUCE("unary->'(' expr ')'");
+                if($2){
+                    $$ = makeConstDecl($2, 0);
+                }else{
+                    semErr(NOT_PTR);
+                    $$ = NULL;
+                }
 
-}
+            }
 | '(' unary ')'	{
     REDUCE("unary->'(' unary ')'");
     if($2){

@@ -27,7 +27,7 @@
 #define SUCCESS			100	
 #define NOT_DECLARED		0
 #define REDECL			1
-#define NOT_SAME_TYPE		2
+#define LHS_RHS_NOT_SAME_TYPE		2
 #define LHS_NOT_VAR		3
 #define RHS_NOT_VAR_CONST	4
 #define NOT_STRUCT_FIELD		6	 

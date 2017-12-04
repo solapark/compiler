@@ -397,8 +397,8 @@ int checkIsArray(struct decl* declPtr){
 }
 
 int checkIsPtr(struct decl* declPtr){
-    printf("checkISPTR\n");
-    printf("declPtr->declClass = %d, declPtr->typeClass = %d\n", declPtr->declClass, declPtr->typeClass);
+    //printf("checkISPTR\n");
+    //printf("declPtr->declClass = %d, declPtr->typeClass = %d\n", declPtr->declClass, declPtr->typeClass);
     if(declPtr == NULL || declPtr->typeClass != DECL_TYPE_PTR){
         return NOT_PTR;	
     }
@@ -736,8 +736,8 @@ void semErr(int errNum){
             case REDECL:                  		
                 printf("REDECL\n");
                 break;                 
-            case NOT_SAME_TYPE:           
-                printf("NOT_SAME_TYPE\n");
+            case LHS_RHS_NOT_SAME_TYPE:           
+                printf("LHS_RHS_NOT_SAME_TYPE\n");
                 break;                 
             case LHS_NOT_VAR:             
                 printf("LHS_NOT_VAR\n");

@@ -16,5 +16,6 @@ int main() {
     a = b;
     a = e;	/* error */
     a = 1;
+    d = 3;
    return 0;
 }
