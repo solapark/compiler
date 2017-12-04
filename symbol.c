@@ -245,6 +245,17 @@ struct decl* makeVarDecl(struct decl* varType){
     return declPtr; 
 }
 
+//Make INT  const declaration struct.
+struct decl* makeIntConstDecl(int integer){
+    //1. Make const decl.
+    struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
+    declPtr->declClass = DECL_CONST;
+    declPtr->value = integer;
+    declPtr->type = findDeclByStr("int");
+
+    return declPtr;
+}
+
 //Make CHAR const declaration struct.
 struct decl* makeCharConstDecl(char* str){
     //1. Make const decl.

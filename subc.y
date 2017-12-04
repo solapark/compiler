@@ -537,7 +537,12 @@ or_list:	or_list LOGICAL_OR and_expr
 {
     REDUCE("or_list->or_list LOGICAL_OR and_expr");
     if($1 && $3){
-        $$ = findDeclByStr("int");
+        if(checkIsInt($1)==SUCCESS && checkIsInt($3)==SUCCESS){
+            $$ = findDeclByStr("int");
+        }else{
+            semErr(NOT_INT);
+            $$ = NULL;
+        }
     }else{
         $$ = NULL;
     }
@@ -568,10 +573,15 @@ and_list:	and_list LOGICAL_AND binary
 {
     REDUCE("and_list->and_list LOGICAL_AND binary");
     if($1 && $3){
-        $$ = findDeclByStr("int");
+        if(checkIsInt($1)==SUCCESS && checkIsInt($3)==SUCCESS){
+            $$ = findDeclByStr("int");
+        }else{
+            semErr(NOT_INT);
+            $$ = NULL;
+        }
     }else{
         $$ = NULL;
-    }   
+    }
 }
 | binary	
 {
@@ -661,16 +671,16 @@ binary:		binary RELOP binary
 }
 ;
 
-unary:		'(' expr ')'	{
-                REDUCE("unary->'(' expr ')'");
-                if($2){
-                    $$ = makeConstDecl($2, 0);
-                }else{
-                    semErr(NOT_PTR);
-                    $$ = NULL;
-                }
+unary:		'(' expr ')'	
+{
+    REDUCE("unary->'(' expr ')'");
+    if($2){
+        $$ = makeConstDecl($2, 0);
+    }else{
+        $$ = NULL;
+    }
 
-            }
+}
 | '(' unary ')'	{
     REDUCE("unary->'(' unary ')'");
     if($2){
@@ -681,7 +691,7 @@ unary:		'(' expr ')'	{
 }
 | INTEGER_CONST	{
     REDUCE("unary->INTEGER_CONST");
-    struct decl* constDecl = makeConstDecl(NULL, $1);
+    struct decl* constDecl = makeIntConstDecl($1);
     //constDecl->type = findDeclByStr("int");
     $$ = constDecl;
 }
@@ -723,6 +733,16 @@ unary:		'(' expr ')'	{
 | '!' unary  
 {
     REDUCE("unary->'!' unary");
+    if($2){
+        if(checkIsInt($2 -> type) == SUCCESS){
+            $$ = $2;
+        }else{
+            semErr(NOT_INT);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 | unary INCOP 
 {
