@@ -5,5 +5,5 @@ int main(){
 
 	(a||1);
 	(b||a);
-	
+	a = NULL;
 }

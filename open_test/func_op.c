@@ -16,6 +16,10 @@ void func3(int *a, int b) {
 	c = a + b;
 }
 
+int func4(void);
+
+int* func5(void);
+
 int main(void) {
 	int a;
 	char b;
@@ -23,24 +27,27 @@ int main(void) {
 	int c;
 	char d;
 
+	int* e;
+	char* f;
+
 	a = 1;
 	b = 'c';
 
 	c = func1(a, b);
-	c = func1(a, b, b); /* error */
-	d = func2(b); /* error */
-	d = func2();
+	c = func1(a, b, b); /* formal args error */
+	d = func2(b); /* formal args error */
+	d = func2();/* LHS != RHS error */
 	
 	func3(&a, c);
-	func3(&b, a); /* error */
+	func3(&b, a); /* formal args error */
 
-	d = func1(a, b); /* error */
-	c = func3(&c, d); /* error */
+	d = func1(a, b); /* LHS != RHS error */
+	c = func3(&c, d); /* formal args error */
+	func3(e, a);
 
+	a = func4();
+
+	e = func5();
+	f = func5();
 	return 0;
 }
-
-int func4(void){
-	return 1;
-}
-

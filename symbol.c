@@ -25,7 +25,7 @@ void initType(){
 }
 
 void pushScope(){
-    printf("\n\n*******PUSH SCOPE*******\n\n");
+   //printf("\n\n*******PUSH SCOPE*******\n\n");
     //1. Make new stack entry.
     struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
@@ -40,13 +40,15 @@ void pushScope(){
     addToHead(&ssTop, newNodePtr);
 
     //print scope stack
-    printf("*****scope Stack******\n");
-    printList(&ssTop);	
+    //printSymbolTable(symbolTableHead);
+    //printf("*****scope Stack******\n");
+    //printList(&ssTop);	
 
 }
 
 struct ste* popScope(){
-    printf("\n\n*******POP SCOPE*******\n\n");
+    //printSymbolTable(symbolTableHead);
+    //printf("\n\n*******POP SCOPE*******\n\n");
     //1. Save poped ste list.
     struct node* popedTop=ssTop;
 
@@ -59,11 +61,11 @@ struct ste* popScope(){
     //4. Set prev of poped tail to NULL.
     struct ste* curStePtr = popedTop->data; 
     struct ste* pointedByFinal = ssTop->data; 
-    if(curStePtr->scope == ssTop){
-        printf("no var in scope.\n");
+    if(curStePtr->scope == ssTop ||curStePtr == pointedByFinal){
+        //printf("no var in scope.\n");
         //printf scope stack 
-        printf("*****scope Stack******\n");
-        printList(&ssTop);	
+        //printf("*****scope Stack******\n");
+        //printList(&ssTop);	
         return NULL;
     }else{	
         while(curStePtr->prev->scope==popedTop){
@@ -78,8 +80,9 @@ struct ste* popScope(){
     //printSymbolTable(popedTop->data);
 
     //printf scope stack 
-    printf("*****scope Stack******\n");
-    printList(&ssTop);
+    //printSymbolTable(symbolTableHead);
+    //printf("*****scope Stack******\n");
+    //printList(&ssTop);
 
     return popedTop->data;
 
@@ -133,7 +136,7 @@ int checkIsRedecl(struct id* name){
     struct ste* curSte = symbolTableHead;
     while(curSte && curSte->scope == ssTop){
         if(curSte->name == name){
-            printf("redecl in scope\n");
+            //printf("redecl in scope\n");
             return 1;
         }
         curSte = curSte -> prev;
@@ -147,7 +150,7 @@ int checkIsRedecl(struct id* name){
         struct ste* curTleSte = curTle -> data; 
         while(curTle != tailTle){//if not tail,
             if(curTleSte -> name == name){
-                printf("redecl in type\n");
+                //printf("redecl in type\n");
                 return 1;
             }
             curTle = curTle->next;
@@ -155,7 +158,7 @@ int checkIsRedecl(struct id* name){
         }
         curTleSte = curTle -> data;
         if(curTleSte->name == name){
-            printf("redecl in type\n");
+            //printf("redecl in type\n");
             return 1;
         }
     } 
@@ -196,7 +199,7 @@ int declare(struct id* name, struct decl* type){
     //printList(&ssTop);
 
     //5. print symbol table 
-    printSymbolTable(symbolTableHead);
+    //printSymbolTable(symbolTableHead);
 
     return SUCCESS;
 }
@@ -230,10 +233,12 @@ struct ste* makeSte(struct id* namePtr, struct decl* declPtr) {
 }
 
 void removeTopSte(){
+    //printf("REMOVE TOP STE\n");
     //1. remove from symbol table
     symbolTableHead = symbolTableHead->prev;
     //2. remove from scope stack.
     ssTop->data = symbolTableHead;
+    //printSymbolTable(symbolTableHead);
 }
 
 //Make Var decl.
@@ -301,13 +306,11 @@ struct decl* makeTypeDecl(int typeClass){
 }
 
 //Make type decl(array)
-struct decl* makeArrDecl(int elementNum, struct decl* elementType){
-
+struct decl* makeArrDecl(struct decl* elementType){
     struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
     declPtr->declClass = DECL_TYPE;
     declPtr->typeClass = DECL_TYPE_ARRAY;
-    declPtr->type = elementType;
-    declPtr->numIndex = elementNum;
+    declPtr->elementVar = makeVarDecl(elementType);
     return declPtr; 
 }
 
@@ -429,20 +432,26 @@ void printSymbolTable(struct ste* head){
     if(curSte != NULL){
         int leng;
         printf("****symbol table****\n"); 
-        printf("name\t\tdecl\ttype\tvarType\n");
+        printf("addr\tname\t\tdecl\ttype\tvarType\tptrTo\n");
         while(curSte->prev != NULL){
             leng = curSte->name->leng;
-            printf("%.*s\t\t%d\t%d\t", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+            printf("%x\t%.*s\t\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
             if(curSte->decl->type){
                 printf("%d\t",curSte->decl->type->typeClass);
+                if(curSte->decl->type->ptrTo){
+                    printf("%d\t",curSte->decl->type->ptrTo->typeClass);
+                }
             }
             printf("\n");
             curSte = curSte->prev;
         }
         leng = curSte->name->leng;
-        printf("%.*s\t\t%d\t%d", leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+        printf("%x\t%.*s\t\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
         if(curSte->decl->type){
             printf("%d\t",curSte->decl->type->typeClass);
+            if(curSte->decl->type->ptrTo){
+                printf("%d\t",curSte->decl->type->ptrTo->typeClass);
+            }
         }
         printf("\n");
 
@@ -463,6 +472,9 @@ void printArgList(struct node **head){
             if(decl->type){
                 printf("%d\t",decl->type->typeClass);
             }
+            if(decl->ptrTo){
+                printf("%d\t",decl->ptrTo->typeClass);
+            }
             printf("\n");
             curNode = curNode->next;
         }
@@ -471,6 +483,10 @@ void printArgList(struct node **head){
         if(decl->type){
             printf("%d\t",decl->type->typeClass);
         }
+        if(decl->ptrTo){
+            printf("%d\t",decl->ptrTo->typeClass);
+        }
+
         printf("\n");
 
     }
@@ -611,6 +627,7 @@ struct ste* recurReverSte(struct ste* steList){
 }
 
 struct decl* findDecl(struct id* name){
+    //printSymbolTable(symbolTableHead);
     struct ste* curSte = lookupSymbol(symbolTableHead, name);
     if(curSte == NULL){
         //printf("thers no decl\n");
@@ -622,7 +639,7 @@ struct decl* findDeclByStr(char* name){
     struct id* curId = enter(0, name, strlen(name));
     struct ste* curSte = lookupSymbol(symbolTableHead, curId);
     if(curSte == NULL){
-        printf("thers no decl\n");
+        //printf("thers no decl\n");
         return NULL;	
     }	
     return curSte->decl;
@@ -644,22 +661,24 @@ int checkCompatible(struct decl* formalType, struct decl* argType){
         //printf("int, char, void, struct\n");
         return SUCCESS;
     }
-    else if(formalType -> typeClass== argType -> typeClass == DECL_TYPE_PTR){//pointer
+    else if(formalType -> typeClass== argType -> typeClass && argType -> typeClass == DECL_TYPE_PTR){//pointer
         if(formalType->ptrTo == argType ->ptrTo ){
             //printf("ptr\n");
             return SUCCESS;
         }
-    }else if(formalType -> typeClass == argType -> typeClass == DECL_TYPE_ARRAY){
+    }else if(formalType -> typeClass == DECL_TYPE_ARRAY&& argType -> typeClass == DECL_TYPE_ARRAY){//array
         if(formalType->elementVar->type == argType->elementVar -> type){
-            if(formalType->numIndex == -1 || formalType->numIndex == argType->numIndex){
-                //printf("arr\n");
                 return SUCCESS;
-            }
         }
+    //}else if(formalType -> typeClass == DECL_TYPE_PTR&& argType -> typeClass == DECL_TYPE_ARRAY){//pointer = array
+    //    if(formalType->ptrTo == argType->elementVar -> type){
+    //        return SUCCESS;
+    //    }
     }else{
         //printf("fail\n");
         return 0;
     }
+    return 0;
 }
 
 
@@ -680,8 +699,8 @@ struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){
 }
 
 struct decl* structAccess(struct decl *typePtr, struct id *fieldId){
-    printf("field List\n");
-    printSymbolTable(typePtr->fieldList);
+    //printf("field List\n");
+    //printSymbolTable(typePtr->fieldList);
     //printf("lookupsymbol : %d", lookupSymbol(typePtr->fieldList, fieldId)->declClass);
     return lookupSymbol(typePtr->fieldList, fieldId)->decl;
 }
@@ -690,8 +709,8 @@ struct decl* checkFunctionCall(struct decl* func, struct node* args){
     struct ste *formals = func->formals;
     struct decl *argDecl;
 
-    printf("formal list");
-    printSymbolTable(formals);
+    //printf("formal list\n");
+    //printSymbolTable(formals);
 
 
     //1. check for type match
@@ -726,7 +745,7 @@ struct node* addArg(struct decl* argDecl){
     struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
     newNodePtr->data = argDecl;
     addToTail(&argListHead, newNodePtr);
-    printArgList(&argListHead);
+    //printArgList(&argListHead);
     return argListHead;
 }
 
@@ -739,7 +758,7 @@ void semErr(int errNum){
         //printf("SUCCESS\n");
         return;
     }else{
-        printf("+++++++++++++++%d: error: ", read_line());
+        printf("%s:%d: error: ", get_file_name(), read_line());
         switch(errNum){
             case NOT_DECLARED :            
                 printf("NOT_DECLARED \n");

@@ -6,26 +6,23 @@ int main(void) {
 	char c[20];
 	char *d;
 
-	a = b;		/* error */
+	a = b;	/* LHS_NOT_VAR error */
 	a[0] = 0;
-	c[5] = 'a';
+	c[5] = 'a';	
 
-	b = &a;		/* error */
+	b = &a;		/* NOT_SAME_TYPE error */
 	b = &a[10];
-	b = &b;		/* error */
-	b = &*(a+5);/* error */
-	b = &(b++);	/* error */
-	b = &*(b++);
+	b = &b;		/* NOT_SAME_TYPE error */
+	b = &*(a+5);/* NOT_INT error */
+	b = &(b++);	/* NOT_INT error */
 
-	d = b;		/* error */
-	d = c;
+	d = b;		/* NOT_SAME_TYPE error */
+	d = c;      /* NOT_SAME_TYPE error*/
 
-	c[1] = a[2]; /* error */
-	d = &(++d); /* error */
-	d = &*(++d);
-
-	if (b < d) { /* error */
-		return -1;
+	c[1] = a[2]; /* NOT_SAME_TYPE error */
+	
+	if (b == d) { 
+		return 'a';
 	}
 
 	return 0;

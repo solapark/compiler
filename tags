@@ -1,0 +1,155 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DECL_CONST	subc.h	16;"	d
+DECL_FUNC	subc.h	17;"	d
+DECL_TYPE	subc.h	18;"	d
+DECL_TYPE_ARRAY	subc.h	22;"	d
+DECL_TYPE_CHAR	subc.h	21;"	d
+DECL_TYPE_INT	subc.h	19;"	d
+DECL_TYPE_PTR	subc.h	23;"	d
+DECL_TYPE_STRUCT	subc.h	24;"	d
+DECL_TYPE_VOID	subc.h	20;"	d
+DECL_VAR	subc.h	15;"	d
+IMCOPATIBLE_COMPARE	subc.h	37;"	d
+INCOMPLETE_STRUCT	subc.h	34;"	d
+LHS_NOT_VAR	subc.h	31;"	d
+LHS_RHS_NOT_SAME_TYPE	subc.h	30;"	d
+MULTIPLE_RETURN_TYPE	subc.h	36;"	d
+NOT_ARRAY	subc.h	50;"	d
+NOT_CHAR	subc.h	49;"	d
+NOT_COMPUTABLE	subc.h	38;"	d
+NOT_CONST	subc.h	44;"	d
+NOT_CONST_VAR	subc.h	40;"	d
+NOT_DECLARED	subc.h	28;"	d
+NOT_FORMAL_ARGS	subc.h	42;"	d
+NOT_FUNC	subc.h	45;"	d
+NOT_INT	subc.h	47;"	d
+NOT_INT_CHAR	subc.h	53;"	d
+NOT_INT_CHAR_PTR	subc.h	54;"	d
+NOT_PROPER_TYPE	subc.h	41;"	d
+NOT_PTR	subc.h	51;"	d
+NOT_STRUCT	subc.h	52;"	d
+NOT_STRUCT_FIELD	subc.h	33;"	d
+NOT_TYPE	subc.h	46;"	d
+NOT_VAR	subc.h	39;"	d
+NOT_VAR_CONST	subc.h	55;"	d
+NOT_VOID	subc.h	48;"	d
+REDECL	subc.h	29;"	d
+RHS_NOT_VAR_CONST	subc.h	32;"	d
+SUCCESS	subc.h	27;"	d
+WRONG_RETURN_VALUE	subc.h	35;"	d
+__SUBC_H__	subc.h	8;"	d
+addArg	symbol.c	/^struct node* addArg(struct decl* argDecl){$/;"	f
+addToHead	symbol.c	/^void addToHead(struct node **head, struct node *newNode) {$/;"	f
+addToTail	symbol.c	/^void addToTail(struct node **head, struct node *newNode) {$/;"	f
+and_expr	subc.y	/^and_expr:	and_list	$/;"	l
+and_list	subc.y	/^and_list:	and_list LOGICAL_AND binary	$/;"	l
+argListHead	symbol.c	/^static struct node *argListHead;$/;"	v	typeref:struct:node	file:
+args	subc.y	/^args:		expr	$/;"	l
+binary	subc.y	/^binary:		binary RELOP binary	$/;"	l
+changeSSTopPnting	symbol.c	/^void changeSSTopPnting(struct ste* newSte){$/;"	f
+charValue	subc.h	/^	char		*charValue;$/;"	m	struct:decl
+checkCompatible	symbol.c	/^int checkCompatible(struct decl* formalType, struct decl* argType){$/;"	f
+checkFunctionCall	symbol.c	/^struct decl* checkFunctionCall(struct decl* func, struct node* args){$/;"	f
+checkIsArray	symbol.c	/^int checkIsArray(struct decl* declPtr){$/;"	f
+checkIsChar	symbol.c	/^int checkIsChar(struct decl* declPtr){$/;"	f
+checkIsConst	symbol.c	/^int checkIsConst(struct decl* declPtr){$/;"	f
+checkIsFunc	symbol.c	/^int checkIsFunc(struct decl* declPtr){$/;"	f
+checkIsInt	symbol.c	/^int checkIsInt(struct decl* declPtr){$/;"	f
+checkIsIntOrChar	symbol.c	/^int checkIsIntOrChar(struct decl* declPtr){$/;"	f
+checkIsListEmpty	symbol.c	/^int checkIsListEmpty (struct node **head){$/;"	f
+checkIsPtr	symbol.c	/^int checkIsPtr(struct decl* declPtr){$/;"	f
+checkIsRedecl	symbol.c	/^int checkIsRedecl(struct id* name){$/;"	f
+checkIsStruct	symbol.c	/^int checkIsStruct(struct decl* declPtr){$/;"	f
+checkIsTail	symbol.c	/^int checkIsTail (struct node **head, struct node* targetNode){$/;"	f
+checkIsType	symbol.c	/^int checkIsType(struct decl* declPtr){$/;"	f
+checkIsVar	symbol.c	/^int checkIsVar(struct decl* declPtr){$/;"	f
+checkSameType	symbol.c	/^int checkSameType(struct decl* typeDecl1, struct decl* typeDecl2){$/;"	f
+compound_stmt	subc.y	/^compound_stmt:	'{' $/;"	l
+const_expr	subc.y	/^const_expr:	expr	$/;"	l
+data	subc.h	/^	void		*data;	$/;"	m	struct:node
+decl	subc.h	/^	struct decl	*decl;$/;"	m	struct:ste	typeref:struct:ste::decl
+decl	subc.h	/^struct decl {$/;"	s
+declClass	subc.h	/^	int		declClass;$/;"	m	struct:decl
+declare	symbol.c	/^int declare(struct id* name, struct decl* type){$/;"	f
+def	subc.y	/^def:	type_specifier pointers ID ';'	$/;"	l
+def_list	subc.y	/^def_list:	def_list def	$/;"	l
+elementVar	subc.h	/^	struct decl	*elementVar;$/;"	m	struct:decl	typeref:struct:decl::decl
+expr	subc.y	/^expr:		unary '=' expr	$/;"	l
+expr_e	subc.y	/^expr_e:		expr	$/;"	l
+ext_def	subc.y	/^ext_def:	type_specifier pointers ID ';' $/;"	l
+ext_def_list	subc.y	/^ext_def_list:	ext_def_list ext_def	$/;"	l
+fieldList	subc.h	/^	struct ste	*fieldList;$/;"	m	struct:decl	typeref:struct:decl::ste
+findDecl	symbol.c	/^struct decl* findDecl(struct id* name){$/;"	f
+findDeclByStr	symbol.c	/^struct decl* findDeclByStr(char* name){$/;"	f
+formals	subc.h	/^	struct ste	*formals;$/;"	m	struct:decl	typeref:struct:decl::ste
+func_decl	subc.y	/^func_decl:	type_specifier pointers ID '(' ')'	$/;"	l
+getTail	symbol.c	/^struct node* getTail(struct node** head){$/;"	f
+id	subc.h	/^struct id {$/;"	s
+initType	symbol.c	/^void initType(){$/;"	f
+leng	subc.h	/^      int leng;$/;"	m	struct:id
+lextype	subc.h	/^      int lextype;$/;"	m	struct:id
+local_defs	subc.y	/^local_defs:	def_list	$/;"	l
+lookupSymbol	symbol.c	/^struct ste* lookupSymbol(struct ste* head, struct id* name){$/;"	f
+makeArrDecl	symbol.c	/^struct decl* makeArrDecl(struct decl* elementType){$/;"	f
+makeCharConstDecl	symbol.c	/^struct decl* makeCharConstDecl(char* str){$/;"	f
+makeConstDecl	symbol.c	/^struct decl* makeConstDecl(struct decl* arrDecl, int intValue){$/;"	f
+makeFuncDecl	symbol.c	/^struct decl* makeFuncDecl(){$/;"	f
+makeIntConstDecl	symbol.c	/^struct decl* makeIntConstDecl(int integer){$/;"	f
+makePtrDecl	symbol.c	/^struct decl* makePtrDecl(struct decl* pointingType){$/;"	f
+makeSte	symbol.c	/^struct ste* makeSte(struct id* namePtr, struct decl* declPtr) {$/;"	f
+makeStructDecl	symbol.c	/^struct decl* makeStructDecl(struct ste* fieldList){$/;"	f
+makeTypeDecl	symbol.c	/^struct decl* makeTypeDecl(int typeClass){$/;"	f
+makeVarDecl	symbol.c	/^struct decl* makeVarDecl(struct decl* varType){$/;"	f
+minusType	symbol.c	/^struct decl* minusType(struct decl* typeDecl1, struct decl* typeDecl2){$/;"	f
+name	subc.h	/^	struct id	*name;$/;"	m	struct:ste	typeref:struct:ste::id
+name	subc.h	/^      char *name;$/;"	m	struct:id
+next	subc.h	/^	struct decl	*next;$/;"	m	struct:decl	typeref:struct:decl::decl
+next	subc.h	/^	struct node	*next;$/;"	m	struct:node	typeref:struct:node::node
+node	subc.h	/^struct node {$/;"	s
+numIndex	subc.h	/^	int		numIndex;$/;"	m	struct:decl
+or_expr	subc.y	/^or_expr:	or_list		$/;"	l
+or_list	subc.y	/^or_list:	or_list LOGICAL_OR and_expr	$/;"	l
+param_decl	subc.y	/^param_decl: type_specifier pointers ID	$/;"	l
+param_list	subc.y	/^param_list:	param_decl	$/;"	l
+plusType	symbol.c	/^struct decl* plusType(struct decl* typeDecl1, struct decl* typeDecl2){$/;"	f
+pointers	subc.y	/^pointers: 	'*'	$/;"	l
+popScope	symbol.c	/^struct ste* popScope(){$/;"	f
+prev	subc.h	/^	struct node	*prev;$/;"	m	struct:node	typeref:struct:node::node
+prev	subc.h	/^	struct ste 	*prev;$/;"	m	struct:ste	typeref:struct:ste::ste
+printArgList	symbol.c	/^void printArgList(struct node **head){$/;"	f
+printList	symbol.c	/^void printList(struct node **head){$/;"	f
+printSymbolTable	symbol.c	/^void printSymbolTable(struct ste* head){$/;"	f
+program	subc.y	/^program:	ext_def_list	$/;"	l
+ptrTo	subc.h	/^	struct decl	*ptrTo;$/;"	m	struct:decl	typeref:struct:decl::decl
+pushScope	symbol.c	/^void pushScope(){$/;"	f
+pushSteList	symbol.c	/^int pushSteList(struct ste* steList){$/;"	f
+recurReverSte	symbol.c	/^struct ste* recurReverSte(struct ste* steList){$/;"	f
+removeFromHead	symbol.c	/^void removeFromHead(struct node **head){$/;"	f
+removeTopSte	symbol.c	/^void removeTopSte(){$/;"	f
+resetArgList	symbol.c	/^void resetArgList(){$/;"	f
+resetList	symbol.c	/^void resetList (struct node **head){$/;"	f
+returnType	subc.h	/^	struct decl	*returnType;$/;"	m	struct:decl	typeref:struct:decl::decl
+reverseSte	symbol.c	/^struct ste* reverseSte(struct ste* steList){$/;"	f
+scope	subc.h	/^	struct node 	*scope;$/;"	m	struct:ste	typeref:struct:ste::node
+scope	subc.h	/^	struct ste	**scope;$/;"	m	struct:decl	typeref:struct:decl::ste
+semErr	symbol.c	/^void semErr(int errNum){$/;"	f
+setSteScope	symbol.c	/^void setSteScope(){$/;"	f
+size	subc.h	/^	int		size;$/;"	m	struct:decl
+ssTop	symbol.c	/^static struct node *ssTop;$/;"	v	typeref:struct:node	file:
+ste	subc.h	/^struct ste {$/;"	s
+stmt	subc.y	/^stmt:		expr ';'	$/;"	l
+stmt_list	subc.y	/^stmt_list:	stmt_list stmt$/;"	l
+structAccess	symbol.c	/^struct decl* structAccess(struct decl *typePtr, struct id *fieldId){$/;"	f
+struct_specifier	subc.y	/^struct_specifier: STRUCT ID '{' $/;"	l
+symbolTableHead	symbol.c	/^static struct ste *symbolTableHead;$/;"	v	typeref:struct:ste	file:
+type	subc.h	/^	struct decl	*type;$/;"	m	struct:decl	typeref:struct:decl::decl
+typeClass	subc.h	/^	int		typeClass;$/;"	m	struct:decl
+typeListHead	symbol.c	/^static struct node *typeListHead;$/;"	v	typeref:struct:node	file:
+type_specifier	subc.y	/^type_specifier:	TYPE	$/;"	l
+unary	subc.y	/^unary:		'(' expr ')'	$/;"	l
+value	subc.h	/^	int		value;$/;"	m	struct:decl

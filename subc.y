@@ -44,7 +44,7 @@
 %left	EQUOP
 %left	RELOP
 %left	'+' '-'
-%left	'*'
+%left	'*' '/' '%'
 %right	'!' INCOP DECOP 
 %left 	'[' ']' '(' ')' '.' STRUCTOP
 
@@ -85,16 +85,28 @@ ext_def:	type_specifier pointers ID ';'
     REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
     int errNum;
     if($2 == 1){
-        errNum = declare($3, makeVarDecl(makePtrDecl($1)));
+        errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
     }else{
-        errNum = declare($3, makeConstDecl(makeArrDecl($5, makeVarDecl($1)),0));
+        errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
     }
     semErr(errNum);
 }
 | func_decl ';' 
 {
     REDUCE("ext_def->func_decl ';' ");
-    //do nothing
+    if($1){
+        //1. pushScope && insert formals to symbol table.
+        pushScope();
+        pushSteList($1->formals);
+        $1 -> formals = $1 -> formals->prev;
+        //2. pop scope to remove funcion's local vars.
+        popScope();
+        //3. make constReturnDecl for function call. 
+        struct decl* declRetType=$1->returnType;
+        $1->returnType = makeConstDecl(declRetType, 0);
+    }else{
+        $$ = NULL;
+    }
 }
 | type_specifier ';' 
 {
@@ -119,7 +131,9 @@ local_defs stmt_list '}'
         //3. make constReturnDecl for function call. 
         struct decl* declRetType=$1->returnType;
         $1->returnType = makeConstDecl(declRetType, 0);
-    } 
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
@@ -142,7 +156,11 @@ type_specifier:	TYPE
 {
     REDUCE("type_specifier->struct_specifier");
     //save struct decl ptr.
-    $$ = $1;
+    if($1){
+        $$ = $1;
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
@@ -188,57 +206,65 @@ def_list '}'
 func_decl:	type_specifier pointers ID '(' ')'	
 {
     REDUCE("funct_decl->type_specifier pointers ID '(' ')'");
-    //1. push fucndecl in symbol table.
-    struct decl* funcDecl = makeFuncDecl();
-    int errNum = declare($3, funcDecl);
-    if(errNum == SUCCESS){
-        //2. push scope to collect formal list.
-        pushScope();
-        //3. push returnid to symbole table.
-        struct id* returnId = enter(0, "returnId", 8);
-        struct decl* returnType=$1; 
-        if($2 == 1){
-            returnType = makePtrDecl($1);
-        }
-        declare(returnId, returnType);
-        //5. save formals list
-        struct ste *formals = popScope();
-        //6. save return type.
-        funcDecl->returnType = formals->decl;
-        funcDecl->formals = formals;
-        $$ = funcDecl;
-    }else{	
-        semErr(errNum);
-        $$ = NULL;	
-    }      
+     if($1 == NULL){
+        $$ = NULL;
+    }else{   
+        //1. push fucndecl in symbol table.
+        struct decl* funcDecl = makeFuncDecl();
+        int errNum = declare($3, funcDecl);
+        if(errNum == SUCCESS){
+            //2. push scope to collect formal list.
+            pushScope();
+            //3. push returnid to symbole table.
+            struct id* returnId = enter(0, "returnId", 8);
+            struct decl* returnType=$1; 
+            if($2 == 1){
+                returnType = makePtrDecl($1);
+            }
+            declare(returnId, returnType);
+            //5. save formals list
+            struct ste *formals = popScope();
+            //6. save return type.
+            funcDecl->returnType = formals->decl;
+            funcDecl->formals = formals;
+            $$ = funcDecl;
+        }else{	
+            semErr(REDECL);
+            $$ = NULL;	
+        }      
+    }
 
 }
 | type_specifier pointers ID '(' VOID ')'	
 {
     REDUCE("funct_decl->type_specifier pointers ID '(' VOID ')'");
-    //1. push fucndecl in symbol table.
-    struct decl* funcDecl = makeFuncDecl();
-    int errNum = declare($3, funcDecl);
-    if(errNum == SUCCESS){
-        //2. push scope to collect formal list.
-        pushScope();
-        //3. push returnid to symbole table.
-        struct id* returnId = enter(0, "returnId", 8);
-        struct decl* returnType=$1; 
-        if($2 == 1){
-            returnType = makePtrDecl($1);
-        }
-        declare(returnId, returnType);
-        //5. save formals list
-        struct ste *formals = popScope();
-        //6. save return type.
-        funcDecl->returnType = formals->decl;
-        funcDecl->formals = formals;
-        $$ = funcDecl;
-    }else{	
-        semErr(errNum);
-        $$ = NULL;	
-    }      
+     if($1 == NULL){
+        $$ = NULL;
+    }else{   
+        //1. push fucndecl in symbol table.
+        struct decl* funcDecl = makeFuncDecl();
+        int errNum = declare($3, funcDecl);
+        if(errNum == SUCCESS){
+            //2. push scope to collect formal list.
+            pushScope();
+            //3. push returnid to symbole table.
+            struct id* returnId = enter(0, "returnId", 8);
+            struct decl* returnType=$1; 
+            if($2 == 1){
+                returnType = makePtrDecl($1);
+            }
+            declare(returnId, returnType);
+            //5. save formals list
+            struct ste *formals = popScope();
+            //6. save return type.
+            funcDecl->returnType = formals->decl;
+            funcDecl->formals = formals;
+            $$ = funcDecl;
+        }else{	
+            semErr(REDECL);
+            $$ = NULL;	
+        }      
+    }
 }
 | type_specifier pointers ID '(' param_list ')'	
 {
@@ -265,7 +291,7 @@ func_decl:	type_specifier pointers ID '(' ')'
             //5. save formals list
             struct ste *formals = popScope();
             if(errNum !=SUCCESS){
-                semErr(errNum);
+                semErr(REDECL);
                 removeTopSte();
                 $$ = NULL;
             }else{
@@ -275,7 +301,7 @@ func_decl:	type_specifier pointers ID '(' ')'
                 $$ = funcDecl;	
             }
         }else{	
-            semErr(errNum);
+            semErr(REDECL);
             $$ = NULL;	
         }	
     }
@@ -340,16 +366,12 @@ param_decl: type_specifier pointers ID
 | type_specifier pointers ID '[' const_expr ']'	
 {
     REDUCE("param_decl -> type_specifier pointers ID '[' const_expr ']'	");
-    if($1 != NULL){
-        //int errNum;
+    if($1 && $5){
         if($2 == 1){
-            $$ = makeSte($3, makeVarDecl(makePtrDecl($1)));
-            //errNum = declare($3, makeVarDecl(makePtrDecl($1)));
+            $$ = makeSte($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
         }else{
-            $$ = makeSte($3, makeConstDecl(makeArrDecl($5, makeVarDecl($1)),0));
-            //errNum = declare($3, makeConstDecl(makeArrDecl($5, makeVarDecl($1)),0));
+            $$ = makeSte($3, makeConstDecl(makeArrDecl($1), 0));
         }
-        //semErr(errNum);
     }else{
         $$ =NULL;
     }
@@ -379,16 +401,24 @@ def:	type_specifier pointers ID ';'
             errNum = declare($3, makeVarDecl($1));
         }       
         semErr(errNum);
+        $$ = NULL;
+    }
+    else{
+        $$ = NULL;
     }
 } | type_specifier pointers ID '[' const_expr ']' ';'	{
     REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
+    if($1){
     int errNum;
     if($2 == 1){
-        errNum = declare($3, makeVarDecl(makePtrDecl($1)));
+        errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
     }else{
-        errNum = declare($3, makeConstDecl(makeArrDecl($5, makeVarDecl($1)),0));
+        errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
     }
     semErr(errNum);
+    }else{
+        $$ = NULL;
+    }
 }
 | type_specifier ';'	
 {
@@ -489,6 +519,16 @@ expr_e:		expr
 const_expr:	expr	
 {
     REDUCE("const_expr->expr");
+    if($1){
+        if(checkIsInt($1) == SUCCESS){
+            $$ = $1;
+        }else{
+            semErr(NOT_INT);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }
 ;
 
@@ -617,6 +657,51 @@ binary:		binary RELOP binary
             $$ = findDeclByStr("int"); 
         }else{
             semErr(NOT_INT_CHAR_PTR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+}
+| binary '*' binary	
+{
+    REDUCE("binary->binary '*' binary");
+    if($1 != NULL && $3 != NULL){
+        struct decl* plusResult = plusType($1, $3);
+        if(plusResult){
+            $$ =plusResult;
+        }else{
+            semErr(NOT_COMPUTABLE);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+}
+| binary '/' binary	
+{
+    REDUCE("binary->binary '/' binary");
+    if($1 != NULL && $3 != NULL){
+        struct decl* plusResult = minusType($1, $3);
+        if(plusResult){
+            $$ =plusResult;
+        }else{
+            semErr(NOT_COMPUTABLE);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+}
+| binary '%' binary	
+{
+    REDUCE("binary->binary '%' binary");
+    if($1 != NULL && $3 != NULL){
+        struct decl* plusResult = minusType($1, $3);
+        if(plusResult){
+            $$ =plusResult;
+        }else{
+            semErr(NOT_COMPUTABLE);
             $$ = NULL;
         }
     }else{
@@ -815,7 +900,7 @@ unary:		'(' expr ')'
             $$ = makeConstDecl(makePtrDecl($2->type), 0);
         }else{
             semErr(NOT_VAR_CONST);
-            $$ = makeConstDecl($2->type->ptrTo, 0);
+            $$ = NULL;
         }
     }else{
         $$ = NULL;
@@ -832,11 +917,28 @@ unary:		'(' expr ')'
             semErr(NOT_PTR);
             $$ = NULL;
         }
+    }else{
+        $$ = NULL;
     }
 }		//<= The type of unary is pointer.
 | unary '[' expr ']'	
 {
     REDUCE("unary->unary '[' expr ']'");
+    if($1  && $3 ){
+        if(checkIsArray($1->type) == SUCCESS){
+            if(checkIsInt($3) == SUCCESS){
+                $$ = $1->type->elementVar;
+            }else{
+                semErr(NOT_INT);
+                $$ = NULL;
+            }
+        }else{
+            semErr( NOT_ARRAY);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
 }//	<= The type of expr is integer.
 | unary '.' ID	
 {
@@ -887,13 +989,14 @@ unary:		'(' expr ')'
 | unary '(' args ')' 
 {
     REDUCE("unary->unary '(' args ')'");
-    if($1 != NULL && $3 != NULL){
+    if($1 && $3) {
         if(checkIsFunc($1) == SUCCESS){
             struct decl* returnConstDecl = checkFunctionCall($1, $3);
             if(returnConstDecl){
                 $$=returnConstDecl;
             }else{
                 semErr(NOT_FORMAL_ARGS);
+                $$ = NULL;
             } 
         }else{
             semErr(NOT_FUNC);
@@ -915,6 +1018,7 @@ unary:		'(' expr ')'
                 $$=returnConstDecl;
             }else{
                 semErr(NOT_FORMAL_ARGS);
+                $$ = NULL;
             }
         }else{
             semErr(NOT_FUNC);

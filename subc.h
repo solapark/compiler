@@ -129,7 +129,7 @@ struct decl* makeFuncDecl();
 struct decl* makeTypeDecl(int typeClass);
 
 //Make type decl(array)
-struct decl* makeArrDecl(int elementNum, struct decl* elementType);
+struct decl* makeArrDecl(struct decl* elementType);
 
 //Make type decl(ptr)
 struct decl* makePtrDecl(struct decl* pointingType);
