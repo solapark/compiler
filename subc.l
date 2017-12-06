@@ -1,5 +1,5 @@
 %{
-/*
+/* 
  * File Name   : subc.l
  * Description : a skeleton flex input
  */
