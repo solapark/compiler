@@ -547,7 +547,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "subc.l"
 #line 2 "subc.l"
-/*
+/* 
  * File Name   : subc.l
  * Description : a skeleton flex input
  */
@@ -2238,6 +2238,7 @@ char* get_file_name(){
    
 int main(int argc, char* argv[])
 {
+   FILE *output;
    static char *keyword[] = {"int", "char", "void", "struct", "return", "if", "else", "while", "for", "break", "continue", "||", "&&", "<", "<=", ">", ">=", "==", "!=", "++", "--", "->", NULL };
    static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP, RELOP, RELOP, RELOP, EQUOP, EQUOP, INCOP, DECOP, STRUCTOP, 0 };
    int i;
@@ -2247,6 +2248,10 @@ int main(int argc, char* argv[])
    if(argc >= 2) {
        yyin = fopen(argv[1], "r");
        fileName = argv[1];
+
+       output = fopen(argv[2], "w");
+	fprintf(output, "%d\n", 1);
+	
    }
    else yyin = stdin;
    if(!yyin) {
@@ -2257,6 +2262,7 @@ int main(int argc, char* argv[])
    initType();	
    yyparse();
    fclose(yyin);
-   return 0;
+   fclose(output);
+  return 0;
 }
 

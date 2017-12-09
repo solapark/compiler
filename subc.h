@@ -90,6 +90,7 @@ struct decl {
 	struct ste	*fieldList;
 	struct decl	*ptrTo;
 	int		size;
+    int     offset;
 	struct ste	**scope;
 	struct decl	*next;
 };
