@@ -1,6 +1,5 @@
 #include "subc.h"
 
-
 //functions to calculate offset
 void resetScopeSize(struct node *curSsTop){
     curSsTop->size = 0;

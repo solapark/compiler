@@ -22,10 +22,15 @@ void initType(){
     declare(enter(0, "char", 4), charType);
     enter(0, "returnId", 8);
 
+    resetScopeSize(ssTop);
+    printf("*****scope Stack******\n");
+    printList(&ssTop);	
+
+
 }
 
 void pushScope(){
-   //printf("\n\n*******PUSH SCOPE*******\n\n");
+   printf("\n\n*******PUSH SCOPE*******\n\n");
     //1. Make new stack entry.
     struct node *newNodePtr = (struct node*) malloc(sizeof(struct node));
 
@@ -41,8 +46,8 @@ void pushScope(){
 
     //print scope stack
     //printSymbolTable(symbolTableHead);
-    //printf("*****scope Stack******\n");
-    //printList(&ssTop);	
+    printf("*****scope Stack******\n");
+    printList(&ssTop);	
 
 }
 
@@ -81,8 +86,8 @@ struct ste* popScope(){
 
     //printf scope stack 
     //printSymbolTable(symbolTableHead);
-    //printf("*****scope Stack******\n");
-    //printList(&ssTop);
+    printf("*****scope Stack******\n");
+    printList(&ssTop);
 
     return popedTop->data;
 
@@ -199,7 +204,7 @@ int declare(struct id* name, struct decl* type){
     //printList(&ssTop);
 
     //5. print symbol table 
-    //printSymbolTable(symbolTableHead);
+    printSymbolTable(symbolTableHead);
 
     return SUCCESS;
 }
@@ -432,10 +437,10 @@ void printSymbolTable(struct ste* head){
     if(curSte != NULL){
         int leng;
         printf("****symbol table****\n"); 
-        printf("addr\tname\t\tdecl\ttype\tvarType\tptrTo\n");
+        printf("addr\tname\t\tdecl\ttype\tvarType\tptrTo\tsize\toffset\n");
         while(curSte->prev != NULL){
             leng = curSte->name->leng;
-            printf("%x\t%.*s\t\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
+            printf("%x\t%.*s\t\t%d\t%d\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass, curSte->decl->size, curSte->decl->offset);
             if(curSte->decl->type){
                 printf("%d\t",curSte->decl->type->typeClass);
                 if(curSte->decl->type->ptrTo){
@@ -501,12 +506,12 @@ void printList(struct node **head){
         while(checkIsTail(head,curNode) ==0){
             stePtr = curNode->data;
             leng = stePtr->name->leng;
-            printf("%.*s\n", leng, stePtr->name->name);
+            printf("%.*s\t%d\n", leng, stePtr->name->name, curNode->size);
             curNode = curNode->next;
         }
         stePtr = curNode->data;
         leng = stePtr->name->leng;
-        printf("%.*s\n", leng, stePtr->name->name);
+        printf("%.*s\t%d\n", leng, stePtr->name->name, curNode->size);
     }
     printf("******************\n\n");
 }
