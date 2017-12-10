@@ -66,6 +66,7 @@ struct node {
 	struct node	*next;
 	struct node	*prev;
 	void		*data;	
+    int         size; //for scope stack
 };
 
 /* structure for symbol table entry */

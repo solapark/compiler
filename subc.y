@@ -77,19 +77,27 @@ ext_def:	type_specifier pointers ID ';'
         else{
             errNum =declare($3, makeVarDecl($1));
         }	
-        semErr(errNum);
+        if(errNum != SUCCESS){
+            semErr(errNum);
+            $$ = NULL;
+        }
     }
 }	
 | type_specifier pointers ID '[' const_expr ']' ';'
 {
     REDUCE("def->type_specifier pointers ID '[' const_expr ']' ';'");
-    int errNum;
-    if($2 == 1){
-        errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
-    }else{
-        errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
+    if($1 !=NULL){
+        int errNum;
+        if($2 == 1){
+            errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
+        }else{
+            errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
+        }
+        if(errNum != SUCCESS){
+            semErr(errNum);
+            $$ = NULL;
+        }
     }
-    semErr(errNum);
 }
 | func_decl ';' 
 {

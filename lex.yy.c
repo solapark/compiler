@@ -2250,7 +2250,7 @@ int main(int argc, char* argv[])
        fileName = argv[1];
 
        output = fopen(argv[2], "w");
-	fprintf(output, "%d\n", 1);
+       //fprintf(output, "%d\n", 1);
 	
    }
    else yyin = stdin;
