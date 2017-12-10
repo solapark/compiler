@@ -73,6 +73,7 @@ special_char	\\[nt]
 		return ID;
 }
 {integer_const}	{//printf("%s\n", yytext);
+            printLex(yytext);
 		   yylval.intVal = atoi(yytext);
 		   return INTEGER_CONST;
 		}

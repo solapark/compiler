@@ -271,7 +271,7 @@ struct decl* makeIntConstDecl(int integer){
     //1. Make const decl.
     struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
     declPtr->declClass = DECL_CONST;
-    declPtr->value = integer;
+    declPtr->intConst = integer;
     declPtr->type = findDeclByStr("int");
 
     return declPtr;
@@ -299,7 +299,7 @@ struct decl* makeConstDecl(struct decl* arrDecl, int intValue){
     }
     //2-2. else assign intValue to value.
     else{
-        declPtr->value = intValue;
+        declPtr->intConst = intValue;
         declPtr->type = findDeclByStr("int");
     }
 
@@ -322,11 +322,12 @@ struct decl* makeTypeDecl(int typeClass){
 }
 
 //Make type decl(array)
-struct decl* makeArrDecl(struct decl* elementType){
+struct decl* makeArrDecl(struct decl* elementType, struct decl* intTypeDecl){
     struct decl* declPtr = (struct decl*) malloc(sizeof(struct decl));	
     declPtr->declClass = DECL_TYPE;
     declPtr->typeClass = DECL_TYPE_ARRAY;
     declPtr->elementVar = makeVarDecl(elementType);
+    declPtr->numIndex = intTypeDecl->intConst;
     return declPtr; 
 }
 

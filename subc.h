@@ -77,11 +77,20 @@ struct ste {
 	struct node 	*scope;
 };
 
+struct Value {
+    int integer;
+    char* character;
+    struct ste* ptr;
+    struct Value* array;
+    struct ste* str;
+};
+
+
 /* structure for declaration */
 struct decl {
 	int		declClass;
 	struct decl	*type;
-	int		value;
+	int		intConst;
 	char		*charValue;
 	struct ste	*formals;
 	struct decl	*returnType;
@@ -94,6 +103,7 @@ struct decl {
     int     offset;
 	struct ste	**scope;
 	struct decl	*next;
+    struct Value* value;
 };
 
 /* For hash table */
@@ -131,7 +141,7 @@ struct decl* makeFuncDecl();
 struct decl* makeTypeDecl(int typeClass);
 
 //Make type decl(array)
-struct decl* makeArrDecl(struct decl* elementType);
+struct decl* makeArrDecl(struct decl* elementType, struct decl* intTypeDecl);
 
 //Make type decl(ptr)
 struct decl* makePtrDecl(struct decl* pointingType);

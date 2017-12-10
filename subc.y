@@ -89,9 +89,9 @@ ext_def:	type_specifier pointers ID ';'
     if($1 !=NULL){
         int errNum;
         if($2 == 1){
-            errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
+            errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1), $5), 0));
         }else{
-            errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
+            errNum = declare($3, makeConstDecl(makeArrDecl($1, $5), 0));
         }
         if(errNum != SUCCESS){
             semErr(errNum);
@@ -376,9 +376,9 @@ param_decl: type_specifier pointers ID
     REDUCE("param_decl -> type_specifier pointers ID '[' const_expr ']'	");
     if($1 && $5){
         if($2 == 1){
-            $$ = makeSte($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
+            $$ = makeSte($3, makeConstDecl(makeArrDecl(makePtrDecl($1), $5),0));
         }else{
-            $$ = makeSte($3, makeConstDecl(makeArrDecl($1), 0));
+            $$ = makeSte($3, makeConstDecl(makeArrDecl($1, $5), 0));
         }
     }else{
         $$ =NULL;
@@ -419,9 +419,9 @@ def:	type_specifier pointers ID ';'
     if($1){
     int errNum;
     if($2 == 1){
-        errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1)), 0));
+        errNum = declare($3, makeConstDecl(makeArrDecl(makePtrDecl($1), $5),0));
     }else{
-        errNum = declare($3, makeConstDecl(makeArrDecl($1), 0));
+        errNum = declare($3, makeConstDecl(makeArrDecl($1, $5), 0));
     }
     semErr(errNum);
     }else{
@@ -754,6 +754,7 @@ binary:		binary RELOP binary
         int isVar = checkIsVar($1);          
         if(isConst == SUCCESS || isVar ==SUCCESS ){
             $$ = $1 -> type;
+            $$ -> intConst = $1->intConst; 
         }else{ 	                       
             semErr(RHS_NOT_VAR_CONST);
             $$ = NULL;                                            	        	                                               
