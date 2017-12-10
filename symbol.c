@@ -14,7 +14,7 @@ void initType(){
     pushScope();
     struct decl *intType, *voidType, *charType; 
     intType = makeTypeDecl(DECL_TYPE_INT);
-    voidType = makeTypeDecl(DECL_TYPE_VOID);
+    voidType =makeTypeDecl(DECL_TYPE_VOID);
     charType = makeTypeDecl(DECL_TYPE_CHAR);
 
     declare(enter(0, "int", 3), intType);	
@@ -44,6 +44,8 @@ void pushScope(){
     //add new stack entry to stack.	
     addToHead(&ssTop, newNodePtr);
 
+    //3. reset scopeSize.
+    resetScopeSize(ssTop);
     //print scope stack
     //printSymbolTable(symbolTableHead);
     printf("*****scope Stack******\n");
@@ -203,7 +205,12 @@ int declare(struct id* name, struct decl* type){
     //printf("*****scope Stack******\n");
     //printList(&ssTop);
 
-    //5. print symbol table 
+    //5. process offset in DECL and scopeStack 
+    if(newSte->name != enter(0, "returnId", 8) && newSte->decl->declClass != DECL_FUNC){ 
+        procOffset(newSte->decl, ssTop);
+    }
+
+    //print symbol table 
     printSymbolTable(symbolTableHead);
 
     return SUCCESS;
@@ -239,11 +246,15 @@ struct ste* makeSte(struct id* namePtr, struct decl* declPtr) {
 
 void removeTopSte(){
     //printf("REMOVE TOP STE\n");
-    //1. remove from symbol table
+    //1. reset top scope size.
+    minusScopeSize(ssTop, symbolTableHead->decl->size);
+
+   //2. remove from symbol table
     symbolTableHead = symbolTableHead->prev;
-    //2. remove from scope stack.
+    //3. remove from scope stack.
     ssTop->data = symbolTableHead;
     //printSymbolTable(symbolTableHead);
+
 }
 
 //Make Var decl.
@@ -437,9 +448,12 @@ void printSymbolTable(struct ste* head){
     if(curSte != NULL){
         int leng;
         printf("****symbol table****\n"); 
-        printf("addr\tname\t\tdecl\ttype\tvarType\tptrTo\tsize\toffset\n");
+        //printf("addr\tname\t\tdecl\ttype\tvarType\tptrTo\tsize\toffset\n");
+        printf("name\t\tsize\toffset\n");
         while(curSte->prev != NULL){
             leng = curSte->name->leng;
+            printf("%.*s\t\t%d\t%d\t", leng, curSte->name->name, curSte->decl->size, curSte->decl->offset);
+            /*
             printf("%x\t%.*s\t\t%d\t%d\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass, curSte->decl->size, curSte->decl->offset);
             if(curSte->decl->type){
                 printf("%d\t",curSte->decl->type->typeClass);
@@ -447,10 +461,13 @@ void printSymbolTable(struct ste* head){
                     printf("%d\t",curSte->decl->type->ptrTo->typeClass);
                 }
             }
+            */
             printf("\n");
             curSte = curSte->prev;
         }
         leng = curSte->name->leng;
+        printf("%.*s\t\t%d\t%d\t", leng, curSte->name->name, curSte->decl->size, curSte->decl->offset);
+        /*
         printf("%x\t%.*s\t\t%d\t%d\t", curSte->name, leng, curSte->name->name, curSte->decl->declClass, curSte->decl->typeClass);
         if(curSte->decl->type){
             printf("%d\t",curSte->decl->type->typeClass);
@@ -458,6 +475,7 @@ void printSymbolTable(struct ste* head){
                 printf("%d\t",curSte->decl->type->ptrTo->typeClass);
             }
         }
+        */
         printf("\n");
 
 
