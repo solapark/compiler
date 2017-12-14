@@ -152,6 +152,7 @@ label
 		{
 			assert($1->pc < 0);
 			$1->pc = CODE_AREA_OFFSET + code_area_size;
+            printf("%s:\n", $1->name);
 		}
 	;
 
@@ -170,6 +171,7 @@ global
 			global_data_size += $4;
 
 			assert(global_data_size <= DATA_AREA_SIZE);
+            printf("Lglob. data %d\n", $4);
 		}
 	;
 
@@ -679,6 +681,7 @@ void simulate_stack_machine(void)
 		}
     print_inst(opcode, operand);
 	print_stack(sp, fp);
+    print_global();
 	}
 }
 
@@ -841,15 +844,36 @@ void print_inst(int opcode, struct operand* operand){
 }
 
 void print_stack(int sp, int fp){
-	printf("*******STACK********\n");
-	for(int i=sp-1; i>-1; i--){
-		printf("%d", stack[i]);
+	printf("****STACK*****\n");
+	for(int i=sp; i>-1; i--){
+		printf("s%d : ", i);
+        if(stack[i] == 65541){
+            printf("xxxx");
+        }else{
+	    	printf("%d", stack[i]);
+        }
+        if(i==sp){
+            printf("    <-sp");
+        }
 		if(fp == i){
-			printf("\t<-fp");		
+			printf("    <-fp");		
 		}
+
 		printf("\n");
 
 	}
-	printf("***************\n\n");
+	printf("*************\n");
 }
 
+void print_global(){
+	printf("*****global*****\n");
+	printf("idx\taddr\tvalue\n");
+    for(int i=global_data_size-1; i>-1; i--){
+        if(global_data_area[i] == 65541){
+            printf("g%d\t%d\txxxx\n", i, DATA_AREA_OFFSET+i);
+        }else{
+            printf("g%d\t%d\t%d\n", i, DATA_AREA_OFFSET+i,global_data_area[i]);
+        }
+	}
+	printf("***************\n\n");
+}

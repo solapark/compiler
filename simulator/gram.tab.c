@@ -546,9 +546,9 @@ static const yytype_uint16 yyrline[] =
        0,   104,   104,   105,   106,   107,   108,   109,   110,   111,
      112,   113,   114,   115,   116,   117,   118,   119,   120,   121,
      122,   123,   124,   125,   126,   127,   128,   129,   130,   131,
-     132,   133,   134,   138,   147,   151,   159,   177,   196,   204,
-     215,   223,   231,   239,   247,   258,   266,   274,   285,   286,
-     287,   288,   289,   290,   291,   292,   293
+     132,   133,   134,   138,   147,   151,   160,   179,   198,   206,
+     217,   225,   233,   241,   249,   260,   268,   276,   287,   288,
+     289,   290,   291,   292,   293,   294,   295
 };
 #endif
 
@@ -1576,12 +1576,13 @@ yyreduce:
     {
 			assert((yyvsp[-2].id)->pc < 0);
 			(yyvsp[-2].id)->pc = CODE_AREA_OFFSET + code_area_size;
+            printf("%s:\n", (yyvsp[-2].id)->name);
 		}
-#line 1581 "gram.tab.c" /* yacc.c:1646  */
+#line 1582 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 160 "gram.y" /* yacc.c:1646  */
+#line 161 "gram.y" /* yacc.c:1646  */
     {
 			int i;
 
@@ -1595,12 +1596,13 @@ yyreduce:
 			global_data_size += (yyvsp[-1].intVal);
 
 			assert(global_data_size <= DATA_AREA_SIZE);
+            printf("Lglob. data %d\n", (yyvsp[-1].intVal));
 		}
-#line 1600 "gram.tab.c" /* yacc.c:1646  */
+#line 1602 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 178 "gram.y" /* yacc.c:1646  */
+#line 180 "gram.y" /* yacc.c:1646  */
     {
 			int i, size;
 
@@ -1616,11 +1618,11 @@ yyreduce:
 
 			assert(global_data_size <= DATA_AREA_SIZE);
 		}
-#line 1620 "gram.tab.c" /* yacc.c:1646  */
+#line 1622 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 197 "gram.y" /* yacc.c:1646  */
+#line 199 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand)); \
 			(yyval.operand)->reg = NULL; \
@@ -1628,11 +1630,11 @@ yyreduce:
 			(yyval.operand)->integer = yyvsp[0].intVal; \
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1632 "gram.tab.c" /* yacc.c:1646  */
+#line 1634 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 205 "gram.y" /* yacc.c:1646  */
+#line 207 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand)); \
 			(yyval.operand)->reg = NULL; \
@@ -1640,11 +1642,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * yyvsp[0].intVal; \
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1644 "gram.tab.c" /* yacc.c:1646  */
+#line 1646 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 216 "gram.y" /* yacc.c:1646  */
+#line 218 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1652,11 +1654,11 @@ yyreduce:
 			(yyval.operand)->integer = (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1656 "gram.tab.c" /* yacc.c:1646  */
+#line 1658 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 224 "gram.y" /* yacc.c:1646  */
+#line 226 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1664,11 +1666,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1668 "gram.tab.c" /* yacc.c:1646  */
+#line 1670 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 232 "gram.y" /* yacc.c:1646  */
+#line 234 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1676,11 +1678,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1680 "gram.tab.c" /* yacc.c:1646  */
+#line 1682 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 240 "gram.y" /* yacc.c:1646  */
+#line 242 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1688,11 +1690,11 @@ yyreduce:
 			(yyval.operand)->integer = (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1692 "gram.tab.c" /* yacc.c:1646  */
+#line 1694 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 248 "gram.y" /* yacc.c:1646  */
+#line 250 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1700,11 +1702,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1704 "gram.tab.c" /* yacc.c:1646  */
+#line 1706 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 259 "gram.y" /* yacc.c:1646  */
+#line 261 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1712,11 +1714,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1716 "gram.tab.c" /* yacc.c:1646  */
+#line 1718 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 267 "gram.y" /* yacc.c:1646  */
+#line 269 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1724,11 +1726,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1728 "gram.tab.c" /* yacc.c:1646  */
+#line 1730 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 275 "gram.y" /* yacc.c:1646  */
+#line 277 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1736,65 +1738,65 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1740 "gram.tab.c" /* yacc.c:1646  */
+#line 1742 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 285 "gram.y" /* yacc.c:1646  */
+#line 287 "gram.y" /* yacc.c:1646  */
     { }
-#line 1746 "gram.tab.c" /* yacc.c:1646  */
+#line 1748 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 286 "gram.y" /* yacc.c:1646  */
+#line 288 "gram.y" /* yacc.c:1646  */
     { }
-#line 1752 "gram.tab.c" /* yacc.c:1646  */
+#line 1754 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 287 "gram.y" /* yacc.c:1646  */
+#line 289 "gram.y" /* yacc.c:1646  */
     { }
-#line 1758 "gram.tab.c" /* yacc.c:1646  */
+#line 1760 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 288 "gram.y" /* yacc.c:1646  */
+#line 290 "gram.y" /* yacc.c:1646  */
     { }
-#line 1764 "gram.tab.c" /* yacc.c:1646  */
+#line 1766 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 289 "gram.y" /* yacc.c:1646  */
+#line 291 "gram.y" /* yacc.c:1646  */
     { }
-#line 1770 "gram.tab.c" /* yacc.c:1646  */
+#line 1772 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 290 "gram.y" /* yacc.c:1646  */
+#line 292 "gram.y" /* yacc.c:1646  */
     { }
-#line 1776 "gram.tab.c" /* yacc.c:1646  */
+#line 1778 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 291 "gram.y" /* yacc.c:1646  */
+#line 293 "gram.y" /* yacc.c:1646  */
     { }
-#line 1782 "gram.tab.c" /* yacc.c:1646  */
+#line 1784 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 292 "gram.y" /* yacc.c:1646  */
+#line 294 "gram.y" /* yacc.c:1646  */
     { }
-#line 1788 "gram.tab.c" /* yacc.c:1646  */
+#line 1790 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 293 "gram.y" /* yacc.c:1646  */
+#line 295 "gram.y" /* yacc.c:1646  */
     { }
-#line 1794 "gram.tab.c" /* yacc.c:1646  */
+#line 1796 "gram.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1798 "gram.tab.c" /* yacc.c:1646  */
+#line 1800 "gram.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2022,7 +2024,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 296 "gram.y" /* yacc.c:1906  */
+#line 298 "gram.y" /* yacc.c:1906  */
 
 
 void init_stack_machine(void)
@@ -2409,6 +2411,7 @@ void simulate_stack_machine(void)
 		}
     print_inst(opcode, operand);
 	print_stack(sp, fp);
+    print_global();
 	}
 }
 
@@ -2571,15 +2574,36 @@ void print_inst(int opcode, struct operand* operand){
 }
 
 void print_stack(int sp, int fp){
-	printf("*******STACK********\n");
-	for(int i=sp-1; i>-1; i--){
-		printf("%d", stack[i]);
+	printf("****STACK*****\n");
+	for(int i=sp; i>-1; i--){
+		printf("s%d : ", i);
+        if(stack[i] == 65541){
+            printf("xxxx");
+        }else{
+	    	printf("%d", stack[i]);
+        }
+        if(i==sp){
+            printf("    <-sp");
+        }
 		if(fp == i){
-			printf("\t<-fp");		
+			printf("    <-fp");		
 		}
+
 		printf("\n");
 
 	}
-	printf("***************\n\n");
+	printf("*************\n");
 }
 
+void print_global(){
+	printf("*****global*****\n");
+	printf("idx\taddr\tvalue\n");
+    for(int i=global_data_size-1; i>-1; i--){
+        if(global_data_area[i] == 65541){
+            printf("g%d\t%d\txxxx\n", i, DATA_AREA_OFFSET+i);
+        }else{
+            printf("g%d\t%d\t%d\n", i, DATA_AREA_OFFSET+i,global_data_area[i]);
+        }
+	}
+	printf("***************\n\n");
+}
