@@ -124,7 +124,7 @@ stack_machine_data_type global_data_area[DATA_AREA_SIZE];
 #define INSTR_TYPE_3 \
 	yyval.instr = (struct instr_node*)malloc(sizeof(struct instr_node)); \
 	yyval.instr->opcode = yyvsp[-1].id; \
-	yyval.instr->operand = yyvsp[0].operand;
+	yyval.instr->operand = yyvsp[0].operand; 
 
 /* instruction with 1 integer const operand */
 #define INSTR_TYPE_4 \
@@ -2084,8 +2084,160 @@ void validate_stack_machine(void)
 	}
 }
 
+void print_inst(int opcode, struct operand* operand){
+    switch(opcode) {
+        case NEGATE: 
+            printf("negate\n");
+            break;
+        case NOT: 
+            printf("not\n");
+            break;
+        case ABS: 
+            printf("abs\n");
+            break;
+        case ADD: 
+            printf("add\n");
+            break;
+        case SUB:
+            printf("sub\n");
+            break;
+        case MUL:
+            printf("mul\n");
+            break;
+        case DIV:
+            printf("div\n");
+            break;
+        case MOD: 
+            printf("mod\n");
+            break;
+        case AND: 
+            printf("and\n");
+            break;
+        case OR:
+            printf("or\n");
+            break;
+        case EQUAL: 
+            printf("equal\n");
+            break;
+        case NOT_EQUAL: 
+            printf("not_equal\n");
+            break;
+        case GREATER: 
+            printf("greater\n");
+            break;
+        case GREATER_EQUAL:
+            printf("greater_equal\n");
+            break;
+        case LESS: 
+            printf("less\n");
+            break;
+        case LESS_EQUAL:
+            printf("less_equal\n");
+            break;
+        case EXIT:
+            printf("exit\n");
+            break;
+        case ASSIGN: 
+            printf("assign\n");
+            break;
+        case FETCH:
+            printf("fetch\n");
+            break;
+        case READ_INT: 
+            printf("read_int\n");
+            break;
+        case READ_CHAR:
+            printf("read_char\n");
+            break;
+        case WRITE_INT: 
+            printf("write_int\n");
+            break;
+        case WRITE_CHAR: 
+            printf("wrtie_char\n");
+            break;
+        case WRITE_STRING:
+            printf("write_string\n");
+            break;
+
+        case JUMP: 
+            printf("jump");
+            if(operand->label){
+                printf(" %s", operand->label->name);
+            }
+            if(operand->integer != 0){
+                printf(" %d", operand->integer);
+            }
+            printf("\n");
+            break;
+        case BRANCH_TRUE: 
+             printf("branch_true");
+             if(operand->label){
+                printf(" %s", operand->label->name);
+            }
+            if(operand->integer != 0){
+                printf(" %d", operand->integer);
+            }
+            printf("\n");
+            break;
+        case BRANCH_FALSE:
+              printf("branch_false");
+            if(operand->label){
+                printf(" %s", operand->label->name);
+            }
+            if(operand->integer != 0){
+                printf(" %d", operand->integer);
+            }
+            printf("\n");
+            break;
+
+       case PUSH_CONST:
+            printf("push_const");
+             if(operand->label){
+                printf(" %s", operand->label->name);
+            }
+            if(operand->integer != 0){
+                printf(" %d", operand->integer);
+            }
+            printf("\n");
+            break;
+
+        case PUSH_REG: 
+            printf("push_reg");
+			switch(operand->reg->lextype) {
+			case PC:
+			    printf(" pc\n");	
+				break;
+			case SP:
+			    printf(" sp\n");	
+				break;
+			case FP:
+			    printf(" fp\n");	
+				break;
+			}
+            break;
+        case POP_REG:
+            printf("pop_reg");
+			switch(operand->reg->lextype) {
+			case PC:
+			    printf(" pc\n");	
+				break;
+			case SP:
+			    printf(" sp\n");	
+				break;
+			case FP:
+			    printf(" fp\n");	
+				break;
+			}
+            break;
+ 
+        case SHIFT_SP:
+            printf("shift_sp %d\n", operand->integer);
+            break;
+    }
+}
+
 void print_stack(int sp, int fp){
-	printf("***************\n");
+	printf("*******STACK********\n");
 	for(int i=sp-1; i>-1; i--){
 		printf("%d", stack[i]);
 		if(fp == i){
@@ -2103,6 +2255,8 @@ void simulate_stack_machine(void)
 
 	fprintf(stderr, "code area size %d\n", code_area_size);
 	fprintf(stderr, "data area size %d\n", global_data_size);
+	printf(stderr, "code area size %d\n", code_area_size);
+	printf(stderr, "data area size %d\n", global_data_size);
 
 	pc = CODE_AREA_OFFSET;
 	sp = STACK_AREA_OFFSET - 1;
@@ -2420,7 +2574,8 @@ void simulate_stack_machine(void)
 			pc++;
 			break;
 		}
-	print_stack(sp, fp);
+    //print_inst(opcode, operand);
+	//print_stack(sp, fp);
 	}
 }
 
