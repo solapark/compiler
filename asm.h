@@ -60,5 +60,4 @@ struct operand
     int regType;
 };
 
-int str_area_size = 0;
 #endif

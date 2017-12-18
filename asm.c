@@ -1,4 +1,5 @@
 #include "asm.h"
+static int str_area_size = 0;
 
 void print_inst(int opcode, struct operand* operand){
     switch(opcode) {
