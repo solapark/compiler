@@ -61,6 +61,7 @@ ext_def_list:	ext_def_list ext_def
 }
 | /* empty */	{
     REDUCE("ext_def_list->epsilon");
+    writeInitCode();
 }
 ;
 

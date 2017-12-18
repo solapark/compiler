@@ -1,6 +1,9 @@
 #ifndef __ASM_H__
 #define __ASM_H__
 
+#include <stdio.h>
+#include <strings.h>
+
 /*for code generation*/
 #define INT_CONST	258 
 #define STRING_CONST	259 
