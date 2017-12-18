@@ -244,6 +244,10 @@ struct ste* makeSte(struct id* namePtr, struct decl* declPtr) {
     return stePtr;
 }
 
+struct ste* getTopSte(){
+    return symbolTableHead;
+}
+
 void removeTopSte(){
     //printf("REMOVE TOP STE\n");
     //1. reset top scope size.
@@ -667,6 +671,27 @@ struct decl* findDeclByStr(char* name){
         return NULL;	
     }	
     return curSte->decl;
+}
+struct ste* findSteByStr(char* name){
+    struct id* curId = enter(0, name, strlen(name));
+    struct ste* curSte = lookupSymbol(symbolTableHead, curId);
+    if(curSte == NULL){
+        //printf("thers no decl\n");
+        return NULL;	
+    }	
+    return curSte;
+}
+
+char* getSteName(struct ste* curSte){
+            int leng = curSte->name->leng;
+            char* name = malloc(leng+1);
+            strncpy(name, curSte->name->name, leng);
+            name[leng] = '\0';
+            return name;
+
+//            char* realName = name;
+ //           printf("realName = %s\n", realName);
+  //          return realName;
 }
 
 int checkSameType(struct decl* typeDecl1, struct decl* typeDecl2){

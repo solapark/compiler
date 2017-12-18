@@ -178,6 +178,8 @@ void addToTail(struct node **head, struct node *newNode);
 
 void addToHead(struct node **head, struct node *newNode);
 
+struct ste* getTopSte();
+
 void removeFromHead(struct node **head);
 
 void resetList (struct node **head);
@@ -195,5 +197,9 @@ struct ste* reverseSte(struct ste* steList);
 struct ste* recurReverSte(struct ste* steList);
 
 struct decl* findDeclByStr(char* name);
+struct ste* findSteByStr(char* name);
+char* getSteName(struct ste* curSte);
+
 #endif
+
 
