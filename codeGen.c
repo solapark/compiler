@@ -17,7 +17,6 @@ void setScopeSize(struct node *curSsTop,struct decl* curDecl){
     printf("setScopeSize()\n");
     curSsTop -> size += curDecl->size;
 }
-
 void minusScopeSize(struct node *curSsTop, int operand){
     printf("minusScopeSize()\n");
     curSsTop->size -= operand;

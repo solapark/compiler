@@ -101,6 +101,9 @@ void changeSSTopPnting(struct ste* newSte){
     ssTop->data = newSte;
 }
 
+int getScopeSize(){
+    return ssTop->size;
+}
 struct ste* lookupSymbol(struct ste* head, struct id* name){
     //1. find symbol in symbol table.
     struct ste* curSte = head;
