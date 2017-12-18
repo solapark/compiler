@@ -131,12 +131,18 @@ ext_def:	type_specifier pointers ID ';'
         pushSteList($1->formals);
         $1 -> formals = $1 -> formals->prev;
     }
+
+    //code_gen() : write label:
     struct ste* funcSte = findSteByStr("returnId")->prev;
     char* funcName =  getSteName(funcSte);
-    //printf("subc.y : funcName = %s\n", funcName);
     code_gen(WRITE_LABEL, setNewLabel(funcName));
-} 
-local_defs stmt_list '}' 
+} local_defs 
+{
+    int scopeSize = getScopeSize();
+    if(scopeSize>0){
+        code_gen(SHIFT_SP, setNewInteger(scopeSize));
+    }
+} stmt_list '}' 
 {
     if($1 != NULL){
         //2. pop scope to remove funcion's local vars.
