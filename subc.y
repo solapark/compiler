@@ -5,7 +5,7 @@
      */
 
 #include "subc.h"
-
+#include "asm.h"
     int    yylex ();
     int    yyerror (char* s);
     void 	REDUCE(char* s);

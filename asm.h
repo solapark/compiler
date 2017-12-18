@@ -1,3 +1,6 @@
+#ifndef __ASM_H__
+#define __ASM_H__
+
 /*for code generation*/
 #define INT_CONST	258 
 #define STRING_CONST	259 
@@ -36,11 +39,17 @@
 #define FP	292 
 #define PC	293 
 //#define ID	294 
-#define DATA	295 
-//#define STRING	296 
+#define DATA_SAVE	295 
+#define STRING_SAVE	296 
 #define NEW_LINE	297
+#define WRITE_LABEL 298
+#define WRITE_LABEL_START 299
+#define WRITE_LABEL_FINAL   300 
+#define WRITE_LABEL_END     301 
 
-struct operand;
+
+
+struct operand
 {
 	char* label;
     int isLabelUsed;
@@ -49,7 +58,7 @@ struct operand;
     char* string;
     int isStringUsed;
     int regType;
-} 
+};
 
-
+int str_area_size = 0;
 #endif

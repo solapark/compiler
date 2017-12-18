@@ -5,6 +5,7 @@
  */
 
 #include "subc.h"
+#include "asm.h"
 #include "subc.tab.h"
 static int comment_depth = 0;
 static int lineno = 1;
