@@ -825,13 +825,17 @@ unary:		'(' expr ')'
     //code_Gen()
     int offset = getOffset($1);
     if(checkIsGlobal($1)){//global
+        printf("global\n");
         struct operand* opPtr = setNewLabel("Lglob");
         setInteger(opPtr, offset);
         code_gen(PUSH_CONST, opPtr);
     }else{
         code_gen(PUSH_REG, setNewRegType(FP));
-        if(checkIsParam($1)){//param
+        if(!checkIsParam($1)){//local
+            printf("local\n");
             offset += getParamSize($1);
+        }else{
+            printf("param\n");
         }
         code_gen(PUSH_CONST, setNewInteger(offset));
         code_gen(ADD, NULL);
