@@ -844,22 +844,33 @@ unary:		'(' expr ')'
     }
 
     //code_Gen()
+    struct decl* declPtr = findDecl($1);
     int offset = getOffset($1);
-    if(checkIsGlobal($1)){//global
-        printf("global\n");
-        struct operand* opPtr = setNewLabel("Lglob");
-        setInteger(opPtr, offset);
-        code_gen(PUSH_CONST, opPtr);
-    }else{
-        code_gen(PUSH_REG, setNewRegType(FP));
-        if(!checkIsParam($1)){//local
-            printf("local\n");
-            offset += getParamSize($1);
-        }else{//param
-            //printf("param\n");
-        }
-        code_gen(PUSH_CONST, setNewInteger(offset));
-        code_gen(ADD, NULL);
+    switch(declPtr->declClass){
+        case DECL_FUNC :
+            printf("decl_funci\n");
+            code_gen(SHIFT_SP, setNewInteger(1));
+            code_gen(PUSH_CONST_RETURN_LABEL, setNewReturnLabel());
+            code_gen(PUSH_REG, setNewRegType(FP));
+           break;
+        case DECL_VAR :
+            if(checkIsGlobal($1)){//global
+                //printf("global\n");
+                struct operand* opPtr = setNewLabel("Lglob");
+                setInteger(opPtr, offset);
+                code_gen(PUSH_CONST, opPtr);
+            }else{
+                code_gen(PUSH_REG, setNewRegType(FP));
+                if(!checkIsParam($1)){//local
+                    //printf("local\n");
+                    offset += getParamSize($1);
+                }else{//param
+                    //printf("param\n");
+                }
+                code_gen(PUSH_CONST, setNewInteger(offset));
+                code_gen(ADD, NULL);
+            }
+            break;
     }
 }
 | STRING	{
@@ -1076,6 +1087,9 @@ unary:		'(' expr ')'
         $$ =NULL;
     }
     resetArgList();
+
+    //code_gen()
+
 }//	<= The type of unary is a function.
 | unary '(' ')'	
 {

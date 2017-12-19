@@ -28,6 +28,7 @@
 #define BRANCH_FALSE	278 
 #define EXIT	279 
 #define PUSH_CONST	280 
+#define PUSH_CONST_RETURN_LABEL	303 
 #define PUSH_REG	281 
 #define POP_REG	282 
 #define SHIFT_SP	283 
@@ -46,9 +47,11 @@
 #define STRING_SAVE	296 
 #define NEW_LINE	297
 #define WRITE_LABEL 298
+#define WRITE_RETURN_LABEL  302 
 #define WRITE_LABEL_START 299
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
+//303
 
 struct operand
 {

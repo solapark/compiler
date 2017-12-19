@@ -1,10 +1,22 @@
 #include "asm.h"
 static int str_area_size = 0;
+static int return_label_num = 0;
+static int mustReturnLabel = 0;
 static FILE* outputFile=NULL;
 
 void setOutputFile(FILE* file){
     outputFile = file;
 }
+
+struct operand* setReturnLabel(struct operand* opPtr){
+   mustReturnLabel = return_label_num;
+   opPtr -> label = "label_";
+   opPtr -> isLabelUsed = 1;
+   opPtr -> integer = return_label_num ++;
+   opPtr -> isIntUsed = 1;
+   return opPtr;
+}
+
 
 struct operand* setLabel(struct operand* opPtr, char* label){
    opPtr -> label = label;
@@ -34,6 +46,12 @@ struct operand* makeOperand(){
    return opPtr;
 }
 
+struct operand* setNewReturnLabel(){
+   struct operand* opPtr = makeOperand();
+   setReturnLabel(opPtr);
+   return opPtr;
+}
+
 struct operand* setNewLabel(char* label){
    struct operand* opPtr = makeOperand();
    setLabel(opPtr, label);
@@ -57,6 +75,16 @@ struct operand* setNewRegType(int regType){
    setRegType(opPtr, regType);
    return opPtr;
 }
+
+struct operand* getReturnLabel(){
+   struct operand* opPtr = makeOperand();
+   opPtr -> label = "labe_";
+   opPtr -> isLabelUsed = 1;
+   opPtr -> integer = mustReturnLabel--;
+   opPtr -> isIntUsed = 1;
+   return opPtr;
+}
+
 void writeInitCode(){
     code_gen(PUSH_CONST, setNewLabel("EXIT"));
     code_gen(PUSH_REG,setNewRegType(FP));
@@ -158,45 +186,50 @@ void code_gen(int opcode, struct operand* operand){
 
         case JUMP: 
             fprintf(outputFile,"	jump");
-            if(outputFile,operand->isLabelUsed){
+            if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
             }
-            if(outputFile,operand->isIntUsed){
+            if(operand->isIntUsed){
                 fprintf(outputFile," %d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
         case BRANCH_TRUE: 
             fprintf(outputFile,"	branch_true");
-            if(outputFile,operand->isLabelUsed){
+            if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
             }
-            if(outputFile,operand->isIntUsed){
+            if(operand->isIntUsed){
                 fprintf(outputFile," %d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
         case BRANCH_FALSE:
             fprintf(outputFile,"	branch_false");
-            if(outputFile,operand->isLabelUsed){
+            if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
             }
-            if(outputFile,operand->isIntUsed){
+            if(operand->isIntUsed){
                 fprintf(outputFile," %d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
         case PUSH_CONST:
             fprintf(outputFile,"	push_const");
-            if(outputFile,operand->isLabelUsed){
+            if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
             }
-            if(outputFile,operand->isIntUsed){
+            if(operand->isIntUsed){
                 fprintf(outputFile," %d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
-
+        case PUSH_CONST_RETURN_LABEL:
+            fprintf(outputFile,"	push_const");
+            fprintf(outputFile," %s", operand->label);
+            fprintf(outputFile,"%d", operand->integer);
+            fprintf(outputFile,"\n");
+            break;
         case PUSH_REG: 
             fprintf(outputFile,"	push_reg");
             switch(operand->regType) {
@@ -239,6 +272,9 @@ void code_gen(int opcode, struct operand* operand){
  
         case WRITE_LABEL :
             fprintf(outputFile,"%s:\n", operand->label);
+            break;
+        case WRITE_RETURN_LABEL :
+            fprintf(outputFile,"%s%d:\n", operand->label, operand->integer);
             break;
         case WRITE_LABEL_START :
             fprintf(outputFile,"%s_start:\n", operand->label);

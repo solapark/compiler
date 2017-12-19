@@ -52,6 +52,21 @@ main_start:
 	assign
 	fetch
 	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	shift_sp 1
+	push_const label_0
+	push_reg fp
+	push_reg fp
+	push_const 3
+	add
+	fetch
+	assign
+	fetch
+	shift_sp -1
 main_final:
 	push_reg fp
 	pop_reg sp

@@ -10,8 +10,8 @@ int main(){
 	k = 10;
 	l = &k;
 	
-    /*
 	i = outprint(l);
+    /*
 	write_int(k);
 	write_string("\n");
     */
