@@ -817,6 +817,9 @@ unary:		'(' expr ')'
     struct decl* constDecl = makeIntConstDecl($1);
     //constDecl->type = findDeclByStr("int");
     $$ = constDecl;
+    
+    //code_gen()
+    code_gen(PUSH_CONST, $1);
 }
 | CHAR_CONST	{
     REDUCE("unary->CHAR_CONST");
