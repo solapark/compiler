@@ -494,14 +494,23 @@ stmt:		expr ';'
     int errNum = checkSameType(findDeclByStr("returnId"), findDeclByStr("void"));
     semErr(errNum);
 }
-| RETURN expr ';'	
+| RETURN 
+{
+    //code_gen()
+    code_gen(PUSH_REG, setNewRegType(FP));
+    code_gen(PUSH_CONST, setNewInteger(-1));
+    code_gen(ADD, NULL);
+    code_gen(PUSH_CONST, setNewInteger(-1));
+    code_gen(ADD, NULL);
+} expr ';'	
 {
     REDUCE("stmt->RETURN expr ';'");
     //struct decl* declExpr = (struct decl*) malloc(sizeof(struct decl));
     //declExpr->type = $2;
     //int errNum = checkSameType(findDeclByStr("returnId"), declExpr);
-    int errNum = checkSameType(findDeclByStr("returnId"), $2);
+    int errNum = checkSameType(findDeclByStr("returnId"), $3);
     semErr(errNum);
+    
 }
 | ';'	
 {

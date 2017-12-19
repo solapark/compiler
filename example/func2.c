@@ -13,6 +13,8 @@ int main(){
 	k = 3;
 
 	l = test(i, j, k);
+    /*
 	write_int(l);
 	write_string("\n");
+    */
 }
