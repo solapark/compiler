@@ -140,7 +140,14 @@ int checkIsParam(struct id* name){
     }
 }
 
-
+int checkIsGlobal(struct id* name){
+   struct ste* targetSte = lookupSymbol(symbolTableHead, name);
+   if(targetSte-> scope == globalScope ){
+       return 1;
+   }else{
+       return 0;
+   }
+}
 
 
 

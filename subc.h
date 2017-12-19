@@ -109,7 +109,7 @@ struct ste *symbolTableHead;
 struct node *ssTop;
 struct node *typeListHead;
 struct node *argListHead;
-
+struct node *globalScope;
 
 /* For hash table */
 unsigned hash(char *name);

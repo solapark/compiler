@@ -7,6 +7,7 @@ void initType(){
     typeListHead = NULL;
 
     pushScope();
+    globalScope = ssTop;
     struct decl *intType, *voidType, *charType; 
     intType = makeTypeDecl(DECL_TYPE_INT);
     voidType =makeTypeDecl(DECL_TYPE_VOID);
