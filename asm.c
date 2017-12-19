@@ -62,6 +62,15 @@ void writeInitCode(){
     code_gen(EXIT, NULL);
 }
 
+void writeFuncFinalCode(struct operand* funcName){
+    code_gen(WRITE_LABEL_FINAL, funcName);
+    code_gen(PUSH_REG, setNewRegType(FP));
+    code_gen(POP_REG, setNewRegType(SP));
+    code_gen(POP_REG, setNewRegType(FP));
+    code_gen(POP_REG, setNewRegType(PC));
+    code_gen(WRITE_LABEL_END, funcName);
+}
+
 void code_gen(int opcode, struct operand* operand){
     switch(opcode) {
         case NEGATE: 

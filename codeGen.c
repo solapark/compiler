@@ -7,10 +7,12 @@ void procOffset(struct decl* newDecl, struct node* curSsTop){
     setDeclSize(newDecl);
     setScopeSize(curSsTop, newDecl);
 }
-
-void resetScopeSize(struct node *curSsTop){
+int getScopeSize(){
+    return ssTop->size;
+}
+void resetScopeSize(){
     printf("resetScopeSize\n");
-    curSsTop->size = 0;
+    ssTop->size = 0;
 }
 
 void setScopeSize(struct node *curSsTop,struct decl* curDecl){
@@ -23,7 +25,7 @@ void minusScopeSize(struct node *curSsTop, int operand){
 }
 void setOffset(struct node *curSsTop, struct decl *curDecl){
     printf("setOffset()\n");
-    curDecl -> offset = curSsTop->size;
+    curDecl -> offset = curSsTop->size +1;
 }
 
 void setDeclSize(struct decl* curDecl){
@@ -128,6 +130,15 @@ void setConstSize(struct decl* constDecl){
     constDecl->size = constDecl->type->size;
 }
 
+int checkIsParam(struct id* name){
+    struct ste* funcSte = findSteByStr("returnId")->prev;
+    struct ste* paramList = funcSte->decl->formals;
+    if(lookupSymbol(paramList, name)){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
 
 

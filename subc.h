@@ -105,6 +105,11 @@ struct decl {
 	struct decl	*next;
     struct Value* value;
 };
+struct ste *symbolTableHead;
+struct node *ssTop;
+struct node *typeListHead;
+struct node *argListHead;
+
 
 /* For hash table */
 unsigned hash(char *name);

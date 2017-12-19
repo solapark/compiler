@@ -133,15 +133,18 @@ ext_def:	type_specifier pointers ID ';'
     }
 
     //code_gen() : write label:
-    struct ste* funcSte = findSteByStr("returnId")->prev;
-    char* funcName =  getSteName(funcSte);
-    code_gen(WRITE_LABEL, setNewLabel(funcName));
+    code_gen(WRITE_LABEL, setNewLabel(findRecentFuncName()));
+    resetScopeSize();
 } local_defs 
 {
+    //code_gen() : make space for local var in func. 
     int scopeSize = getScopeSize();
+    //printf("scopeSize : %d\n", scopeSize);
     if(scopeSize>0){
         code_gen(SHIFT_SP, setNewInteger(scopeSize));
     }
+    //code_gen() : write label_start
+    code_gen(WRITE_LABEL_START, setNewLabel(findRecentFuncName()));
 } stmt_list '}' 
 {
     if($1 != NULL){
@@ -153,6 +156,10 @@ ext_def:	type_specifier pointers ID ';'
     }else{
         $$ = NULL;
     }
+   
+    //code_gen() : func_final
+    char* funcName = getSteName(getTopSte());
+    writeFuncFinalCode(setNewLabel(funcName));
 }
 ;
 

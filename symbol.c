@@ -1,10 +1,5 @@
 #include "subc.h"
 
-static struct ste *symbolTableHead;
-static struct node *ssTop;
-static struct node *typeListHead;
-static struct node *argListHead;
-
 /* For symbol table */
 void initType(){
     symbolTableHead = NULL;
@@ -22,7 +17,7 @@ void initType(){
     declare(enter(0, "char", 4), charType);
     enter(0, "returnId", 8);
 
-    resetScopeSize(ssTop);
+    resetScopeSize();
     printf("*****scope Stack******\n");
     printList(&ssTop);	
 
@@ -45,7 +40,7 @@ void pushScope(){
     addToHead(&ssTop, newNodePtr);
 
     //3. reset scopeSize.
-    resetScopeSize(ssTop);
+    resetScopeSize();
     //print scope stack
     //printSymbolTable(symbolTableHead);
     printf("*****scope Stack******\n");
@@ -101,9 +96,7 @@ void changeSSTopPnting(struct ste* newSte){
     ssTop->data = newSte;
 }
 
-int getScopeSize(){
-    return ssTop->size;
-}
+
 struct ste* lookupSymbol(struct ste* head, struct id* name){
     //1. find symbol in symbol table.
     struct ste* curSte = head;
@@ -685,16 +678,17 @@ struct ste* findSteByStr(char* name){
     return curSte;
 }
 
+char* findRecentFuncName(){
+    struct ste* funcSte = findSteByStr("returnId")->prev;
+    return getSteName(funcSte);
+}
+
 char* getSteName(struct ste* curSte){
             int leng = curSte->name->leng;
             char* name = malloc(leng+1);
             strncpy(name, curSte->name->name, leng);
             name[leng] = '\0';
             return name;
-
-//            char* realName = name;
- //           printf("realName = %s\n", realName);
-  //          return realName;
 }
 
 int checkSameType(struct decl* typeDecl1, struct decl* typeDecl2){
