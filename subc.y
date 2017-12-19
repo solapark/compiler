@@ -754,6 +754,9 @@ binary:		binary RELOP binary
     }else{
         $$ = NULL;
     }
+    
+    //code_gen()
+    code_gen(ADD, NULL);
 }
 | binary '-' binary	
 {
@@ -788,7 +791,7 @@ binary:		binary RELOP binary
     }    
 
     //code_gen()
-    if(checkIsVar($1)){
+    if(checkIsVar($1)==SUCCESS){
         code_gen(FETCH, NULL);
     }
 }
@@ -819,7 +822,7 @@ unary:		'(' expr ')'
     $$ = constDecl;
     
     //code_gen()
-    code_gen(PUSH_CONST, $1);
+    code_gen(PUSH_CONST, setNewInteger($1));
 }
 | CHAR_CONST	{
     REDUCE("unary->CHAR_CONST");
@@ -848,7 +851,7 @@ unary:		'(' expr ')'
             printf("local\n");
             offset += getParamSize($1);
         }else{//param
-            printf("param\n");
+            //printf("param\n");
         }
         code_gen(PUSH_CONST, setNewInteger(offset));
         code_gen(ADD, NULL);
@@ -971,7 +974,7 @@ unary:		'(' expr ')'
     if($2){
         int errNum = checkIsPtr($2->type);
         if(errNum == SUCCESS){
-            $$ = makeConstDecl($2->type->ptrTo, 0);
+            $$ = makeVarDecl($2->type->ptrTo);
         }else{
             semErr(NOT_PTR);
             $$ = NULL;
