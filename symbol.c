@@ -679,9 +679,26 @@ struct ste* findSteByStr(char* name){
     return curSte;
 }
 
+char* findFuncName(struct decl* funcDecl){
+    struct ste* curSte = symbolTableHead;
+    while(curSte){
+        if(curSte -> decl == funcDecl){
+            return getSteName(curSte);
+        }
+        curSte = curSte->prev;
+    }
+    return NULL;
+}
+
 char* findRecentFuncName(){
-    struct ste* funcSte = findSteByStr("returnId")->prev;
-    return getSteName(funcSte);
+    struct ste* curSte = symbolTableHead;
+    while(curSte){
+        if(curSte -> decl->declClass == DECL_FUNC){
+            return getSteName(curSte);
+        }
+        curSte = curSte->prev;
+    }
+    return NULL;
 }
 
 char* getSteName(struct ste* curSte){

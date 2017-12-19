@@ -78,7 +78,7 @@ struct operand* setNewRegType(int regType){
 
 struct operand* getReturnLabel(){
    struct operand* opPtr = makeOperand();
-   opPtr -> label = "labe_";
+   opPtr -> label = "label_";
    opPtr -> isLabelUsed = 1;
    opPtr -> integer = mustReturnLabel--;
    opPtr -> isIntUsed = 1;

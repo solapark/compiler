@@ -64,6 +64,12 @@ main_start:
 	push_const 3
 	add
 	fetch
+	push_reg sp
+	push_const -1
+	add
+	pop_reg fp
+	jump outprint
+label_0:
 	assign
 	fetch
 	shift_sp -1

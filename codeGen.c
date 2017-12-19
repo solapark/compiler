@@ -153,7 +153,17 @@ int checkIsGlobal(struct id* name){
    }
 }
 
-int getParamSize(struct id* name){
+int getParamSize(struct decl* funcDecl){
+    struct ste* paramList = funcDecl->formals;
+    int paramSize = 0;
+    while(paramList){
+        paramSize++;
+        paramList = paramList->prev;
+    }
+    return paramSize;
+}
+
+int getRecentFuncParamSize(){
     struct ste* funcSte = findSteByStr("returnId")->prev;
     struct ste* paramList = funcSte->decl->formals;
     int paramSize = 0;

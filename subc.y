@@ -848,7 +848,7 @@ unary:		'(' expr ')'
     int offset = getOffset($1);
     switch(declPtr->declClass){
         case DECL_FUNC :
-            printf("decl_funci\n");
+            printf("decl_func\n");
             code_gen(SHIFT_SP, setNewInteger(1));
             code_gen(PUSH_CONST_RETURN_LABEL, setNewReturnLabel());
             code_gen(PUSH_REG, setNewRegType(FP));
@@ -863,7 +863,7 @@ unary:		'(' expr ')'
                 code_gen(PUSH_REG, setNewRegType(FP));
                 if(!checkIsParam($1)){//local
                     //printf("local\n");
-                    offset += getParamSize($1);
+                    offset += getRecentFuncParamSize();
                 }else{//param
                     //printf("param\n");
                 }
@@ -1089,7 +1089,13 @@ unary:		'(' expr ')'
     resetArgList();
 
     //code_gen()
-
+    code_gen(PUSH_REG, setNewRegType(SP));
+    int paramSize = -1 * getParamSize($1);
+    code_gen(PUSH_CONST, setNewInteger(paramSize));
+    code_gen(ADD, NULL);
+    code_gen(POP_REG, setNewRegType(FP));
+    code_gen(JUMP, setNewLabel(findFuncName($1)));
+    code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }//	<= The type of unary is a function.
 | unary '(' ')'	
 {
@@ -1112,6 +1118,12 @@ unary:		'(' expr ')'
     }else{
         $$ =NULL;
     }
+
+    //code_gen()
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(POP_REG, setNewRegType(FP));
+    code_gen(JUMP, setNewLabel(findFuncName($1)));
+    code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }
 ;
 
