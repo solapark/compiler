@@ -11,9 +11,13 @@ outprint_start:
 	push_const 1
 	add
 	fetch
+	push_reg sp
+	fetch
 	push_reg fp
 	push_const 1
 	add
+	fetch
+	fetch
 	fetch
 outprint_final:
 	push_reg fp
@@ -27,10 +31,13 @@ main_start:
 	push_reg fp
 	push_const 2
 	add
+	push_reg sp
+	fetch
 	fetch
 	push_reg fp
 	push_const 3
 	add
+	push_reg sp
 	fetch
 	push_reg fp
 	push_const 2

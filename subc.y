@@ -559,12 +559,17 @@ const_expr:	expr
 }
 ;
 
-expr:		unary '=' expr	
+expr:		unary '=' 
+{
+                //code_gen
+                code_gen(PUSH_REG, setNewRegType(SP));
+                code_gen(FETCH, NULL);
+} expr	
 {
     REDUCE("expr->unary '=' expr");
-    if($1 && $3){
+    if($1 && $4){
         if(checkIsVar($1) == SUCCESS){
-            if(checkCompatible($1->type, $3) == SUCCESS){
+            if(checkCompatible($1->type, $4) == SUCCESS){
                 $$ = $1->type;
             }else{
                 semErr(LHS_RHS_NOT_SAME_TYPE);
@@ -781,6 +786,11 @@ binary:		binary RELOP binary
     }else{                                              
         $$ = NULL;                                    
     }    
+
+    //code_gen()
+    if(checkIsVar($1)){
+        code_gen(FETCH, NULL);
+    }
 }
 ;
 
@@ -834,12 +844,11 @@ unary:		'(' expr ')'
         if(!checkIsParam($1)){//local
             printf("local\n");
             offset += getParamSize($1);
-        }else{
+        }else{//param
             printf("param\n");
         }
         code_gen(PUSH_CONST, setNewInteger(offset));
         code_gen(ADD, NULL);
-        code_gen(FETCH, NULL);
     }
 }
 | STRING	{
@@ -967,6 +976,9 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+
+    //code_gen()
+    code_gen(FETCH, NULL);
 }		//<= The type of unary is pointer.
 | unary '[' expr ']'	
 {
