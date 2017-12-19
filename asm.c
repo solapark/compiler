@@ -1,5 +1,10 @@
 #include "asm.h"
 static int str_area_size = 0;
+static FILE* outputFile=NULL;
+
+void setOutputFile(FILE* file){
+    outputFile = file;
+}
 
 struct operand* setLabel(struct operand* opPtr, char* label){
    opPtr -> label = label;
@@ -71,7 +76,182 @@ void writeFuncFinalCode(struct operand* funcName){
     code_gen(WRITE_LABEL_END, funcName);
 }
 
+#define fprint  1
+#define print  1
+
+
 void code_gen(int opcode, struct operand* operand){
+#if fprint
+    switch(opcode) {
+        case NEGATE: 
+            fprintf(outputFile,"	negate\n");
+            break;
+        case NOT: 
+            fprintf(outputFile,"	not\n");
+            break;
+        case ABS: 
+            fprintf(outputFile,"	abs\n");
+            break;
+        case ADD: 
+            fprintf(outputFile,"	add\n");
+            break;
+        case SUB:
+            fprintf(outputFile,"	sub\n");
+            break;
+        case MUL:
+            fprintf(outputFile,"	mul\n");
+            break;
+        case DIV:
+            fprintf(outputFile,"	div\n");
+            break;
+        case MOD: 
+            fprintf(outputFile,"	mod\n");
+            break;
+        case AND: 
+            fprintf(outputFile,"	and\n");
+            break;
+        case OR:
+            fprintf(outputFile,"	or\n");
+            break;
+        case EQUAL: 
+            fprintf(outputFile,"	equal\n");
+            break;
+        case NOT_EQUAL: 
+            fprintf(outputFile,"	not_equal\n");
+            break;
+        case GREATER: 
+            fprintf(outputFile,"	greater\n");
+            break;
+        case GREATER_EQUAL:
+            fprintf(outputFile,"	greater_equal\n");
+            break;
+        case LESS: 
+            fprintf(outputFile,"	less\n");
+            break;
+        case LESS_EQUAL:
+            fprintf(outputFile,"	less_equal\n");
+            break;
+        case EXIT:
+            fprintf(outputFile,"	exit\n");
+            break;
+        case ASSIGN: 
+            fprintf(outputFile,"	assign\n");
+            break;
+        case FETCH:
+            fprintf(outputFile,"	fetch\n");
+            break;
+        case READ_INT: 
+            fprintf(outputFile,"	read_int\n");
+            break;
+        case READ_CHAR:
+            fprintf(outputFile,"	read_char\n");
+            break;
+        case WRITE_INT: 
+            fprintf(outputFile,"	write_int\n");
+            break;
+        case WRITE_CHAR: 
+            fprintf(outputFile,"	wrtie_char\n");
+            break;
+        case WRITE_STRING:
+            fprintf(outputFile,"	write_string\n");
+            break;
+
+        case JUMP: 
+            fprintf(outputFile,"	jump");
+            if(outputFile,operand->isLabelUsed){
+                fprintf(outputFile," %s", operand->label);
+            }
+            if(outputFile,operand->isIntUsed){
+                fprintf(outputFile," %d", operand->integer);
+            }
+            fprintf(outputFile,"\n");
+            break;
+        case BRANCH_TRUE: 
+            fprintf(outputFile,"	branch_true");
+            if(outputFile,operand->isLabelUsed){
+                fprintf(outputFile," %s", operand->label);
+            }
+            if(outputFile,operand->isIntUsed){
+                fprintf(outputFile," %d", operand->integer);
+            }
+            fprintf(outputFile,"\n");
+            break;
+        case BRANCH_FALSE:
+            fprintf(outputFile,"	branch_false");
+            if(outputFile,operand->isLabelUsed){
+                fprintf(outputFile," %s", operand->label);
+            }
+            if(outputFile,operand->isIntUsed){
+                fprintf(outputFile," %d", operand->integer);
+            }
+            fprintf(outputFile,"\n");
+            break;
+        case PUSH_CONST:
+            fprintf(outputFile,"	push_const");
+            if(outputFile,operand->isLabelUsed){
+                fprintf(outputFile," %s", operand->label);
+            }
+            if(outputFile,operand->isIntUsed){
+                fprintf(outputFile," %d", operand->integer);
+            }
+            fprintf(outputFile,"\n");
+            break;
+
+        case PUSH_REG: 
+            fprintf(outputFile,"	push_reg");
+            switch(operand->regType) {
+                case PC:
+                    fprintf(outputFile," pc\n");	
+                    break;
+                case SP:
+                    fprintf(outputFile," sp\n");	
+                    break;
+                case FP:
+                    fprintf(outputFile," fp\n");	
+                    break;
+            }
+            break;
+        case POP_REG:
+            fprintf(outputFile,"	pop_reg");
+            switch(operand->regType) {
+                case PC:
+                    fprintf(outputFile," pc\n");	
+                    break;
+                case SP:
+                    fprintf(outputFile," sp\n");	
+                    break;
+                case FP:
+                    fprintf(outputFile," fp\n");	
+                    break;
+            }
+            break;
+
+        case SHIFT_SP:
+            fprintf(outputFile,"	shift_sp %d\n", operand->integer);
+            break;
+
+        case DATA_SAVE:
+            fprintf(outputFile,"Lglob. data %d\n", operand->integer);
+            break;
+        case STRING_SAVE:
+            fprintf(outputFile,"str_%d. string %s\n", str_area_size++, operand->string);
+            break;
+ 
+        case WRITE_LABEL :
+            fprintf(outputFile,"%s:\n", operand->label);
+            break;
+        case WRITE_LABEL_START :
+            fprintf(outputFile,"%s_start:\n", operand->label);
+            break;
+        case WRITE_LABEL_FINAL :
+            fprintf(outputFile,"%s_final:\n", operand->label);
+            break;
+         case WRITE_LABEL_END :
+            fprintf(outputFile,"%s_end:\n", operand->label);
+            break;
+    }
+#endif
+#if print
     switch(opcode) {
         case NEGATE: 
             printf("	negate\n");
@@ -240,6 +420,7 @@ void code_gen(int opcode, struct operand* operand){
             printf("%s_end:\n", operand->label);
             break;
     }
+#endif
 }
 
 

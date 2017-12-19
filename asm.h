@@ -50,8 +50,6 @@
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
 
-
-
 struct operand
 {
 	char* label;

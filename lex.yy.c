@@ -558,9 +558,10 @@ char *yytext;
 static int comment_depth = 0;
 static int lineno = 1;
 static char* fileName ;
+static FILE* output;
 /* regular definitions */
 
-#line 564 "lex.yy.c"
+#line 565 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -779,9 +780,9 @@ YY_DECL
 		}
 
 	{
-#line 25 "subc.l"
+#line 26 "subc.l"
 
-#line 785 "lex.yy.c"
+#line 786 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -839,120 +840,120 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-#line 27 "subc.l"
+#line 28 "subc.l"
 case 2:
 YY_RULE_SETUP
-#line 27 "subc.l"
+#line 28 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return TYPE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "subc.l"
+#line 30 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return VOID; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "subc.l"
+#line 32 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return STRUCT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "subc.l"
+#line 34 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return RETURN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "subc.l"
+#line 36 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return IF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 37 "subc.l"
+#line 38 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return ELSE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 39 "subc.l"
+#line 40 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return WHILE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 41 "subc.l"
+#line 42 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return FOR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 43 "subc.l"
+#line 44 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return BREAK; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 45 "subc.l"
+#line 46 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return CONTINUE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 47 "subc.l"
+#line 48 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return LOGICAL_OR; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 49 "subc.l"
+#line 50 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return LOGICAL_AND; }
 	YY_BREAK
 case 14:
-#line 52 "subc.l"
-case 15:
 #line 53 "subc.l"
-case 16:
+case 15:
 #line 54 "subc.l"
+case 16:
+#line 55 "subc.l"
 case 17:
 YY_RULE_SETUP
-#line 54 "subc.l"
+#line 55 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return RELOP; }
 	YY_BREAK
 case 18:
-#line 57 "subc.l"
+#line 58 "subc.l"
 case 19:
 YY_RULE_SETUP
-#line 57 "subc.l"
+#line 58 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return EQUOP; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 59 "subc.l"
+#line 60 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return INCOP; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 61 "subc.l"
+#line 62 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return DECOP; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 63 "subc.l"
+#line 64 "subc.l"
 { printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return STRUCTOP; }	
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 65 "subc.l"
+#line 66 "subc.l"
 {
 		//Search the hash table to find the pointer of entry for yytext.
 		struct id* entered = enter(0, yytext, yyleng);
@@ -967,7 +968,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 76 "subc.l"
+#line 77 "subc.l"
 {//printf("%s\n", yytext);
             printLex(yytext);
 		   yylval.intVal = atoi(yytext);
@@ -976,7 +977,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 81 "subc.l"
+#line 82 "subc.l"
 {
 			/* String Variable */
 		   printLex(yytext);//printf("%s\n", yytext); 
@@ -986,7 +987,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 87 "subc.l"
+#line 88 "subc.l"
 {
 			/* Character Variable */
 		   printLex(yytext);//printf("%s\n", yytext);
@@ -996,210 +997,210 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 93 "subc.l"
+#line 94 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 95 "subc.l"
+#line 96 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 97 "subc.l"
+#line 98 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 99 "subc.l"
+#line 100 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 101 "subc.l"
+#line 102 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 103 "subc.l"
+#line 104 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 105 "subc.l"
+#line 106 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 107 "subc.l"
+#line 108 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 109 "subc.l"
+#line 110 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 111 "subc.l"
+#line 112 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 113 "subc.l"
+#line 114 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 115 "subc.l"
+#line 116 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);i
     return yytext[0];}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 117 "subc.l"
+#line 118 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 119 "subc.l"
+#line 120 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 121 "subc.l"
+#line 122 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 123 "subc.l"
+#line 124 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 125 "subc.l"
+#line 126 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 127 "subc.l"
+#line 128 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 129 "subc.l"
+#line 130 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 131 "subc.l"
+#line 132 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 133 "subc.l"
+#line 134 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 135 "subc.l"
+#line 136 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 137 "subc.l"
+#line 138 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 139 "subc.l"
+#line 140 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 141 "subc.l"
+#line 142 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 143 "subc.l"
+#line 144 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return ';';}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 145 "subc.l"
+#line 146 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 147 "subc.l"
+#line 148 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 149 "subc.l"
+#line 150 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 151 "subc.l"
+#line 152 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 153 "subc.l"
+#line 154 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 155 "subc.l"
+#line 156 "subc.l"
 {printLex(yytext);//printf("%s\n", yytext);
     return yytext[0];}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 157 "subc.l"
+#line 158 "subc.l"
 
 	YY_BREAK
 case 60:
 /* rule 60 can match eol */
 YY_RULE_SETUP
-#line 158 "subc.l"
+#line 159 "subc.l"
 ++lineno;
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 159 "subc.l"
+#line 160 "subc.l"
 {
 		   ++comment_depth;
 		   BEGIN (COMMENT);
@@ -1207,20 +1208,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 163 "subc.l"
+#line 164 "subc.l"
 if(--comment_depth == 0) BEGIN (INITIAL);
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 164 "subc.l"
+#line 165 "subc.l"
 {}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 167 "subc.l"
+#line 168 "subc.l"
 ECHO;
 	YY_BREAK
-#line 1224 "lex.yy.c"
+#line 1225 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -2222,7 +2223,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 167 "subc.l"
+#line 168 "subc.l"
 
 
 void printLex(char* token){
@@ -2237,10 +2238,12 @@ int read_line()
 char* get_file_name(){
     return fileName;
 }
-   
+
+FILE* getFilePtr(){
+    return output;
+} 
 int main(int argc, char* argv[])
 {
-   FILE *output;
    static char *keyword[] = {"int", "char", "void", "struct", "return", "if", "else", "while", "for", "break", "continue", "||", "&&", "<", "<=", ">", ">=", "==", "!=", "++", "--", "->", NULL };
    static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP, RELOP, RELOP, RELOP, EQUOP, EQUOP, INCOP, DECOP, STRUCTOP, 0 };
    int i;

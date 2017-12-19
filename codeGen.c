@@ -2,7 +2,7 @@
 
 //functions to calculate offset
 void procOffset(struct decl* newDecl, struct node* curSsTop){
-    printf("procOffset\n");
+    //printf("procOffset\n");
     setOffset(curSsTop, newDecl);
     setDeclSize(newDecl);
     setScopeSize(curSsTop, newDecl);
@@ -11,25 +11,29 @@ int getScopeSize(){
     return ssTop->size;
 }
 void resetScopeSize(){
-    printf("resetScopeSize\n");
+    //printf("resetScopeSize\n");
     ssTop->size = 0;
 }
 
 void setScopeSize(struct node *curSsTop,struct decl* curDecl){
-    printf("setScopeSize()\n");
+    //printf("setScopeSize()\n");
     curSsTop -> size += curDecl->size;
 }
 void minusScopeSize(struct node *curSsTop, int operand){
-    printf("minusScopeSize()\n");
+    //printf("minusScopeSize()\n");
     curSsTop->size -= operand;
 }
 void setOffset(struct node *curSsTop, struct decl *curDecl){
-    printf("setOffset()\n");
+    //printf("setOffset()\n");
     curDecl -> offset = curSsTop->size +1;
+}
+int getOffset(struct id* name){
+    struct decl* targetDecl = findDecl(name);
+    return targetDecl->offset;
 }
 
 void setDeclSize(struct decl* curDecl){
-   printf("setDeclSize()\n");
+   //printf("setDeclSize()\n");
    switch(curDecl->declClass){
        case DECL_VAR :
            setVarSize(curDecl);
@@ -49,27 +53,27 @@ void setDeclSize(struct decl* curDecl){
 }
 
 int calcVoidSize(){
-   printf("calcVoidSize()\n");
+   //printf("calcVoidSize()\n");
     return 1;
 }
 
 int calcIntSize(){
-   printf("calcintSize()\n");
+   //printf("calcintSize()\n");
     return 1;
 }
 
 int calcCharSize(){
-   printf("calcCharSize()\n");
+   //printf("calcCharSize()\n");
     return 1;
 }
 
 int calcPtrSize(){
-   printf("calcPtrSize()\n");
+   //printf("calcPtrSize()\n");
     return 1;
 }
 
 int calcStructSize(struct ste* fields){
-   printf("calcStructSize()\n");
+   //printf("calcStructSize()\n");
     struct ste* curSte = fields;
     int sumFieldSize = 0;
     while(curSte) {
@@ -80,14 +84,14 @@ int calcStructSize(struct ste* fields){
 }
 
 int calcArraySize(struct decl* arrType){
-   printf("calcArraySize()\n");
+   //printf("calcArraySize()\n");
     int numEle = arrType ->numIndex; 
     int sizeEle = arrType->elementVar->type->size;
     return numEle * sizeEle;
 }
 
 void setTypeSize(struct decl* typeDecl, struct ste* structFields){
-   printf("setTypeSize()\n");
+   //printf("setTypeSize()\n");
     int sizeEle = 0;
     switch(typeDecl->typeClass){
          case DECL_TYPE_VOID :
@@ -116,7 +120,7 @@ void setTypeSize(struct decl* typeDecl, struct ste* structFields){
 }
 
 void setVarSize(struct decl* varDecl){
-   printf("setVarSize()\n");
+   //printf("setVarSize()\n");
    if(varDecl->type->typeClass == DECL_TYPE_PTR){
        varDecl->size = varDecl->type->ptrTo->size;
    }else{
@@ -125,7 +129,7 @@ void setVarSize(struct decl* varDecl){
 }
 
 void setConstSize(struct decl* constDecl){
-   printf("setConstSize()\n");
+   //printf("setConstSize()\n");
     setTypeSize(constDecl->type, NULL);
     constDecl->size = constDecl->type->size;
 }
@@ -149,12 +153,13 @@ int checkIsGlobal(struct id* name){
    }
 }
 
-
-
-
-
-
-
-
-
-
+int getParamSize(struct id* name){
+    struct ste* funcSte = findSteByStr("returnId")->prev;
+    struct ste* paramList = funcSte->decl->formals;
+    int paramSize = 0;
+    while(paramList){
+        paramSize++;
+        paramList = paramList->prev;
+    }
+    return paramSize;
+}

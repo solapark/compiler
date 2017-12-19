@@ -10,6 +10,7 @@
 static int comment_depth = 0;
 static int lineno = 1;
 static char* fileName ;
+static FILE* output;
 %}
 
 /* regular definitions */
@@ -177,10 +178,12 @@ int read_line()
 char* get_file_name(){
     return fileName;
 }
-   
+
+FILE* getFilePtr(){
+    return output;
+} 
 int main(int argc, char* argv[])
 {
-   FILE *output;
    static char *keyword[] = {"int", "char", "void", "struct", "return", "if", "else", "while", "for", "break", "continue", "||", "&&", "<", "<=", ">", ">=", "==", "!=", "++", "--", "->", NULL };
    static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP, RELOP, RELOP, RELOP, EQUOP, EQUOP, INCOP, DECOP, STRUCTOP, 0 };
    int i;

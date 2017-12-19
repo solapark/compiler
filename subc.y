@@ -61,6 +61,7 @@ ext_def_list:	ext_def_list ext_def
 }
 | /* empty */	{
     REDUCE("ext_def_list->epsilon");
+    setOutputFile(getFilePtr());
     writeInitCode();
 }
 ;
@@ -821,6 +822,21 @@ unary:		'(' expr ')'
         semErr(NOT_DECLARED);
     }
 
+    //code_Gen()
+    int offset = getOffset($1);
+    if(checkIsGlobal($1)){//global
+        struct operand* opPtr = setNewLabel("Lglob");
+        setInteger(opPtr, offset);
+        code_gen(PUSH_CONST, opPtr);
+    }else{
+        code_gen(PUSH_REG, setNewRegType(FP));
+        if(checkIsParam($1)){//param
+            offset += getParamSize($1);
+        }
+        code_gen(PUSH_CONST, setNewInteger(offset));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+    }
 }
 | STRING	{
     //printf("unary->STRING %s \n", $1);
