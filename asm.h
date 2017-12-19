@@ -24,6 +24,7 @@
 #define LESS	274 
 #define LESS_EQUAL	275 
 #define JUMP	276 
+#define JUMP_TO_FINAL	304 
 #define BRANCH_TRUE	277 
 #define BRANCH_FALSE	278 
 #define EXIT	279 
@@ -51,7 +52,7 @@
 #define WRITE_LABEL_START 299
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
-//303
+//304
 
 struct operand
 {

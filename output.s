@@ -16,6 +16,8 @@ test_start:
 	push_const 1
 	add
 	fetch
+	assign
+	jump test_final
 test_final:
 	push_reg fp
 	pop_reg sp

@@ -184,7 +184,7 @@ void code_gen(int opcode, struct operand* operand){
             fprintf(outputFile,"	write_string\n");
             break;
 
-        case JUMP: 
+         case JUMP: 
             fprintf(outputFile,"	jump");
             if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
@@ -192,6 +192,11 @@ void code_gen(int opcode, struct operand* operand){
             if(operand->isIntUsed){
                 fprintf(outputFile," %d", operand->integer);
             }
+            fprintf(outputFile,"\n");
+            break;
+        case JUMP_TO_FINAL: 
+            fprintf(outputFile,"	jump");
+            fprintf(outputFile," %s_final", operand->label);
             fprintf(outputFile,"\n");
             break;
         case BRANCH_TRUE: 

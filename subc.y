@@ -511,6 +511,10 @@ stmt:		expr ';'
     int errNum = checkSameType(findDeclByStr("returnId"), $3);
     semErr(errNum);
     
+    //code_gen()
+    code_gen(ASSIGN, NULL);
+    code_gen(JUMP_TO_FINAL, setNewLabel(findRecentFuncName()));
+
 }
 | ';'	
 {
