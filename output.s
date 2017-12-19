@@ -20,6 +20,9 @@ outprint_start:
 	fetch
 	push_const 10
 	add
+	assign
+	fetch
+	shift_sp -1
 outprint_final:
 	push_reg fp
 	pop_reg sp
@@ -35,6 +38,9 @@ main_start:
 	push_reg sp
 	fetch
 	push_const 10
+	assign
+	fetch
+	shift_sp -1
 	push_reg fp
 	push_const 3
 	add
@@ -43,6 +49,9 @@ main_start:
 	push_reg fp
 	push_const 2
 	add
+	assign
+	fetch
+	shift_sp -1
 main_final:
 	push_reg fp
 	pop_reg sp

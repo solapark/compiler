@@ -582,6 +582,11 @@ expr:		unary '='
     }else{
         $$ = NULL;
     }
+    
+    //code_gen()
+    code_gen(ASSIGN, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(SHIFT_SP, setNewInteger(-1));
 }
 | or_expr	
 {
@@ -974,7 +979,7 @@ unary:		'(' expr ')'
     if($2){
         int errNum = checkIsPtr($2->type);
         if(errNum == SUCCESS){
-            $$ = makeVarDecl($2->type->ptrTo);
+            $$= makeVarDecl($2->type->ptrTo);
         }else{
             semErr(NOT_PTR);
             $$ = NULL;
