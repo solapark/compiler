@@ -1142,6 +1142,23 @@ unary:		'(' expr ')'
     code_gen(JUMP, setNewLabel(findFuncName($1)));
     code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }
+| 'write_string' '(' STRING ')' 
+{
+    REDUCE("unary->write_string '(' STRING ')'");
+    //code_gen()
+    //remove ')'
+    $3[strlen($3)-1] = '\0';
+    struct operand* opPtr = setNewString($3);
+    code_gen(STRING_SAVE, opPtr);
+    code_gen(PUSH_CONST_STRING, opPtr);
+    code_gen(WRITE_STRING, NULL);
+}
+| 'write_int' '(' expr ')' 
+{
+    REDUCE("unary->unary '(' expr ')'");
+    //code_gen()
+    code_gen(WRITE_INT, NULL);
+}
 ;
 
 args:		expr	

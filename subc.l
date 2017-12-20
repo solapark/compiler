@@ -21,9 +21,14 @@ integer_const	([1-9]{digit}*)|"0"
 white_space		[ \t]+
 special_char	\\[nt]
 
-
 %x COMMENT
 %%
+"write_int"		        { printLex(yytext);//printf("%s\n", yytext);
+    return yytext[0];}
+"write_string"		        { printLex(yytext);//printf("%s\n", yytext);
+    return yytext[0];}
+"write_char"		        { printLex(yytext);//printf("%s\n", yytext);
+    return yytext[0];}
 "int" 		|
 "char"		{ printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return TYPE; }
@@ -66,7 +71,6 @@ special_char	\\[nt]
 {id}		{
 		//Search the hash table to find the pointer of entry for yytext.
 		struct id* entered = enter(0, yytext, yyleng);
-	
 		printLex(yytext);//printf("%s\n", yytext);
 		yylval.idPtr = entered;
 		//yylval.stringVal = entered->name;

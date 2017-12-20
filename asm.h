@@ -52,7 +52,8 @@
 #define WRITE_LABEL_START 299
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
-//304
+#define PUSH_CONST_STRING     305 
+//num of define : 305
 
 struct operand
 {

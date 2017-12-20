@@ -11,8 +11,6 @@ int main(){
 	l = &k;
 	
 	i = outprint(l);
-    /*
 	write_int(k);
 	write_string("\n");
-    */
 }

@@ -235,6 +235,9 @@ void code_gen(int opcode, struct operand* operand){
             fprintf(outputFile,"%d", operand->integer);
             fprintf(outputFile,"\n");
             break;
+        case PUSH_CONST_STRING :
+            fprintf(outputFile,"    push_const str_%d\n", operand->integer);
+            break;
         case PUSH_REG: 
             fprintf(outputFile,"	push_reg");
             switch(operand->regType) {
@@ -272,7 +275,8 @@ void code_gen(int opcode, struct operand* operand){
             fprintf(outputFile,"Lglob. data %d\n", operand->integer);
             break;
         case STRING_SAVE:
-            fprintf(outputFile,"str_%d. string %s\n", str_area_size++, operand->string);
+            fprintf(outputFile,"str_%d. string %s\n", str_area_size, operand->string);
+            setInteger(operand, str_area_size++);
             break;
  
         case WRITE_LABEL :

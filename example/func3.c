@@ -1,5 +1,5 @@
 void print(int a){
-	write_int(a);
+    write_int(a);
 }
 
 int main(){
