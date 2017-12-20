@@ -43,6 +43,7 @@ main_start:
 	pop_reg fp
 	jump print
 label_0:
+	shift_sp -1
 str_0. string "\n"
     push_const str_0
 	write_string

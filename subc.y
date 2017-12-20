@@ -487,6 +487,8 @@ stmt_list:	stmt_list stmt
 stmt:		expr ';'	
 {
     REDUCE("stmt->expr ';'");
+    //code_gen()
+    code_gen(SHIFT_SP, setNewInteger(-1));
 }
 | compound_stmt	
 {
@@ -497,6 +499,8 @@ stmt:		expr ';'
     REDUCE("stmt->RETURN ';'");
     int errNum = checkSameType(findDeclByStr("returnId"), findDeclByStr("void"));
     semErr(errNum);
+    //code_gen()
+    code_gen(JUMP_TO_FINAL, setNewLabel(findRecentFuncName()));
 }
 | RETURN 
 {
@@ -509,9 +513,6 @@ stmt:		expr ';'
 } expr ';'	
 {
     REDUCE("stmt->RETURN expr ';'");
-    //struct decl* declExpr = (struct decl*) malloc(sizeof(struct decl));
-    //declExpr->type = $2;
-    //int errNum = checkSameType(findDeclByStr("returnId"), declExpr);
     int errNum = checkSameType(findDeclByStr("returnId"), $3);
     semErr(errNum);
     
@@ -547,6 +548,23 @@ stmt:		expr ';'
 | CONTINUE ';'		
 {
     REDUCE("stmt->CONTINUE ';'");
+}
+| 'write_string' '(' STRING ')' 
+{
+    REDUCE("unary->write_string '(' STRING ')'");
+    //code_gen()
+    //remove ')'
+    $3[strlen($3)-1] = '\0';
+    struct operand* opPtr = setNewString($3);
+    code_gen(STRING_SAVE, opPtr);
+    code_gen(PUSH_CONST_STRING, opPtr);
+    code_gen(WRITE_STRING, NULL);
+}
+| 'write_int' '(' expr ')' 
+{
+    REDUCE("unary->unary '(' expr ')'");
+    //code_gen()
+    code_gen(WRITE_INT, NULL);
 }
 ;
 
@@ -603,7 +621,6 @@ expr:		unary '='
     //code_gen()
     code_gen(ASSIGN, NULL);
     code_gen(FETCH, NULL);
-    code_gen(SHIFT_SP, setNewInteger(-1));
 }
 | or_expr	
 {
@@ -1142,23 +1159,7 @@ unary:		'(' expr ')'
     code_gen(JUMP, setNewLabel(findFuncName($1)));
     code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }
-| 'write_string' '(' STRING ')' 
-{
-    REDUCE("unary->write_string '(' STRING ')'");
-    //code_gen()
-    //remove ')'
-    $3[strlen($3)-1] = '\0';
-    struct operand* opPtr = setNewString($3);
-    code_gen(STRING_SAVE, opPtr);
-    code_gen(PUSH_CONST_STRING, opPtr);
-    code_gen(WRITE_STRING, NULL);
-}
-| 'write_int' '(' expr ')' 
-{
-    REDUCE("unary->unary '(' expr ')'");
-    //code_gen()
-    code_gen(WRITE_INT, NULL);
-}
+
 ;
 
 args:		expr	
