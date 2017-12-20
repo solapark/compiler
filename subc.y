@@ -52,6 +52,7 @@
 program:	ext_def_list	
 {
     REDUCE("program->ext_def_list");
+    code_gen(DATA_SAVE, setNewInteger(getGlobalSize()));
 }
 ;
 

@@ -31,7 +31,9 @@ int getOffset(struct id* name){
     struct decl* targetDecl = findDecl(name);
     return targetDecl->offset;
 }
-
+int getGlobalSize(){
+    return globalScope->size;
+}
 void setDeclSize(struct decl* curDecl){
    //printf("setDeclSize()\n");
    switch(curDecl->declClass){
