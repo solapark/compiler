@@ -1127,6 +1127,13 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+    
+    //code_gen()
+    //offset -1 when it is struct
+    struct decl* fieldPtr = structAccess($1->type->ptrTo, $3);
+    int strFieldOffset = fieldPtr->offset -1;
+    code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
+    code_gen(ADD, NULL);
 }//	<= The type of unary is a struct.
 | unary '(' args ')' 
 {
