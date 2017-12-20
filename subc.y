@@ -20,18 +20,20 @@
         struct decl	*declPtr;
         struct ste	*stePtr;
         struct node 	*nodePtr;
+        struct operand  *operandPtr;
     }
 
 /* Token and Types */
-%token	<stringVal>	TYPE VOID STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP EQUOP INCOP DECOP STRUCTOP
+%token	<stringVal>	TYPE VOID STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP EQUOP INCOP DECOP STRUCTOP 
 %token	<idPtr>		ID
 %token	<intVal>	INTEGER_CONST
 %token	<stringVal>	STRING CHAR_CONST
 
-%type	<declPtr>	program	ext_def_list ext_def type_specifier struct_specifier func_decl def_list def compound_stmt local_defs stmt_list stmt expr_e const_expr expr or_expr or_list and_expr and_list binary unary
+%type	<declPtr>	program	ext_def_list ext_def type_specifier struct_specifier func_decl def_list def compound_stmt local_defs stmt_list stmt expr_e const_expr expr or_expr or_list and_expr and_list binary unary 
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
+%type 	<operandPtr>	if_label
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -526,11 +528,11 @@ stmt:		expr ';'
 {
     REDUCE("stmt->';'");
 }
-| IF '(' expr ')' stmt %prec IFSIMPLE	
+| IF if_label '(' expr ')' stmt %prec IFSIMPLE	
 {
     REDUCE("stmt->IF '(' expr ')' stmt	");
 }
-| IF '(' expr ')' stmt ELSE stmt %prec ELSE
+| IF if_label '(' expr ')' stmt ELSE stmt %prec ELSE
 {
     REDUCE("stmt->IF '(' expr ')' stmt ELSE stmt");
 }
@@ -566,6 +568,14 @@ stmt:		expr ';'
     REDUCE("unary->unary '(' expr ')'");
     //code_gen()
     code_gen(WRITE_INT, NULL);
+}
+;
+
+if_label: /*empty*/
+{
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(WRITE_RETURN_LABEL, opPtr);
+    $$ = opPtr;
 }
 ;
 

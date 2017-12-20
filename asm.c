@@ -1,7 +1,6 @@
 #include "asm.h"
 static int str_area_size = 0;
 static int return_label_num = 0;
-static int mustReturnLabel = 0;
 static FILE* outputFile=NULL;
 
 void setOutputFile(FILE* file){
@@ -9,7 +8,6 @@ void setOutputFile(FILE* file){
 }
 
 struct operand* setReturnLabel(struct operand* opPtr){
-   mustReturnLabel = return_label_num;
    opPtr -> label = "label_";
    opPtr -> isLabelUsed = 1;
    opPtr -> integer = return_label_num ++;
@@ -75,7 +73,7 @@ struct operand* setNewRegType(int regType){
    setRegType(opPtr, regType);
    return opPtr;
 }
-
+/*
 struct operand* getReturnLabel(){
    struct operand* opPtr = makeOperand();
    opPtr -> label = "label_";
@@ -84,7 +82,7 @@ struct operand* getReturnLabel(){
    opPtr -> isIntUsed = 1;
    return opPtr;
 }
-
+*/
 void writeInitCode(){
     code_gen(PUSH_CONST, setNewLabel("EXIT"));
     code_gen(PUSH_REG,setNewRegType(FP));
