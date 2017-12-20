@@ -31,6 +31,7 @@ int getOffset(struct id* name){
     struct decl* targetDecl = findDecl(name);
     return targetDecl->offset;
 }
+
 int getGlobalSize(){
     return globalScope->size;
 }
@@ -85,10 +86,16 @@ int calcStructSize(struct ste* fields){
     return sumFieldSize;
 }
 
+int calcEleSize(struct decl* arrType){
+    int sizeEle = arrType->elementVar->type->size;
+    return sizeEle;
+}
+
+
 int calcArraySize(struct decl* arrType){
    //printf("calcArraySize()\n");
     int numEle = arrType ->numIndex; 
-    int sizeEle = arrType->elementVar->type->size;
+    int sizeEle = calcEleSize(arrType);
     return numEle * sizeEle;
 }
 

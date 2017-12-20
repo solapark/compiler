@@ -1066,6 +1066,13 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+    
+    //code_gen()
+    int oneEleSize = calcEleSize($1->type);
+    code_gen(PUSH_CONST, setNewInteger(oneEleSize));
+    code_gen(MUL, NULL);
+    code_gen(ADD, NULL);
+
 }//	<= The type of expr is integer.
 | unary '.' ID	
 {
@@ -1086,6 +1093,14 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+    
+    //code_gen()
+    //offset -1 when it is struct
+    struct decl* fieldPtr = structAccess($1->type, $3);
+    int strFieldOffset = fieldPtr->offset -1;
+    code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
+    code_gen(ADD, NULL);
+
 }//	<= The type of unary is a struct.
 | unary STRUCTOP ID	
 {
