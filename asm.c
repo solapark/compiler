@@ -238,6 +238,9 @@ void code_gen(int opcode, struct operand* operand){
         case PUSH_CONST_STRING :
             fprintf(outputFile,"    push_const str_%d\n", operand->integer);
             break;
+        case PUSH_CONST_LGLOB :
+            fprintf(outputFile,"    push_const Lglob+%d\n", operand->integer);
+            break;
         case PUSH_REG: 
             fprintf(outputFile,"	push_reg");
             switch(operand->regType) {

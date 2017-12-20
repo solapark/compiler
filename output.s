@@ -8,64 +8,33 @@ EXIT:
 main:
 	shift_sp 84
 main_start:
-	push_reg fp
-	push_const 1
+	push_const Lglob 3
+	push_const 2
+	add
+	push_const 0
 	add
 	push_reg sp
 	fetch
-	push_const 5
+	push_const 1000
 	assign
 	fetch
 	shift_sp -1
 	push_reg fp
-	push_const 5
-	add
-	push_reg fp
 	push_const 1
-	add
-	fetch
-	push_const 8
-	mul
-	add
-	push_const 2
-	add
-	push_const 1
-	add
-	push_const 3
 	add
 	push_reg sp
 	fetch
-	push_const 10
-	assign
-	fetch
-	shift_sp -1
-	push_reg fp
+	push_const Lglob 3
 	push_const 2
 	add
-	push_reg sp
-	fetch
-	push_reg fp
-	push_const 5
-	add
-	push_reg fp
-	push_const 1
-	add
-	fetch
-	push_const 8
-	mul
-	add
-	push_const 2
-	add
-	push_const 1
-	add
-	push_const 3
+	push_const 0
 	add
 	fetch
 	assign
 	fetch
 	shift_sp -1
 	push_reg fp
-	push_const 2
+	push_const 1
 	add
 	fetch
 	write_int

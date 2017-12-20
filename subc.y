@@ -906,9 +906,7 @@ unary:		'(' expr ')'
         case DECL_CONST :
             if(checkIsGlobal($1)){//global
                 //printf("global\n");
-                struct operand* opPtr = setNewLabel("Lglob");
-                setInteger(opPtr, offset);
-                code_gen(PUSH_CONST, opPtr);
+                code_gen(PUSH_CONST_LGLOB, setNewInteger(offset-1));
             }else{
                 code_gen(PUSH_REG, setNewRegType(FP));
                 if(!checkIsParam($1)){//local

@@ -30,6 +30,7 @@
 #define EXIT	279 
 #define PUSH_CONST	280 
 #define PUSH_CONST_RETURN_LABEL	303 
+#define PUSH_CONST_LGLOB    306
 #define PUSH_REG	281 
 #define POP_REG	282 
 #define SHIFT_SP	283 
@@ -53,7 +54,7 @@
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
 #define PUSH_CONST_STRING     305 
-//num of define : 305
+//num of define : 306
 
 struct operand
 {
