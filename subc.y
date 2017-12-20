@@ -1102,8 +1102,10 @@ unary:		'(' expr ')'
     //offset -1 when it is struct
     struct decl* fieldPtr = structAccess($1->type, $3);
     int strFieldOffset = fieldPtr->offset -1;
-    code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
-    code_gen(ADD, NULL);
+    if(strFieldOffset > 0){
+        code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
+        code_gen(ADD, NULL);
+    }
 
 }//	<= The type of unary is a struct.
 | unary STRUCTOP ID	

@@ -8,10 +8,8 @@ EXIT:
 main:
 	shift_sp 84
 main_start:
-	push_const Lglob 3
+    push_const Lglob+2
 	push_const 2
-	add
-	push_const 0
 	add
 	push_reg sp
 	fetch
@@ -24,10 +22,8 @@ main_start:
 	add
 	push_reg sp
 	fetch
-	push_const Lglob 3
+    push_const Lglob+2
 	push_const 2
-	add
-	push_const 0
 	add
 	fetch
 	assign
