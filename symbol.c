@@ -203,7 +203,7 @@ int declare(struct id* name, struct decl* type){
     //printList(&ssTop);
 
     //5. process offset in DECL and scopeStack 
-    if(newSte->name != enter(0, "returnId", 8) && newSte->decl->declClass != DECL_FUNC &&newSte->decl->declClass != DECL_TYPE ){ 
+    if(newSte->name != enter(0, "returnId", 8) && newSte->decl->declClass != DECL_FUNC ){ 
         procOffset(newSte->decl, ssTop);
     }
 

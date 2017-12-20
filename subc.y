@@ -579,7 +579,7 @@ expr_e:		expr
 }
 ;
 
-const_expr:	expr	
+const_expr:	/*expr	
 {
     REDUCE("const_expr->expr");
     if($1){
@@ -592,6 +592,15 @@ const_expr:	expr
     }else{
         $$ = NULL;
     }
+}
+| */
+INTEGER_CONST 
+{
+    REDUCE("const_expr->INTEGER_CONST");
+    struct decl* constDecl = makeIntConstDecl($1);
+    //constDecl->type = findDeclByStr("int");
+    $$ = constDecl -> type;
+    $$ -> intConst = constDecl->intConst; 
 }
 ;
 
@@ -831,6 +840,8 @@ binary:		binary RELOP binary
     }    
 
     //code_gen()
+    //if(checkIsConst($1) == SUCCESS && checkIsInt($1->type)==SUCCESS){
+    //    code_gen(PUSH_CONST, 
     if(checkIsVar($1)==SUCCESS){
         code_gen(FETCH, NULL);
     }
@@ -908,7 +919,7 @@ unary:		'(' expr ')'
             break;
     }
 }
-| STRING	{
+| STRING    %prec IFSIMPLE	{
     //printf("unary->STRING %s \n", $1);
     REDUCE("unary->STRING");
     $$ = makeCharConstDecl($1);	
