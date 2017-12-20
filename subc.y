@@ -821,6 +821,8 @@ binary:		binary RELOP binary
     }else{
         $$ = NULL;
     }
+    //code_gen()
+    code_gen(SUB, NULL);
 }
 | unary	%prec '='	
 {
@@ -892,14 +894,16 @@ unary:		'(' expr ')'
     //code_Gen()
     struct decl* declPtr = findDecl($1);
     int offset = getOffset($1);
+    //printf("declClass = %d\n", declPtr->declClass);
     switch(declPtr->declClass){
         case DECL_FUNC :
-            printf("decl_func\n");
+            //printf("decl_func\n");
             code_gen(SHIFT_SP, setNewInteger(1));
             code_gen(PUSH_CONST_RETURN_LABEL, setNewReturnLabel());
             code_gen(PUSH_REG, setNewRegType(FP));
            break;
         case DECL_VAR :
+        case DECL_CONST :
             if(checkIsGlobal($1)){//global
                 //printf("global\n");
                 struct operand* opPtr = setNewLabel("Lglob");
