@@ -13,7 +13,7 @@ main_start:
 	add
 	push_reg sp
 	fetch
-	push_const 7
+	push_const 5
 	assign
 	fetch
 	shift_sp -1
@@ -27,16 +27,15 @@ main_start:
 	push_const 8
 	mul
 	add
+	push_const 2
+	add
 	push_const 1
+	add
+	push_const 3
 	add
 	push_reg sp
 	fetch
-	push_reg fp
-	push_const 1
-	add
-	fetch
 	push_const 10
-	sub
 	assign
 	fetch
 	shift_sp -1
@@ -55,7 +54,11 @@ main_start:
 	push_const 8
 	mul
 	add
+	push_const 2
+	add
 	push_const 1
+	add
+	push_const 3
 	add
 	fetch
 	assign

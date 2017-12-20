@@ -476,8 +476,8 @@ static const yytype_uint16 yyrline[] =
      553,   564,   572,   577,   597,   608,   607,   635,   646,   657,
      671,   682,   693,   707,   718,   733,   747,   762,   777,   792,
      810,   827,   853,   863,   871,   880,   886,   926,   931,   946,
-     960,   975,   993,  1008,  1023,  1037,  1055,  1081,  1109,  1142,
-    1172,  1203,  1213
+     960,   975,   993,  1008,  1023,  1037,  1055,  1083,  1111,  1144,
+    1174,  1205,  1215
 };
 #endif
 
@@ -2699,16 +2699,18 @@ yyreduce:
     
     //code_gen()
     int oneEleSize = calcEleSize((yyvsp[-3].declPtr)->type);
-    code_gen(PUSH_CONST, setNewInteger(oneEleSize));
-    code_gen(MUL, NULL);
+    if(oneEleSize > 1){
+        code_gen(PUSH_CONST, setNewInteger(oneEleSize));
+        code_gen(MUL, NULL);
+    }
     code_gen(ADD, NULL);
 
 }
-#line 2708 "subc.tab.c" /* yacc.c:1646  */
+#line 2710 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 1082 "subc.y" /* yacc.c:1646  */
+#line 1084 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '.' ID");
     if((yyvsp[-2].declPtr) != NULL && (yyvsp[0].idPtr) != NULL ){
@@ -2736,11 +2738,11 @@ yyreduce:
     code_gen(ADD, NULL);
 
 }
-#line 2740 "subc.tab.c" /* yacc.c:1646  */
+#line 2742 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 1110 "subc.y" /* yacc.c:1646  */
+#line 1112 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary STRUCTOP ID");
     if((yyvsp[-2].declPtr) != NULL && (yyvsp[0].idPtr) != NULL ){
@@ -2773,11 +2775,11 @@ yyreduce:
     code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
     code_gen(ADD, NULL);
 }
-#line 2777 "subc.tab.c" /* yacc.c:1646  */
+#line 2779 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 1143 "subc.y" /* yacc.c:1646  */
+#line 1145 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' args ')'");
     if((yyvsp[-3].declPtr) && (yyvsp[-1].nodePtr)) {
@@ -2807,11 +2809,11 @@ yyreduce:
     code_gen(JUMP, setNewLabel(findFuncName((yyvsp[-3].declPtr))));
     code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }
-#line 2811 "subc.tab.c" /* yacc.c:1646  */
+#line 2813 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 1173 "subc.y" /* yacc.c:1646  */
+#line 1175 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("unary->unary '(' ')'");
     if((yyvsp[-2].declPtr) != NULL ){
@@ -2839,11 +2841,11 @@ yyreduce:
     code_gen(JUMP, setNewLabel(findFuncName((yyvsp[-2].declPtr))));
     code_gen(WRITE_RETURN_LABEL, getReturnLabel());
 }
-#line 2843 "subc.tab.c" /* yacc.c:1646  */
+#line 2845 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 1204 "subc.y" /* yacc.c:1646  */
+#line 1206 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->expr");
     if((yyvsp[0].declPtr) != NULL){
@@ -2853,11 +2855,11 @@ yyreduce:
         (yyval.nodePtr) = NULL;
     }
 }
-#line 2857 "subc.tab.c" /* yacc.c:1646  */
+#line 2859 "subc.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 1214 "subc.y" /* yacc.c:1646  */
+#line 1216 "subc.y" /* yacc.c:1646  */
     {
     REDUCE("args->args ',' expr");
     if((yyvsp[-2].nodePtr) != NULL && (yyvsp[0].declPtr) != NULL){
@@ -2868,11 +2870,11 @@ yyreduce:
     }
 
 }
-#line 2872 "subc.tab.c" /* yacc.c:1646  */
+#line 2874 "subc.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2876 "subc.tab.c" /* yacc.c:1646  */
+#line 2878 "subc.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3100,7 +3102,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1225 "subc.y" /* yacc.c:1906  */
+#line 1227 "subc.y" /* yacc.c:1906  */
 
 
 /*  Additional C Codes 

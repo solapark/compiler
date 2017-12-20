@@ -1073,8 +1073,10 @@ unary:		'(' expr ')'
     
     //code_gen()
     int oneEleSize = calcEleSize($1->type);
-    code_gen(PUSH_CONST, setNewInteger(oneEleSize));
-    code_gen(MUL, NULL);
+    if(oneEleSize > 1){
+        code_gen(PUSH_CONST, setNewInteger(oneEleSize));
+        code_gen(MUL, NULL);
+    }
     code_gen(ADD, NULL);
 
 }//	<= The type of expr is integer.
