@@ -362,7 +362,11 @@ param_list:	param_decl
     if($1 == NULL || $3 == NULL){
         $$ = NULL;
     }else{
-        $1->prev = $3;
+        struct ste* curSte = $1;
+        while(curSte->prev){
+            curSte = curSte-> prev;
+        }
+        curSte->prev = $3;
         $$ = $1;
     }
 }

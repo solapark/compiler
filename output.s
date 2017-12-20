@@ -75,7 +75,7 @@ main_start:
 	add
 	fetch
 	push_reg sp
-	push_const -2
+	push_const -3
 	add
 	pop_reg fp
 	jump test
