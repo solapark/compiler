@@ -33,7 +33,7 @@
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
-%type 	<operandPtr>	if_label
+%type 	<operandPtr>	if_label func_label
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -908,10 +908,7 @@ unary:		'(' expr ')'
     switch(declPtr->declClass){
         case DECL_FUNC :
             //printf("decl_func\n");
-            code_gen(SHIFT_SP, setNewInteger(1));
-            code_gen(PUSH_CONST_RETURN_LABEL, setNewReturnLabel());
-            code_gen(PUSH_REG, setNewRegType(FP));
-           break;
+          break;
         case DECL_VAR :
         case DECL_CONST :
             if(checkIsGlobal($1)){//global
@@ -1151,12 +1148,12 @@ unary:		'(' expr ')'
     code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
     code_gen(ADD, NULL);
 }//	<= The type of unary is a struct.
-| unary '(' args ')' 
+| unary '(' func_label args ')' 
 {
     REDUCE("unary->unary '(' args ')'");
-    if($1 && $3) {
+    if($1 && $4) {
         if(checkIsFunc($1) == SUCCESS){
-            struct decl* returnConstDecl = checkFunctionCall($1, $3);
+            struct decl* returnConstDecl = checkFunctionCall($1, $4);
             if(returnConstDecl){
                 $$=returnConstDecl;
             }else{
@@ -1172,16 +1169,16 @@ unary:		'(' expr ')'
     }
     resetArgList();
 
-    //code_gen()
+
     code_gen(PUSH_REG, setNewRegType(SP));
     int paramSize = -1 * getParamSize($1);
     code_gen(PUSH_CONST, setNewInteger(paramSize));
     code_gen(ADD, NULL);
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
-    code_gen(WRITE_RETURN_LABEL, getReturnLabel());
+    code_gen(WRITE_RETURN_LABEL,$3); 
 }//	<= The type of unary is a function.
-| unary '(' ')'	
+| unary '(' func_label ')'	
 {
     REDUCE("unary->unary '(' ')'");
     if($1 != NULL ){
@@ -1207,9 +1204,20 @@ unary:		'(' expr ')'
     code_gen(PUSH_REG, setNewRegType(SP));
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
-    code_gen(WRITE_RETURN_LABEL, getReturnLabel());
+    code_gen(WRITE_RETURN_LABEL, $3);
 }
 
+;
+
+func_label: /*empty*/   
+{
+    //code_gen()
+    code_gen(SHIFT_SP, setNewInteger(1));
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
+    code_gen(PUSH_REG, setNewRegType(FP));
+    $$ = opPtr;
+}
 ;
 
 args:		expr	

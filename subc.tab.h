@@ -83,9 +83,10 @@ union YYSTYPE
         struct decl	*declPtr;
         struct ste	*stePtr;
         struct node 	*nodePtr;
+        struct operand  *operandPtr;
     
 
-#line 89 "subc.tab.h" /* yacc.c:1909  */
+#line 90 "subc.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
