@@ -54,14 +54,18 @@ special_char	\\[nt]
     yylval.stringVal = yytext;return LOGICAL_OR; }
 "&&"		{printLex(yytext);//printf("%s\n", yytext); 
     yylval.stringVal = yytext;return LOGICAL_AND; }
-"<"		|
-"<="		|
-">"		|
+"<"		    {printLex(yytext);//printf("%s\n", yytext); 
+    yylval.stringVal = yytext;return RELOP_LESS; }
+"<="		{printLex(yytext);//printf("%s\n", yytext); 
+    yylval.stringVal = yytext;return RELOP_LESS_EQUAL; }
+">"		    {printLex(yytext);//printf("%s\n", yytext); 
+    yylval.stringVal = yytext;return RELOP_GREATER; }
 ">="		{printLex(yytext);//printf("%s\n", yytext); 
-    yylval.stringVal = yytext;return RELOP; }
-"=="		|
-"!="		{ printLex(yytext);//printf("%s\n", yytext);
-    yylval.stringVal = yytext;return EQUOP; }
+    yylval.stringVal = yytext;return RELOP_GREATER_EQUAL; }
+"=="		{printLex(yytext);//printf("%s\n", yytext); 
+    yylval.stringVal = yytext;return EQUOP_EQUAL; }
+"!="		{ printLex(yytext);
+    yylval.stringVal = yytext;return EQUOP_NOT_EQUAL; }
 "++"		{ printLex(yytext);//printf("%s\n", yytext);
     yylval.stringVal = yytext;return INCOP; }
 "--"		{ printLex(yytext);//printf("%s\n", yytext);
@@ -189,7 +193,7 @@ FILE* getFilePtr(){
 int main(int argc, char* argv[])
 {
    static char *keyword[] = {"int", "char", "void", "struct", "return", "if", "else", "while", "for", "break", "continue", "||", "&&", "<", "<=", ">", ">=", "==", "!=", "++", "--", "->", NULL };
-   static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP, RELOP, RELOP, RELOP, EQUOP, EQUOP, INCOP, DECOP, STRUCTOP, 0 };
+   static int tokentype[] = {TYPE, TYPE, VOID, STRUCT, RETURN, IF, ELSE, WHILE, FOR, BREAK, CONTINUE, LOGICAL_OR, LOGICAL_AND, RELOP_LESS, RELOP_LESS_EQUAL, RELOP_GREATER, RELOP_GREATER_EQUAL, EQUOP_EQUAL, EQUOP_NOT_EQUAL, INCOP, DECOP, STRUCTOP, 0 };
    int i;
    for(i = 0; keyword[i] != NULL; i++)
       enter(0, keyword[i], strlen(keyword[i]));

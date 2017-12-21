@@ -24,7 +24,7 @@
     }
 
 /* Token and Types */
-%token	<stringVal>	TYPE VOID STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP EQUOP INCOP DECOP STRUCTOP 
+%token	<stringVal>	TYPE VOID STRUCT RETURN IF ELSE WHILE FOR BREAK CONTINUE LOGICAL_OR LOGICAL_AND RELOP_LESS RELOP_LESS_EQUAL RELOP_GREATER RELOP_GREATER_EQUAL EQUOP_EQUAL EQUOP_NOT_EQUAL INCOP DECOP STRUCTOP 
 %token	<idPtr>		ID
 %token	<intVal>	INTEGER_CONST
 %token	<stringVal>	STRING CHAR_CONST
@@ -677,6 +677,8 @@ or_list:	or_list LOGICAL_OR and_expr
     }else{
         $$ = NULL;
     }
+    //code_gen
+    code_gen(OR, NULL);
 }
 | and_expr	
 {
@@ -713,6 +715,8 @@ and_list:	and_list LOGICAL_AND binary
     }else{
         $$ = NULL;
     }
+    //code_gen
+    code_gen(AND, NULL);
 }
 | binary	
 {
@@ -725,7 +729,7 @@ and_list:	and_list LOGICAL_AND binary
 }
 ;
 
-binary:		binary RELOP binary	
+binary:		binary RELOP_LESS binary	
 {
     REDUCE("binary->binary RELOP binary");
     if($1 && $3){
@@ -739,8 +743,61 @@ binary:		binary RELOP binary
     }else{
         $$ = NULL;
     }
+    //code_gen()
+    code_gen(LESS, NULL);
 }
-| binary EQUOP binary	
+| binary RELOP_LESS_EQUAL binary	
+{
+    REDUCE("binary->binary RELOP binary");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS)
+                || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+    //code_gen()
+    code_gen(LESS_EQUAL, NULL);
+}
+| binary RELOP_GREATER binary	
+{
+    REDUCE("binary->binary RELOP binary");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS)
+                || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+    //code_gen()
+    code_gen(GREATER, NULL);
+}
+| binary RELOP_GREATER_EQUAL binary	
+{
+    REDUCE("binary->binary RELOP binary");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS)
+                || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+    //code_gen()
+    code_gen(GREATER_EQUAL, NULL);
+}
+| binary EQUOP_EQUAL binary	
 {
     REDUCE("binary->binary EQUOP binary");
     if($1 && $3){
@@ -753,6 +810,32 @@ binary:		binary RELOP binary
     }else{
         $$ = NULL;
     }
+
+    //code_gen()
+    code_gen(EQUAL, NULL);
+}
+| binary EQUOP_NOT_EQUAL binary	
+{
+    REDUCE("binary->binary EQUOP binary");
+    if($1 && $3){
+        if((checkIsChar($1) == SUCCESS && checkIsChar($3) == SUCCESS) || (checkIsInt($1) == SUCCESS && checkIsInt($3)== SUCCESS) || (checkIsPtr($1) == SUCCESS && checkIsPtr($3)== SUCCESS)){
+            $$ = findDeclByStr("int"); 
+        }else{
+            semErr(NOT_INT_CHAR_PTR);
+            $$ = NULL;
+        }
+    }else{
+        $$ = NULL;
+    }
+
+    //code_gen()
+    printf("%s\n", $2);
+    if($2 == "=="){
+        code_gen(EQUAL, NULL);
+    }
+
+    //code_gen()
+    code_gen(NOT_EQUAL, NULL);
 }
 | binary '*' binary	
 {

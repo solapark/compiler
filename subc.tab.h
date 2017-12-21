@@ -57,16 +57,22 @@ extern int yydebug;
     CONTINUE = 267,
     LOGICAL_OR = 268,
     LOGICAL_AND = 269,
-    RELOP = 270,
-    EQUOP = 271,
-    INCOP = 272,
-    DECOP = 273,
-    STRUCTOP = 274,
-    ID = 275,
-    INTEGER_CONST = 276,
-    STRING = 277,
-    CHAR_CONST = 278,
-    IFSIMPLE = 279
+    RELOP_LESS = 270,
+    RELOP_LESS_EQUAL = 271,
+    RELOP_GREATER = 272,
+    RELOP_GREATER_EQUAL = 273,
+    EQUOP_EQUAL = 274,
+    EQUOP_NOT_EQUAL = 275,
+    INCOP = 276,
+    DECOP = 277,
+    STRUCTOP = 278,
+    ID = 279,
+    INTEGER_CONST = 280,
+    STRING = 281,
+    CHAR_CONST = 282,
+    IFSIMPLE = 283,
+    EQUOP = 284,
+    RELOP = 285
   };
 #endif
 
@@ -86,7 +92,7 @@ union YYSTYPE
         struct operand  *operandPtr;
     
 
-#line 90 "subc.tab.h" /* yacc.c:1909  */
+#line 96 "subc.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
