@@ -1102,7 +1102,18 @@ unary:		'(' expr ')'
         $$ = NULL;
     }
 
-
+    //code_gen
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_CONST, setNewInteger(1));
+    code_gen(SUB, NULL);
+    code_gen(ASSIGN, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_CONST, setNewInteger(1));
+    code_gen(SUB, NULL);
 }	
 | INCOP unary 
 {
@@ -1154,6 +1165,16 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+    //code_gen
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_CONST, setNewInteger(1));
+    code_gen(SUB, NULL);
+    code_gen(ASSIGN, NULL);
+    code_gen(FETCH, NULL);
 }
 | '&' unary %prec '!'	
 {
