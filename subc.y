@@ -33,7 +33,7 @@
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
-%type 	<operandPtr>	if_label func_label
+%type 	<operandPtr>	if_label func_label branch_false     
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -528,13 +528,27 @@ stmt:		expr ';'
 {
     REDUCE("stmt->';'");
 }
-| IF if_label '(' expr ')' stmt %prec IFSIMPLE	
+
+| IF if_label '(' expr branch_false ')' stmt %prec IFSIMPLE	
 {
     REDUCE("stmt->IF '(' expr ')' stmt	");
+
+    //code_gen
+    code_gen(WRITE_RETURN_LABEL, $5);
 }
-| IF if_label '(' expr ')' stmt ELSE stmt %prec ELSE
+| IF if_label '(' expr branch_false ')' stmt ELSE 
+{
+    //code_gen
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(JUMP, opPtr);
+    code_gen(WRITE_RETURN_LABEL, $5);
+    $<operandPtr>$ = opPtr;
+}
+stmt %prec ELSE
 {
     REDUCE("stmt->IF '(' expr ')' stmt ELSE stmt");
+    //code_gen
+    code_gen(WRITE_RETURN_LABEL, $<operandPtr>9);
 }
 | WHILE '(' expr ')' stmt	
 {
@@ -575,6 +589,15 @@ if_label: /*empty*/
 {
     struct operand* opPtr = setNewReturnLabel();
     code_gen(WRITE_RETURN_LABEL, opPtr);
+    $$ = opPtr;
+}
+;
+
+branch_false: /*empty*/  
+{
+    //code_gen
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(BRANCH_FALSE,opPtr);
     $$ = opPtr;
 }
 ;

@@ -84,95 +84,100 @@ Grammar
 
    41 stmt: RETURN $@5 expr ';'
    42     | ';'
-   43     | IF if_label '(' expr ')' stmt
-   44     | IF if_label '(' expr ')' stmt ELSE stmt
-   45     | WHILE '(' expr ')' stmt
-   46     | FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt
-   47     | BREAK ';'
-   48     | CONTINUE ';'
-   49     | 'w' '(' STRING ')'
-   50     | 'w' '(' expr ')'
+   43     | IF if_label '(' expr branch_false ')' stmt
 
-   51 if_label: %empty
+   44 @6: %empty
 
-   52 expr_e: expr
-   53       | %empty
+   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 stmt
+   46     | WHILE '(' expr ')' stmt
+   47     | FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt
+   48     | BREAK ';'
+   49     | CONTINUE ';'
+   50     | 'w' '(' STRING ')'
+   51     | 'w' '(' expr ')'
 
-   54 const_expr: INTEGER_CONST
+   52 if_label: %empty
 
-   55 $@6: %empty
+   53 branch_false: %empty
 
-   56 expr: unary '=' $@6 expr
-   57     | or_expr
+   54 expr_e: expr
+   55       | %empty
 
-   58 or_expr: or_list
+   56 const_expr: INTEGER_CONST
 
-   59 or_list: or_list LOGICAL_OR and_expr
-   60        | and_expr
+   57 $@7: %empty
 
-   61 and_expr: and_list
+   58 expr: unary '=' $@7 expr
+   59     | or_expr
 
-   62 and_list: and_list LOGICAL_AND binary
-   63         | binary
+   60 or_expr: or_list
 
-   64 binary: binary RELOP_LESS binary
-   65       | binary RELOP_LESS_EQUAL binary
-   66       | binary RELOP_GREATER binary
-   67       | binary RELOP_GREATER_EQUAL binary
-   68       | binary EQUOP_EQUAL binary
-   69       | binary EQUOP_NOT_EQUAL binary
-   70       | binary '*' binary
-   71       | binary '/' binary
-   72       | binary '%' binary
-   73       | binary '+' binary
-   74       | binary '-' binary
-   75       | unary
+   61 or_list: or_list LOGICAL_OR and_expr
+   62        | and_expr
 
-   76 unary: '(' expr ')'
-   77      | '(' unary ')'
-   78      | INTEGER_CONST
-   79      | CHAR_CONST
-   80      | ID
-   81      | STRING
-   82      | '-' unary
-   83      | '!' unary
-   84      | unary INCOP
-   85      | unary DECOP
-   86      | INCOP unary
-   87      | DECOP unary
-   88      | '&' unary
-   89      | '*' unary
-   90      | unary '[' expr ']'
-   91      | unary '.' ID
-   92      | unary STRUCTOP ID
-   93      | unary '(' func_label args ')'
-   94      | unary '(' func_label ')'
+   63 and_expr: and_list
 
-   95 func_label: %empty
+   64 and_list: and_list LOGICAL_AND binary
+   65         | binary
 
-   96 args: expr
-   97     | args ',' expr
+   66 binary: binary RELOP_LESS binary
+   67       | binary RELOP_LESS_EQUAL binary
+   68       | binary RELOP_GREATER binary
+   69       | binary RELOP_GREATER_EQUAL binary
+   70       | binary EQUOP_EQUAL binary
+   71       | binary EQUOP_NOT_EQUAL binary
+   72       | binary '*' binary
+   73       | binary '/' binary
+   74       | binary '%' binary
+   75       | binary '+' binary
+   76       | binary '-' binary
+   77       | unary
+
+   78 unary: '(' expr ')'
+   79      | '(' unary ')'
+   80      | INTEGER_CONST
+   81      | CHAR_CONST
+   82      | ID
+   83      | STRING
+   84      | '-' unary
+   85      | '!' unary
+   86      | unary INCOP
+   87      | unary DECOP
+   88      | INCOP unary
+   89      | DECOP unary
+   90      | '&' unary
+   91      | '*' unary
+   92      | unary '[' expr ']'
+   93      | unary '.' ID
+   94      | unary STRUCTOP ID
+   95      | unary '(' func_label args ')'
+   96      | unary '(' func_label ')'
+
+   97 func_label: %empty
+
+   98 args: expr
+   99     | args ',' expr
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 83
-'%' (37) 72
-'&' (38) 88
-'(' (40) 17 18 19 43 44 45 46 49 50 76 77 93 94
-')' (41) 17 18 19 43 44 45 46 49 50 76 77 93 94
-'*' (42) 20 70 89
-'+' (43) 73
-',' (44) 23 97
-'-' (45) 74 82
-'.' (46) 91
-'/' (47) 71
-';' (59) 4 5 6 7 28 29 30 31 37 39 41 42 46 47 48
-'=' (61) 56
-'[' (91) 5 25 29 90
-']' (93) 5 25 29 90
-'w' (119) 49 50
+'!' (33) 85
+'%' (37) 74
+'&' (38) 90
+'(' (40) 17 18 19 43 45 46 47 50 51 78 79 95 96
+')' (41) 17 18 19 43 45 46 47 50 51 78 79 95 96
+'*' (42) 20 72 91
+'+' (43) 75
+',' (44) 23 99
+'-' (45) 76 84
+'.' (46) 93
+'/' (47) 73
+';' (59) 4 5 6 7 28 29 30 31 37 39 41 42 47 48 49
+'=' (61) 58
+'[' (91) 5 25 29 92
+']' (93) 5 25 29 92
+'w' (119) 50 51
 '{' (123) 10 15 33
 '}' (125) 10 15 33
 error (256)
@@ -180,27 +185,27 @@ TYPE (258) 11
 VOID (259) 12 18
 STRUCT (260) 15 16
 RETURN (261) 39 41
-IF (262) 43 44
-ELSE (263) 44
-WHILE (264) 45
-FOR (265) 46
-BREAK (266) 47
-CONTINUE (267) 48
-LOGICAL_OR (268) 59
-LOGICAL_AND (269) 62
-RELOP_LESS (270) 64
-RELOP_LESS_EQUAL (271) 65
-RELOP_GREATER (272) 66
-RELOP_GREATER_EQUAL (273) 67
-EQUOP_EQUAL (274) 68
-EQUOP_NOT_EQUAL (275) 69
-INCOP (276) 84 86
-DECOP (277) 85 87
-STRUCTOP (278) 92
-ID (279) 4 5 15 16 17 18 19 24 25 28 29 80 91 92
-INTEGER_CONST (280) 54 78
-STRING (281) 49 81
-CHAR_CONST (282) 79
+IF (262) 43 45
+ELSE (263) 45
+WHILE (264) 46
+FOR (265) 47
+BREAK (266) 48
+CONTINUE (267) 49
+LOGICAL_OR (268) 61
+LOGICAL_AND (269) 64
+RELOP_LESS (270) 66
+RELOP_LESS_EQUAL (271) 67
+RELOP_GREATER (272) 68
+RELOP_GREATER_EQUAL (273) 69
+EQUOP_EQUAL (274) 70
+EQUOP_NOT_EQUAL (275) 71
+INCOP (276) 86 88
+DECOP (277) 87 89
+STRUCTOP (278) 94
+ID (279) 4 5 15 16 17 18 19 24 25 28 29 82 93 94
+INTEGER_CONST (280) 56 80
+STRING (281) 50 83
+CHAR_CONST (282) 81
 IFSIMPLE (283)
 EQUOP (284)
 RELOP (285)
@@ -247,38 +252,42 @@ local_defs (66)
 stmt_list (67)
     on left: 35 36, on right: 10 33 35
 stmt (68)
-    on left: 37 38 39 41 42 43 44 45 46 47 48 49 50, on right: 35 43
-    44 45 46
+    on left: 37 38 39 41 42 43 45 46 47 48 49 50 51, on right: 35 43
+    45 46 47
 $@5 (69)
     on left: 40, on right: 41
-if_label (70)
-    on left: 51, on right: 43 44
-expr_e (71)
-    on left: 52 53, on right: 46
-const_expr (72)
-    on left: 54, on right: 5 25 29
-expr (73)
-    on left: 56 57, on right: 37 41 43 44 45 50 52 56 76 90 96 97
-$@6 (74)
-    on left: 55, on right: 56
-or_expr (75)
-    on left: 58, on right: 57
-or_list (76)
-    on left: 59 60, on right: 58 59
-and_expr (77)
-    on left: 61, on right: 59 60
-and_list (78)
-    on left: 62 63, on right: 61 62
-binary (79)
-    on left: 64 65 66 67 68 69 70 71 72 73 74 75, on right: 62 63 64
-    65 66 67 68 69 70 71 72 73 74
-unary (80)
-    on left: 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
-    94, on right: 56 75 77 82 83 84 85 86 87 88 89 90 91 92 93 94
-func_label (81)
-    on left: 95, on right: 93 94
-args (82)
-    on left: 96 97, on right: 93 97
+@6 (70)
+    on left: 44, on right: 45
+if_label (71)
+    on left: 52, on right: 43 45
+branch_false (72)
+    on left: 53, on right: 43 45
+expr_e (73)
+    on left: 54 55, on right: 47
+const_expr (74)
+    on left: 56, on right: 5 25 29
+expr (75)
+    on left: 58 59, on right: 37 41 43 45 46 51 54 58 78 92 98 99
+$@7 (76)
+    on left: 57, on right: 58
+or_expr (77)
+    on left: 60, on right: 59
+or_list (78)
+    on left: 61 62, on right: 60 61
+and_expr (79)
+    on left: 63, on right: 61 62
+and_list (80)
+    on left: 64 65, on right: 63 64
+binary (81)
+    on left: 66 67 68 69 70 71 72 73 74 75 76 77, on right: 64 65 66
+    67 68 69 70 71 72 73 74 75 76
+unary (82)
+    on left: 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+    96, on right: 58 77 79 84 85 86 87 88 89 90 91 92 93 94 95 96
+func_label (83)
+    on left: 97, on right: 95 96
+args (84)
+    on left: 98 99, on right: 95 99
 
 
 State 0
@@ -553,9 +562,9 @@ State 26
 
 State 27
 
-   54 const_expr: INTEGER_CONST .
+   56 const_expr: INTEGER_CONST .
 
-    $default  reduce using rule 54 (const_expr)
+    $default  reduce using rule 56 (const_expr)
 
 
 State 28
@@ -813,45 +822,45 @@ State 52
 
 State 53
 
-   43 stmt: IF . if_label '(' expr ')' stmt
-   44     | IF . if_label '(' expr ')' stmt ELSE stmt
+   43 stmt: IF . if_label '(' expr branch_false ')' stmt
+   45     | IF . if_label '(' expr branch_false ')' stmt ELSE @6 stmt
 
-    $default  reduce using rule 51 (if_label)
+    $default  reduce using rule 52 (if_label)
 
     if_label  go to state 87
 
 
 State 54
 
-   45 stmt: WHILE . '(' expr ')' stmt
+   46 stmt: WHILE . '(' expr ')' stmt
 
     '('  shift, and go to state 88
 
 
 State 55
 
-   46 stmt: FOR . '(' expr_e ';' expr_e ';' expr_e ')' stmt
+   47 stmt: FOR . '(' expr_e ';' expr_e ';' expr_e ')' stmt
 
     '('  shift, and go to state 89
 
 
 State 56
 
-   47 stmt: BREAK . ';'
+   48 stmt: BREAK . ';'
 
     ';'  shift, and go to state 90
 
 
 State 57
 
-   48 stmt: CONTINUE . ';'
+   49 stmt: CONTINUE . ';'
 
     ';'  shift, and go to state 91
 
 
 State 58
 
-   86 unary: INCOP . unary
+   88 unary: INCOP . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -870,7 +879,7 @@ State 58
 
 State 59
 
-   87 unary: DECOP . unary
+   89 unary: DECOP . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -889,35 +898,35 @@ State 59
 
 State 60
 
-   80 unary: ID .
+   82 unary: ID .
 
-    $default  reduce using rule 80 (unary)
+    $default  reduce using rule 82 (unary)
 
 
 State 61
 
-   78 unary: INTEGER_CONST .
+   80 unary: INTEGER_CONST .
 
-    $default  reduce using rule 78 (unary)
+    $default  reduce using rule 80 (unary)
 
 
 State 62
 
-   81 unary: STRING .
+   83 unary: STRING .
 
-    $default  reduce using rule 81 (unary)
+    $default  reduce using rule 83 (unary)
 
 
 State 63
 
-   79 unary: CHAR_CONST .
+   81 unary: CHAR_CONST .
 
-    $default  reduce using rule 79 (unary)
+    $default  reduce using rule 81 (unary)
 
 
 State 64
 
-   88 unary: '&' . unary
+   90 unary: '&' . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -936,7 +945,7 @@ State 64
 
 State 65
 
-   82 unary: '-' . unary
+   84 unary: '-' . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -955,7 +964,7 @@ State 65
 
 State 66
 
-   89 unary: '*' . unary
+   91 unary: '*' . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -974,7 +983,7 @@ State 66
 
 State 67
 
-   83 unary: '!' . unary
+   85 unary: '!' . unary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -993,8 +1002,8 @@ State 67
 
 State 68
 
-   76 unary: '(' . expr ')'
-   77      | '(' . unary ')'
+   78 unary: '(' . expr ')'
+   79      | '(' . unary ')'
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1042,8 +1051,8 @@ State 71
 
 State 72
 
-   49 stmt: 'w' . '(' STRING ')'
-   50     | 'w' . '(' expr ')'
+   50 stmt: 'w' . '(' STRING ')'
+   51     | 'w' . '(' expr ')'
 
     '('  shift, and go to state 101
 
@@ -1071,52 +1080,52 @@ State 75
 
 State 76
 
-   57 expr: or_expr .
+   59 expr: or_expr .
 
-    $default  reduce using rule 57 (expr)
+    $default  reduce using rule 59 (expr)
 
 
 State 77
 
-   58 or_expr: or_list .
-   59 or_list: or_list . LOGICAL_OR and_expr
+   60 or_expr: or_list .
+   61 or_list: or_list . LOGICAL_OR and_expr
 
     LOGICAL_OR  shift, and go to state 103
 
-    $default  reduce using rule 58 (or_expr)
+    $default  reduce using rule 60 (or_expr)
 
 
 State 78
 
-   60 or_list: and_expr .
+   62 or_list: and_expr .
 
-    $default  reduce using rule 60 (or_list)
+    $default  reduce using rule 62 (or_list)
 
 
 State 79
 
-   61 and_expr: and_list .
-   62 and_list: and_list . LOGICAL_AND binary
+   63 and_expr: and_list .
+   64 and_list: and_list . LOGICAL_AND binary
 
     LOGICAL_AND  shift, and go to state 104
 
-    $default  reduce using rule 61 (and_expr)
+    $default  reduce using rule 63 (and_expr)
 
 
 State 80
 
-   63 and_list: binary .
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   65 and_list: binary .
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -1130,20 +1139,20 @@ State 80
     '/'                  shift, and go to state 114
     '%'                  shift, and go to state 115
 
-    $default  reduce using rule 63 (and_list)
+    $default  reduce using rule 65 (and_list)
 
 
 State 81
 
-   56 expr: unary . '=' $@6 expr
-   75 binary: unary .
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   58 expr: unary . '=' $@7 expr
+   77 binary: unary .
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1153,7 +1162,7 @@ State 81
     '('       shift, and go to state 121
     '.'       shift, and go to state 122
 
-    $default  reduce using rule 75 (binary)
+    $default  reduce using rule 77 (binary)
 
 
 State 82
@@ -1215,15 +1224,15 @@ State 86
 
 State 87
 
-   43 stmt: IF if_label . '(' expr ')' stmt
-   44     | IF if_label . '(' expr ')' stmt ELSE stmt
+   43 stmt: IF if_label . '(' expr branch_false ')' stmt
+   45     | IF if_label . '(' expr branch_false ')' stmt ELSE @6 stmt
 
     '('  shift, and go to state 126
 
 
 State 88
 
-   45 stmt: WHILE '(' . expr ')' stmt
+   46 stmt: WHILE '(' . expr ')' stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1248,7 +1257,7 @@ State 88
 
 State 89
 
-   46 stmt: FOR '(' . expr_e ';' expr_e ';' expr_e ')' stmt
+   47 stmt: FOR '(' . expr_e ';' expr_e ';' expr_e ')' stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1262,7 +1271,7 @@ State 89
     '!'            shift, and go to state 67
     '('            shift, and go to state 68
 
-    $default  reduce using rule 53 (expr_e)
+    $default  reduce using rule 55 (expr_e)
 
     expr_e    go to state 128
     expr      go to state 129
@@ -1276,70 +1285,28 @@ State 89
 
 State 90
 
-   47 stmt: BREAK ';' .
-
-    $default  reduce using rule 47 (stmt)
-
-
-State 91
-
-   48 stmt: CONTINUE ';' .
+   48 stmt: BREAK ';' .
 
     $default  reduce using rule 48 (stmt)
 
 
+State 91
+
+   49 stmt: CONTINUE ';' .
+
+    $default  reduce using rule 49 (stmt)
+
+
 State 92
 
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   86      | INCOP unary .
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
-
-    INCOP     shift, and go to state 116
-    DECOP     shift, and go to state 117
-    STRUCTOP  shift, and go to state 118
-    '['       shift, and go to state 120
-    '('       shift, and go to state 121
-    '.'       shift, and go to state 122
-
-    $default  reduce using rule 86 (unary)
-
-
-State 93
-
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   87      | DECOP unary .
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
-
-    INCOP     shift, and go to state 116
-    DECOP     shift, and go to state 117
-    STRUCTOP  shift, and go to state 118
-    '['       shift, and go to state 120
-    '('       shift, and go to state 121
-    '.'       shift, and go to state 122
-
-    $default  reduce using rule 87 (unary)
-
-
-State 94
-
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   88      | '&' unary .
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   88      | INCOP unary .
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1351,37 +1318,16 @@ State 94
     $default  reduce using rule 88 (unary)
 
 
-State 95
+State 93
 
-   82 unary: '-' unary .
-   84      | unary . INCOP
-   85      | unary . DECOP
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
-
-    INCOP     shift, and go to state 116
-    DECOP     shift, and go to state 117
-    STRUCTOP  shift, and go to state 118
-    '['       shift, and go to state 120
-    '('       shift, and go to state 121
-    '.'       shift, and go to state 122
-
-    $default  reduce using rule 82 (unary)
-
-
-State 96
-
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   89      | '*' unary .
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   89      | DECOP unary .
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1393,16 +1339,16 @@ State 96
     $default  reduce using rule 89 (unary)
 
 
-State 97
+State 94
 
-   83 unary: '!' unary .
-   84      | unary . INCOP
-   85      | unary . DECOP
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   90      | '&' unary .
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1411,28 +1357,91 @@ State 97
     '('       shift, and go to state 121
     '.'       shift, and go to state 122
 
-    $default  reduce using rule 83 (unary)
+    $default  reduce using rule 90 (unary)
+
+
+State 95
+
+   84 unary: '-' unary .
+   86      | unary . INCOP
+   87      | unary . DECOP
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
+
+    INCOP     shift, and go to state 116
+    DECOP     shift, and go to state 117
+    STRUCTOP  shift, and go to state 118
+    '['       shift, and go to state 120
+    '('       shift, and go to state 121
+    '.'       shift, and go to state 122
+
+    $default  reduce using rule 84 (unary)
+
+
+State 96
+
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   91      | '*' unary .
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
+
+    INCOP     shift, and go to state 116
+    DECOP     shift, and go to state 117
+    STRUCTOP  shift, and go to state 118
+    '['       shift, and go to state 120
+    '('       shift, and go to state 121
+    '.'       shift, and go to state 122
+
+    $default  reduce using rule 91 (unary)
+
+
+State 97
+
+   85 unary: '!' unary .
+   86      | unary . INCOP
+   87      | unary . DECOP
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
+
+    INCOP     shift, and go to state 116
+    DECOP     shift, and go to state 117
+    STRUCTOP  shift, and go to state 118
+    '['       shift, and go to state 120
+    '('       shift, and go to state 121
+    '.'       shift, and go to state 122
+
+    $default  reduce using rule 85 (unary)
 
 
 State 98
 
-   76 unary: '(' expr . ')'
+   78 unary: '(' expr . ')'
 
     ')'  shift, and go to state 130
 
 
 State 99
 
-   56 expr: unary . '=' $@6 expr
-   75 binary: unary .
-   77 unary: '(' unary . ')'
-   84      | unary . INCOP
-   85      | unary . DECOP
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   58 expr: unary . '=' $@7 expr
+   77 binary: unary .
+   79 unary: '(' unary . ')'
+   86      | unary . INCOP
+   87      | unary . DECOP
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1443,7 +1452,7 @@ State 99
     ')'       shift, and go to state 131
     '.'       shift, and go to state 122
 
-    $default  reduce using rule 75 (binary)
+    $default  reduce using rule 77 (binary)
 
 
 State 100
@@ -1458,8 +1467,8 @@ State 100
 
 State 101
 
-   49 stmt: 'w' '(' . STRING ')'
-   50     | 'w' '(' . expr ')'
+   50 stmt: 'w' '(' . STRING ')'
+   51     | 'w' '(' . expr ')'
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1491,7 +1500,7 @@ State 102
 
 State 103
 
-   59 or_list: or_list LOGICAL_OR . and_expr
+   61 or_list: or_list LOGICAL_OR . and_expr
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1513,7 +1522,7 @@ State 103
 
 State 104
 
-   62 and_list: and_list LOGICAL_AND . binary
+   64 and_list: and_list LOGICAL_AND . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1533,7 +1542,7 @@ State 104
 
 State 105
 
-   64 binary: binary RELOP_LESS . binary
+   66 binary: binary RELOP_LESS . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1553,7 +1562,7 @@ State 105
 
 State 106
 
-   65 binary: binary RELOP_LESS_EQUAL . binary
+   67 binary: binary RELOP_LESS_EQUAL . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1573,7 +1582,7 @@ State 106
 
 State 107
 
-   66 binary: binary RELOP_GREATER . binary
+   68 binary: binary RELOP_GREATER . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1593,7 +1602,7 @@ State 107
 
 State 108
 
-   67 binary: binary RELOP_GREATER_EQUAL . binary
+   69 binary: binary RELOP_GREATER_EQUAL . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1613,7 +1622,7 @@ State 108
 
 State 109
 
-   68 binary: binary EQUOP_EQUAL . binary
+   70 binary: binary EQUOP_EQUAL . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1633,7 +1642,7 @@ State 109
 
 State 110
 
-   69 binary: binary EQUOP_NOT_EQUAL . binary
+   71 binary: binary EQUOP_NOT_EQUAL . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1653,7 +1662,7 @@ State 110
 
 State 111
 
-   73 binary: binary '+' . binary
+   75 binary: binary '+' . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1673,7 +1682,7 @@ State 111
 
 State 112
 
-   74 binary: binary '-' . binary
+   76 binary: binary '-' . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1693,7 +1702,7 @@ State 112
 
 State 113
 
-   70 binary: binary '*' . binary
+   72 binary: binary '*' . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1713,7 +1722,7 @@ State 113
 
 State 114
 
-   71 binary: binary '/' . binary
+   73 binary: binary '/' . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1733,7 +1742,7 @@ State 114
 
 State 115
 
-   72 binary: binary '%' . binary
+   74 binary: binary '%' . binary
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1753,37 +1762,37 @@ State 115
 
 State 116
 
-   84 unary: unary INCOP .
+   86 unary: unary INCOP .
 
-    $default  reduce using rule 84 (unary)
+    $default  reduce using rule 86 (unary)
 
 
 State 117
 
-   85 unary: unary DECOP .
+   87 unary: unary DECOP .
 
-    $default  reduce using rule 85 (unary)
+    $default  reduce using rule 87 (unary)
 
 
 State 118
 
-   92 unary: unary STRUCTOP . ID
+   94 unary: unary STRUCTOP . ID
 
     ID  shift, and go to state 149
 
 
 State 119
 
-   56 expr: unary '=' . $@6 expr
+   58 expr: unary '=' . $@7 expr
 
-    $default  reduce using rule 55 ($@6)
+    $default  reduce using rule 57 ($@7)
 
-    $@6  go to state 150
+    $@7  go to state 150
 
 
 State 120
 
-   90 unary: unary '[' . expr ']'
+   92 unary: unary '[' . expr ']'
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1808,17 +1817,17 @@ State 120
 
 State 121
 
-   93 unary: unary '(' . func_label args ')'
-   94      | unary '(' . func_label ')'
+   95 unary: unary '(' . func_label args ')'
+   96      | unary '(' . func_label ')'
 
-    $default  reduce using rule 95 (func_label)
+    $default  reduce using rule 97 (func_label)
 
     func_label  go to state 152
 
 
 State 122
 
-   91 unary: unary '.' . ID
+   93 unary: unary '.' . ID
 
     ID  shift, and go to state 153
 
@@ -1846,8 +1855,8 @@ State 125
 
 State 126
 
-   43 stmt: IF if_label '(' . expr ')' stmt
-   44     | IF if_label '(' . expr ')' stmt ELSE stmt
+   43 stmt: IF if_label '(' . expr branch_false ')' stmt
+   45     | IF if_label '(' . expr branch_false ')' stmt ELSE @6 stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1872,37 +1881,37 @@ State 126
 
 State 127
 
-   45 stmt: WHILE '(' expr . ')' stmt
+   46 stmt: WHILE '(' expr . ')' stmt
 
     ')'  shift, and go to state 158
 
 
 State 128
 
-   46 stmt: FOR '(' expr_e . ';' expr_e ';' expr_e ')' stmt
+   47 stmt: FOR '(' expr_e . ';' expr_e ';' expr_e ')' stmt
 
     ';'  shift, and go to state 159
 
 
 State 129
 
-   52 expr_e: expr .
+   54 expr_e: expr .
 
-    $default  reduce using rule 52 (expr_e)
+    $default  reduce using rule 54 (expr_e)
 
 
 State 130
 
-   76 unary: '(' expr ')' .
+   78 unary: '(' expr ')' .
 
-    $default  reduce using rule 76 (unary)
+    $default  reduce using rule 78 (unary)
 
 
 State 131
 
-   77 unary: '(' unary ')' .
+   79 unary: '(' unary ')' .
 
-    $default  reduce using rule 77 (unary)
+    $default  reduce using rule 79 (unary)
 
 
 State 132
@@ -1916,38 +1925,38 @@ State 132
 
 State 133
 
-   49 stmt: 'w' '(' STRING . ')'
-   81 unary: STRING .
+   50 stmt: 'w' '(' STRING . ')'
+   83 unary: STRING .
 
     ')'  shift, and go to state 161
 
-    $default  reduce using rule 81 (unary)
+    $default  reduce using rule 83 (unary)
 
 
 State 134
 
-   50 stmt: 'w' '(' expr . ')'
+   51 stmt: 'w' '(' expr . ')'
 
     ')'  shift, and go to state 162
 
 
 State 135
 
-   59 or_list: or_list LOGICAL_OR and_expr .
+   61 or_list: or_list LOGICAL_OR and_expr .
 
-    $default  reduce using rule 59 (or_list)
+    $default  reduce using rule 61 (or_list)
 
 
 State 136
 
-   75 binary: unary .
-   84 unary: unary . INCOP
-   85      | unary . DECOP
-   90      | unary . '[' expr ']'
-   91      | unary . '.' ID
-   92      | unary . STRUCTOP ID
-   93      | unary . '(' func_label args ')'
-   94      | unary . '(' func_label ')'
+   77 binary: unary .
+   86 unary: unary . INCOP
+   87      | unary . DECOP
+   92      | unary . '[' expr ']'
+   93      | unary . '.' ID
+   94      | unary . STRUCTOP ID
+   95      | unary . '(' func_label args ')'
+   96      | unary . '(' func_label ')'
 
     INCOP     shift, and go to state 116
     DECOP     shift, and go to state 117
@@ -1956,23 +1965,23 @@ State 136
     '('       shift, and go to state 121
     '.'       shift, and go to state 122
 
-    $default  reduce using rule 75 (binary)
+    $default  reduce using rule 77 (binary)
 
 
 State 137
 
-   62 and_list: and_list LOGICAL_AND binary .
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   64 and_list: and_list LOGICAL_AND binary .
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -1986,105 +1995,23 @@ State 137
     '/'                  shift, and go to state 114
     '%'                  shift, and go to state 115
 
-    $default  reduce using rule 62 (and_list)
+    $default  reduce using rule 64 (and_list)
 
 
 State 138
 
-   64 binary: binary . RELOP_LESS binary
-   64       | binary RELOP_LESS binary .
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
-
-    RELOP_LESS           shift, and go to state 105
-    RELOP_LESS_EQUAL     shift, and go to state 106
-    RELOP_GREATER        shift, and go to state 107
-    RELOP_GREATER_EQUAL  shift, and go to state 108
-    EQUOP_EQUAL          shift, and go to state 109
-    EQUOP_NOT_EQUAL      shift, and go to state 110
-    '+'                  shift, and go to state 111
-    '-'                  shift, and go to state 112
-    '*'                  shift, and go to state 113
-    '/'                  shift, and go to state 114
-    '%'                  shift, and go to state 115
-
-    RELOP_LESS           [reduce using rule 64 (binary)]
-    RELOP_LESS_EQUAL     [reduce using rule 64 (binary)]
-    RELOP_GREATER        [reduce using rule 64 (binary)]
-    RELOP_GREATER_EQUAL  [reduce using rule 64 (binary)]
-    EQUOP_EQUAL          [reduce using rule 64 (binary)]
-    EQUOP_NOT_EQUAL      [reduce using rule 64 (binary)]
-    '+'                  [reduce using rule 64 (binary)]
-    '-'                  [reduce using rule 64 (binary)]
-    '*'                  [reduce using rule 64 (binary)]
-    '/'                  [reduce using rule 64 (binary)]
-    '%'                  [reduce using rule 64 (binary)]
-    $default             reduce using rule 64 (binary)
-
-
-State 139
-
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   65       | binary RELOP_LESS_EQUAL binary .
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
-
-    RELOP_LESS           shift, and go to state 105
-    RELOP_LESS_EQUAL     shift, and go to state 106
-    RELOP_GREATER        shift, and go to state 107
-    RELOP_GREATER_EQUAL  shift, and go to state 108
-    EQUOP_EQUAL          shift, and go to state 109
-    EQUOP_NOT_EQUAL      shift, and go to state 110
-    '+'                  shift, and go to state 111
-    '-'                  shift, and go to state 112
-    '*'                  shift, and go to state 113
-    '/'                  shift, and go to state 114
-    '%'                  shift, and go to state 115
-
-    RELOP_LESS           [reduce using rule 65 (binary)]
-    RELOP_LESS_EQUAL     [reduce using rule 65 (binary)]
-    RELOP_GREATER        [reduce using rule 65 (binary)]
-    RELOP_GREATER_EQUAL  [reduce using rule 65 (binary)]
-    EQUOP_EQUAL          [reduce using rule 65 (binary)]
-    EQUOP_NOT_EQUAL      [reduce using rule 65 (binary)]
-    '+'                  [reduce using rule 65 (binary)]
-    '-'                  [reduce using rule 65 (binary)]
-    '*'                  [reduce using rule 65 (binary)]
-    '/'                  [reduce using rule 65 (binary)]
-    '%'                  [reduce using rule 65 (binary)]
-    $default             reduce using rule 65 (binary)
-
-
-State 140
-
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   66       | binary RELOP_GREATER binary .
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   66       | binary RELOP_LESS binary .
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2112,20 +2039,20 @@ State 140
     $default             reduce using rule 66 (binary)
 
 
-State 141
+State 139
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   67       | binary RELOP_GREATER_EQUAL binary .
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   67       | binary RELOP_LESS_EQUAL binary .
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2153,20 +2080,20 @@ State 141
     $default             reduce using rule 67 (binary)
 
 
-State 142
+State 140
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   68       | binary EQUOP_EQUAL binary .
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   68       | binary RELOP_GREATER binary .
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2194,20 +2121,20 @@ State 142
     $default             reduce using rule 68 (binary)
 
 
-State 143
+State 141
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   69       | binary EQUOP_NOT_EQUAL binary .
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   69       | binary RELOP_GREATER_EQUAL binary .
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2235,20 +2162,20 @@ State 143
     $default             reduce using rule 69 (binary)
 
 
-State 144
+State 142
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   73       | binary '+' binary .
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   70       | binary EQUOP_EQUAL binary .
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2256,74 +2183,11 @@ State 144
     RELOP_GREATER_EQUAL  shift, and go to state 108
     EQUOP_EQUAL          shift, and go to state 109
     EQUOP_NOT_EQUAL      shift, and go to state 110
+    '+'                  shift, and go to state 111
+    '-'                  shift, and go to state 112
     '*'                  shift, and go to state 113
     '/'                  shift, and go to state 114
     '%'                  shift, and go to state 115
-
-    RELOP_LESS           [reduce using rule 73 (binary)]
-    RELOP_LESS_EQUAL     [reduce using rule 73 (binary)]
-    RELOP_GREATER        [reduce using rule 73 (binary)]
-    RELOP_GREATER_EQUAL  [reduce using rule 73 (binary)]
-    EQUOP_EQUAL          [reduce using rule 73 (binary)]
-    EQUOP_NOT_EQUAL      [reduce using rule 73 (binary)]
-    $default             reduce using rule 73 (binary)
-
-
-State 145
-
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
-   74       | binary '-' binary .
-
-    RELOP_LESS           shift, and go to state 105
-    RELOP_LESS_EQUAL     shift, and go to state 106
-    RELOP_GREATER        shift, and go to state 107
-    RELOP_GREATER_EQUAL  shift, and go to state 108
-    EQUOP_EQUAL          shift, and go to state 109
-    EQUOP_NOT_EQUAL      shift, and go to state 110
-    '*'                  shift, and go to state 113
-    '/'                  shift, and go to state 114
-    '%'                  shift, and go to state 115
-
-    RELOP_LESS           [reduce using rule 74 (binary)]
-    RELOP_LESS_EQUAL     [reduce using rule 74 (binary)]
-    RELOP_GREATER        [reduce using rule 74 (binary)]
-    RELOP_GREATER_EQUAL  [reduce using rule 74 (binary)]
-    EQUOP_EQUAL          [reduce using rule 74 (binary)]
-    EQUOP_NOT_EQUAL      [reduce using rule 74 (binary)]
-    $default             reduce using rule 74 (binary)
-
-
-State 146
-
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   70       | binary '*' binary .
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
-
-    RELOP_LESS           shift, and go to state 105
-    RELOP_LESS_EQUAL     shift, and go to state 106
-    RELOP_GREATER        shift, and go to state 107
-    RELOP_GREATER_EQUAL  shift, and go to state 108
-    EQUOP_EQUAL          shift, and go to state 109
-    EQUOP_NOT_EQUAL      shift, and go to state 110
 
     RELOP_LESS           [reduce using rule 70 (binary)]
     RELOP_LESS_EQUAL     [reduce using rule 70 (binary)]
@@ -2331,23 +2195,28 @@ State 146
     RELOP_GREATER_EQUAL  [reduce using rule 70 (binary)]
     EQUOP_EQUAL          [reduce using rule 70 (binary)]
     EQUOP_NOT_EQUAL      [reduce using rule 70 (binary)]
+    '+'                  [reduce using rule 70 (binary)]
+    '-'                  [reduce using rule 70 (binary)]
+    '*'                  [reduce using rule 70 (binary)]
+    '/'                  [reduce using rule 70 (binary)]
+    '%'                  [reduce using rule 70 (binary)]
     $default             reduce using rule 70 (binary)
 
 
-State 147
+State 143
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   71       | binary '/' binary .
-   72       | binary . '%' binary
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   71       | binary EQUOP_NOT_EQUAL binary .
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2355,6 +2224,11 @@ State 147
     RELOP_GREATER_EQUAL  shift, and go to state 108
     EQUOP_EQUAL          shift, and go to state 109
     EQUOP_NOT_EQUAL      shift, and go to state 110
+    '+'                  shift, and go to state 111
+    '-'                  shift, and go to state 112
+    '*'                  shift, and go to state 113
+    '/'                  shift, and go to state 114
+    '%'                  shift, and go to state 115
 
     RELOP_LESS           [reduce using rule 71 (binary)]
     RELOP_LESS_EQUAL     [reduce using rule 71 (binary)]
@@ -2362,23 +2236,96 @@ State 147
     RELOP_GREATER_EQUAL  [reduce using rule 71 (binary)]
     EQUOP_EQUAL          [reduce using rule 71 (binary)]
     EQUOP_NOT_EQUAL      [reduce using rule 71 (binary)]
+    '+'                  [reduce using rule 71 (binary)]
+    '-'                  [reduce using rule 71 (binary)]
+    '*'                  [reduce using rule 71 (binary)]
+    '/'                  [reduce using rule 71 (binary)]
+    '%'                  [reduce using rule 71 (binary)]
     $default             reduce using rule 71 (binary)
 
 
-State 148
+State 144
 
-   64 binary: binary . RELOP_LESS binary
-   65       | binary . RELOP_LESS_EQUAL binary
-   66       | binary . RELOP_GREATER binary
-   67       | binary . RELOP_GREATER_EQUAL binary
-   68       | binary . EQUOP_EQUAL binary
-   69       | binary . EQUOP_NOT_EQUAL binary
-   70       | binary . '*' binary
-   71       | binary . '/' binary
-   72       | binary . '%' binary
-   72       | binary '%' binary .
-   73       | binary . '+' binary
-   74       | binary . '-' binary
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   75       | binary '+' binary .
+   76       | binary . '-' binary
+
+    RELOP_LESS           shift, and go to state 105
+    RELOP_LESS_EQUAL     shift, and go to state 106
+    RELOP_GREATER        shift, and go to state 107
+    RELOP_GREATER_EQUAL  shift, and go to state 108
+    EQUOP_EQUAL          shift, and go to state 109
+    EQUOP_NOT_EQUAL      shift, and go to state 110
+    '*'                  shift, and go to state 113
+    '/'                  shift, and go to state 114
+    '%'                  shift, and go to state 115
+
+    RELOP_LESS           [reduce using rule 75 (binary)]
+    RELOP_LESS_EQUAL     [reduce using rule 75 (binary)]
+    RELOP_GREATER        [reduce using rule 75 (binary)]
+    RELOP_GREATER_EQUAL  [reduce using rule 75 (binary)]
+    EQUOP_EQUAL          [reduce using rule 75 (binary)]
+    EQUOP_NOT_EQUAL      [reduce using rule 75 (binary)]
+    $default             reduce using rule 75 (binary)
+
+
+State 145
+
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
+   76       | binary '-' binary .
+
+    RELOP_LESS           shift, and go to state 105
+    RELOP_LESS_EQUAL     shift, and go to state 106
+    RELOP_GREATER        shift, and go to state 107
+    RELOP_GREATER_EQUAL  shift, and go to state 108
+    EQUOP_EQUAL          shift, and go to state 109
+    EQUOP_NOT_EQUAL      shift, and go to state 110
+    '*'                  shift, and go to state 113
+    '/'                  shift, and go to state 114
+    '%'                  shift, and go to state 115
+
+    RELOP_LESS           [reduce using rule 76 (binary)]
+    RELOP_LESS_EQUAL     [reduce using rule 76 (binary)]
+    RELOP_GREATER        [reduce using rule 76 (binary)]
+    RELOP_GREATER_EQUAL  [reduce using rule 76 (binary)]
+    EQUOP_EQUAL          [reduce using rule 76 (binary)]
+    EQUOP_NOT_EQUAL      [reduce using rule 76 (binary)]
+    $default             reduce using rule 76 (binary)
+
+
+State 146
+
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   72       | binary '*' binary .
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
 
     RELOP_LESS           shift, and go to state 105
     RELOP_LESS_EQUAL     shift, and go to state 106
@@ -2396,16 +2343,78 @@ State 148
     $default             reduce using rule 72 (binary)
 
 
+State 147
+
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   73       | binary '/' binary .
+   74       | binary . '%' binary
+   75       | binary . '+' binary
+   76       | binary . '-' binary
+
+    RELOP_LESS           shift, and go to state 105
+    RELOP_LESS_EQUAL     shift, and go to state 106
+    RELOP_GREATER        shift, and go to state 107
+    RELOP_GREATER_EQUAL  shift, and go to state 108
+    EQUOP_EQUAL          shift, and go to state 109
+    EQUOP_NOT_EQUAL      shift, and go to state 110
+
+    RELOP_LESS           [reduce using rule 73 (binary)]
+    RELOP_LESS_EQUAL     [reduce using rule 73 (binary)]
+    RELOP_GREATER        [reduce using rule 73 (binary)]
+    RELOP_GREATER_EQUAL  [reduce using rule 73 (binary)]
+    EQUOP_EQUAL          [reduce using rule 73 (binary)]
+    EQUOP_NOT_EQUAL      [reduce using rule 73 (binary)]
+    $default             reduce using rule 73 (binary)
+
+
+State 148
+
+   66 binary: binary . RELOP_LESS binary
+   67       | binary . RELOP_LESS_EQUAL binary
+   68       | binary . RELOP_GREATER binary
+   69       | binary . RELOP_GREATER_EQUAL binary
+   70       | binary . EQUOP_EQUAL binary
+   71       | binary . EQUOP_NOT_EQUAL binary
+   72       | binary . '*' binary
+   73       | binary . '/' binary
+   74       | binary . '%' binary
+   74       | binary '%' binary .
+   75       | binary . '+' binary
+   76       | binary . '-' binary
+
+    RELOP_LESS           shift, and go to state 105
+    RELOP_LESS_EQUAL     shift, and go to state 106
+    RELOP_GREATER        shift, and go to state 107
+    RELOP_GREATER_EQUAL  shift, and go to state 108
+    EQUOP_EQUAL          shift, and go to state 109
+    EQUOP_NOT_EQUAL      shift, and go to state 110
+
+    RELOP_LESS           [reduce using rule 74 (binary)]
+    RELOP_LESS_EQUAL     [reduce using rule 74 (binary)]
+    RELOP_GREATER        [reduce using rule 74 (binary)]
+    RELOP_GREATER_EQUAL  [reduce using rule 74 (binary)]
+    EQUOP_EQUAL          [reduce using rule 74 (binary)]
+    EQUOP_NOT_EQUAL      [reduce using rule 74 (binary)]
+    $default             reduce using rule 74 (binary)
+
+
 State 149
 
-   92 unary: unary STRUCTOP ID .
+   94 unary: unary STRUCTOP ID .
 
-    $default  reduce using rule 92 (unary)
+    $default  reduce using rule 94 (unary)
 
 
 State 150
 
-   56 expr: unary '=' $@6 . expr
+   58 expr: unary '=' $@7 . expr
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -2430,15 +2439,15 @@ State 150
 
 State 151
 
-   90 unary: unary '[' expr . ']'
+   92 unary: unary '[' expr . ']'
 
     ']'  shift, and go to state 164
 
 
 State 152
 
-   93 unary: unary '(' func_label . args ')'
-   94      | unary '(' func_label . ')'
+   95 unary: unary '(' func_label . args ')'
+   96      | unary '(' func_label . ')'
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -2465,9 +2474,9 @@ State 152
 
 State 153
 
-   91 unary: unary '.' ID .
+   93 unary: unary '.' ID .
 
-    $default  reduce using rule 91 (unary)
+    $default  reduce using rule 93 (unary)
 
 
 State 154
@@ -2493,15 +2502,17 @@ State 156
 
 State 157
 
-   43 stmt: IF if_label '(' expr . ')' stmt
-   44     | IF if_label '(' expr . ')' stmt ELSE stmt
+   43 stmt: IF if_label '(' expr . branch_false ')' stmt
+   45     | IF if_label '(' expr . branch_false ')' stmt ELSE @6 stmt
 
-    ')'  shift, and go to state 169
+    $default  reduce using rule 53 (branch_false)
+
+    branch_false  go to state 169
 
 
 State 158
 
-   45 stmt: WHILE '(' expr ')' . stmt
+   46 stmt: WHILE '(' expr ')' . stmt
 
     RETURN         shift, and go to state 52
     IF             shift, and go to state 53
@@ -2537,7 +2548,7 @@ State 158
 
 State 159
 
-   46 stmt: FOR '(' expr_e ';' . expr_e ';' expr_e ')' stmt
+   47 stmt: FOR '(' expr_e ';' . expr_e ';' expr_e ')' stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -2551,7 +2562,7 @@ State 159
     '!'            shift, and go to state 67
     '('            shift, and go to state 68
 
-    $default  reduce using rule 53 (expr_e)
+    $default  reduce using rule 55 (expr_e)
 
     expr_e    go to state 171
     expr      go to state 129
@@ -2603,50 +2614,50 @@ State 160
 
 State 161
 
-   49 stmt: 'w' '(' STRING ')' .
-
-    $default  reduce using rule 49 (stmt)
-
-
-State 162
-
-   50 stmt: 'w' '(' expr ')' .
+   50 stmt: 'w' '(' STRING ')' .
 
     $default  reduce using rule 50 (stmt)
 
 
+State 162
+
+   51 stmt: 'w' '(' expr ')' .
+
+    $default  reduce using rule 51 (stmt)
+
+
 State 163
 
-   56 expr: unary '=' $@6 expr .
+   58 expr: unary '=' $@7 expr .
 
-    $default  reduce using rule 56 (expr)
+    $default  reduce using rule 58 (expr)
 
 
 State 164
 
-   90 unary: unary '[' expr ']' .
+   92 unary: unary '[' expr ']' .
 
-    $default  reduce using rule 90 (unary)
+    $default  reduce using rule 92 (unary)
 
 
 State 165
 
-   94 unary: unary '(' func_label ')' .
+   96 unary: unary '(' func_label ')' .
 
-    $default  reduce using rule 94 (unary)
+    $default  reduce using rule 96 (unary)
 
 
 State 166
 
-   96 args: expr .
+   98 args: expr .
 
-    $default  reduce using rule 96 (args)
+    $default  reduce using rule 98 (args)
 
 
 State 167
 
-   93 unary: unary '(' func_label args . ')'
-   97 args: args . ',' expr
+   95 unary: unary '(' func_label args . ')'
+   99 args: args . ',' expr
 
     ','  shift, and go to state 173
     ')'  shift, and go to state 174
@@ -2661,51 +2672,22 @@ State 168
 
 State 169
 
-   43 stmt: IF if_label '(' expr ')' . stmt
-   44     | IF if_label '(' expr ')' . stmt ELSE stmt
+   43 stmt: IF if_label '(' expr branch_false . ')' stmt
+   45     | IF if_label '(' expr branch_false . ')' stmt ELSE @6 stmt
 
-    RETURN         shift, and go to state 52
-    IF             shift, and go to state 53
-    WHILE          shift, and go to state 54
-    FOR            shift, and go to state 55
-    BREAK          shift, and go to state 56
-    CONTINUE       shift, and go to state 57
-    INCOP          shift, and go to state 58
-    DECOP          shift, and go to state 59
-    ID             shift, and go to state 60
-    INTEGER_CONST  shift, and go to state 61
-    STRING         shift, and go to state 62
-    CHAR_CONST     shift, and go to state 63
-    '&'            shift, and go to state 64
-    '-'            shift, and go to state 65
-    '*'            shift, and go to state 66
-    '!'            shift, and go to state 67
-    '('            shift, and go to state 68
-    ';'            shift, and go to state 69
-    '{'            shift, and go to state 70
-    'w'            shift, and go to state 72
-
-    compound_stmt  go to state 73
-    stmt           go to state 175
-    expr           go to state 75
-    or_expr        go to state 76
-    or_list        go to state 77
-    and_expr       go to state 78
-    and_list       go to state 79
-    binary         go to state 80
-    unary          go to state 81
+    ')'  shift, and go to state 175
 
 
 State 170
 
-   45 stmt: WHILE '(' expr ')' stmt .
+   46 stmt: WHILE '(' expr ')' stmt .
 
-    $default  reduce using rule 45 (stmt)
+    $default  reduce using rule 46 (stmt)
 
 
 State 171
 
-   46 stmt: FOR '(' expr_e ';' expr_e . ';' expr_e ')' stmt
+   47 stmt: FOR '(' expr_e ';' expr_e . ';' expr_e ')' stmt
 
     ';'  shift, and go to state 176
 
@@ -2719,7 +2701,7 @@ State 172
 
 State 173
 
-   97 args: args ',' . expr
+   99 args: args ',' . expr
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -2744,24 +2726,51 @@ State 173
 
 State 174
 
-   93 unary: unary '(' func_label args ')' .
+   95 unary: unary '(' func_label args ')' .
 
-    $default  reduce using rule 93 (unary)
+    $default  reduce using rule 95 (unary)
 
 
 State 175
 
-   43 stmt: IF if_label '(' expr ')' stmt .
-   44     | IF if_label '(' expr ')' stmt . ELSE stmt
+   43 stmt: IF if_label '(' expr branch_false ')' . stmt
+   45     | IF if_label '(' expr branch_false ')' . stmt ELSE @6 stmt
 
-    ELSE  shift, and go to state 178
+    RETURN         shift, and go to state 52
+    IF             shift, and go to state 53
+    WHILE          shift, and go to state 54
+    FOR            shift, and go to state 55
+    BREAK          shift, and go to state 56
+    CONTINUE       shift, and go to state 57
+    INCOP          shift, and go to state 58
+    DECOP          shift, and go to state 59
+    ID             shift, and go to state 60
+    INTEGER_CONST  shift, and go to state 61
+    STRING         shift, and go to state 62
+    CHAR_CONST     shift, and go to state 63
+    '&'            shift, and go to state 64
+    '-'            shift, and go to state 65
+    '*'            shift, and go to state 66
+    '!'            shift, and go to state 67
+    '('            shift, and go to state 68
+    ';'            shift, and go to state 69
+    '{'            shift, and go to state 70
+    'w'            shift, and go to state 72
 
-    $default  reduce using rule 43 (stmt)
+    compound_stmt  go to state 73
+    stmt           go to state 178
+    expr           go to state 75
+    or_expr        go to state 76
+    or_list        go to state 77
+    and_expr       go to state 78
+    and_list       go to state 79
+    binary         go to state 80
+    unary          go to state 81
 
 
 State 176
 
-   46 stmt: FOR '(' expr_e ';' expr_e ';' . expr_e ')' stmt
+   47 stmt: FOR '(' expr_e ';' expr_e ';' . expr_e ')' stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -2775,7 +2784,7 @@ State 176
     '!'            shift, and go to state 67
     '('            shift, and go to state 68
 
-    $default  reduce using rule 53 (expr_e)
+    $default  reduce using rule 55 (expr_e)
 
     expr_e    go to state 179
     expr      go to state 129
@@ -2789,64 +2798,40 @@ State 176
 
 State 177
 
-   97 args: args ',' expr .
+   99 args: args ',' expr .
 
-    $default  reduce using rule 97 (args)
+    $default  reduce using rule 99 (args)
 
 
 State 178
 
-   44 stmt: IF if_label '(' expr ')' stmt ELSE . stmt
+   43 stmt: IF if_label '(' expr branch_false ')' stmt .
+   45     | IF if_label '(' expr branch_false ')' stmt . ELSE @6 stmt
 
-    RETURN         shift, and go to state 52
-    IF             shift, and go to state 53
-    WHILE          shift, and go to state 54
-    FOR            shift, and go to state 55
-    BREAK          shift, and go to state 56
-    CONTINUE       shift, and go to state 57
-    INCOP          shift, and go to state 58
-    DECOP          shift, and go to state 59
-    ID             shift, and go to state 60
-    INTEGER_CONST  shift, and go to state 61
-    STRING         shift, and go to state 62
-    CHAR_CONST     shift, and go to state 63
-    '&'            shift, and go to state 64
-    '-'            shift, and go to state 65
-    '*'            shift, and go to state 66
-    '!'            shift, and go to state 67
-    '('            shift, and go to state 68
-    ';'            shift, and go to state 69
-    '{'            shift, and go to state 70
-    'w'            shift, and go to state 72
+    ELSE  shift, and go to state 180
 
-    compound_stmt  go to state 73
-    stmt           go to state 180
-    expr           go to state 75
-    or_expr        go to state 76
-    or_list        go to state 77
-    and_expr       go to state 78
-    and_list       go to state 79
-    binary         go to state 80
-    unary          go to state 81
+    $default  reduce using rule 43 (stmt)
 
 
 State 179
 
-   46 stmt: FOR '(' expr_e ';' expr_e ';' expr_e . ')' stmt
+   47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e . ')' stmt
 
     ')'  shift, and go to state 181
 
 
 State 180
 
-   44 stmt: IF if_label '(' expr ')' stmt ELSE stmt .
+   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE . @6 stmt
 
-    $default  reduce using rule 44 (stmt)
+    $default  reduce using rule 44 (@6)
+
+    @6  go to state 182
 
 
 State 181
 
-   46 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' . stmt
+   47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' . stmt
 
     RETURN         shift, and go to state 52
     IF             shift, and go to state 53
@@ -2870,7 +2855,7 @@ State 181
     'w'            shift, and go to state 72
 
     compound_stmt  go to state 73
-    stmt           go to state 182
+    stmt           go to state 183
     expr           go to state 75
     or_expr        go to state 76
     or_list        go to state 77
@@ -2882,6 +2867,49 @@ State 181
 
 State 182
 
-   46 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt .
+   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 . stmt
 
-    $default  reduce using rule 46 (stmt)
+    RETURN         shift, and go to state 52
+    IF             shift, and go to state 53
+    WHILE          shift, and go to state 54
+    FOR            shift, and go to state 55
+    BREAK          shift, and go to state 56
+    CONTINUE       shift, and go to state 57
+    INCOP          shift, and go to state 58
+    DECOP          shift, and go to state 59
+    ID             shift, and go to state 60
+    INTEGER_CONST  shift, and go to state 61
+    STRING         shift, and go to state 62
+    CHAR_CONST     shift, and go to state 63
+    '&'            shift, and go to state 64
+    '-'            shift, and go to state 65
+    '*'            shift, and go to state 66
+    '!'            shift, and go to state 67
+    '('            shift, and go to state 68
+    ';'            shift, and go to state 69
+    '{'            shift, and go to state 70
+    'w'            shift, and go to state 72
+
+    compound_stmt  go to state 73
+    stmt           go to state 184
+    expr           go to state 75
+    or_expr        go to state 76
+    or_list        go to state 77
+    and_expr       go to state 78
+    and_list       go to state 79
+    binary         go to state 80
+    unary          go to state 81
+
+
+State 183
+
+   47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt .
+
+    $default  reduce using rule 47 (stmt)
+
+
+State 184
+
+   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 stmt .
+
+    $default  reduce using rule 45 (stmt)

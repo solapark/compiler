@@ -36,6 +36,7 @@ label_0:
 	add
 	fetch
 	equal
+	branch_false label_ 1
 	push_reg fp
 	push_const 3
 	add
@@ -45,6 +46,8 @@ label_0:
 	assign
 	fetch
 	shift_sp -1
+	jump label_ 2
+label_1:
 	push_reg fp
 	push_const 3
 	add
@@ -54,6 +57,7 @@ label_0:
 	assign
 	fetch
 	shift_sp -1
+label_2:
 	push_reg fp
 	push_const 3
 	add
