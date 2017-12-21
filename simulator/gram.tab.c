@@ -94,6 +94,7 @@ struct operand {
 
 int code_area_size = 0;
 int global_data_size = 0;
+int line_no = 1;
 
 /*
 typedef union _stack_machine_data_type {
@@ -133,7 +134,7 @@ stack_machine_data_type global_data_area[DATA_AREA_SIZE];
 	yyval.instr->operand = yyvsp[0].operand;
 
 
-#line 137 "gram.tab.c" /* yacc.c:339  */
+#line 138 "gram.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -216,7 +217,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 72 "gram.y" /* yacc.c:355  */
+#line 73 "gram.y" /* yacc.c:355  */
 
 	int intVal;
 	char* stringVal;
@@ -225,7 +226,7 @@ union YYSTYPE
 	struct instr_node* instr;
 	struct operand* operand;
 
-#line 229 "gram.tab.c" /* yacc.c:355  */
+#line 230 "gram.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -242,7 +243,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 246 "gram.tab.c" /* yacc.c:358  */
+#line 247 "gram.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -543,12 +544,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   104,   104,   105,   106,   107,   108,   109,   110,   111,
-     112,   113,   114,   115,   116,   117,   118,   119,   120,   121,
-     122,   123,   124,   125,   126,   127,   128,   129,   130,   131,
-     132,   133,   134,   138,   147,   151,   160,   179,   198,   206,
-     217,   225,   233,   241,   249,   260,   268,   276,   287,   288,
-     289,   290,   291,   292,   293,   294,   295
+       0,   105,   105,   106,   107,   108,   109,   110,   111,   112,
+     113,   114,   115,   116,   117,   118,   119,   120,   121,   122,
+     123,   124,   125,   126,   127,   128,   129,   130,   131,   132,
+     133,   134,   135,   139,   148,   152,   161,   180,   199,   207,
+     218,   226,   234,   242,   250,   261,   269,   277,   288,   289,
+     290,   291,   292,   293,   294,   295,   296
 };
 #endif
 
@@ -1376,213 +1377,213 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 104 "gram.y" /* yacc.c:1646  */
+#line 105 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1382 "gram.tab.c" /* yacc.c:1646  */
+#line 1383 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 105 "gram.y" /* yacc.c:1646  */
+#line 106 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1388 "gram.tab.c" /* yacc.c:1646  */
+#line 1389 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 106 "gram.y" /* yacc.c:1646  */
+#line 107 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1394 "gram.tab.c" /* yacc.c:1646  */
+#line 1395 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 107 "gram.y" /* yacc.c:1646  */
+#line 108 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1400 "gram.tab.c" /* yacc.c:1646  */
+#line 1401 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 108 "gram.y" /* yacc.c:1646  */
+#line 109 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1406 "gram.tab.c" /* yacc.c:1646  */
+#line 1407 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 109 "gram.y" /* yacc.c:1646  */
+#line 110 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1412 "gram.tab.c" /* yacc.c:1646  */
+#line 1413 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 110 "gram.y" /* yacc.c:1646  */
+#line 111 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1418 "gram.tab.c" /* yacc.c:1646  */
+#line 1419 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 111 "gram.y" /* yacc.c:1646  */
+#line 112 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1424 "gram.tab.c" /* yacc.c:1646  */
+#line 1425 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 112 "gram.y" /* yacc.c:1646  */
+#line 113 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1430 "gram.tab.c" /* yacc.c:1646  */
+#line 1431 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 113 "gram.y" /* yacc.c:1646  */
+#line 114 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1436 "gram.tab.c" /* yacc.c:1646  */
+#line 1437 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 114 "gram.y" /* yacc.c:1646  */
+#line 115 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1442 "gram.tab.c" /* yacc.c:1646  */
+#line 1443 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 115 "gram.y" /* yacc.c:1646  */
+#line 116 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1448 "gram.tab.c" /* yacc.c:1646  */
+#line 1449 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 116 "gram.y" /* yacc.c:1646  */
+#line 117 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1454 "gram.tab.c" /* yacc.c:1646  */
+#line 1455 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 117 "gram.y" /* yacc.c:1646  */
+#line 118 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1460 "gram.tab.c" /* yacc.c:1646  */
+#line 1461 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 118 "gram.y" /* yacc.c:1646  */
+#line 119 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1466 "gram.tab.c" /* yacc.c:1646  */
+#line 1467 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 119 "gram.y" /* yacc.c:1646  */
+#line 120 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1472 "gram.tab.c" /* yacc.c:1646  */
+#line 1473 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 120 "gram.y" /* yacc.c:1646  */
+#line 121 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_2 }
-#line 1478 "gram.tab.c" /* yacc.c:1646  */
+#line 1479 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 121 "gram.y" /* yacc.c:1646  */
+#line 122 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_2 }
-#line 1484 "gram.tab.c" /* yacc.c:1646  */
+#line 1485 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 122 "gram.y" /* yacc.c:1646  */
+#line 123 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_2 }
-#line 1490 "gram.tab.c" /* yacc.c:1646  */
+#line 1491 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 123 "gram.y" /* yacc.c:1646  */
+#line 124 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1496 "gram.tab.c" /* yacc.c:1646  */
+#line 1497 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 124 "gram.y" /* yacc.c:1646  */
+#line 125 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_2 }
-#line 1502 "gram.tab.c" /* yacc.c:1646  */
+#line 1503 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 125 "gram.y" /* yacc.c:1646  */
+#line 126 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_3 }
-#line 1508 "gram.tab.c" /* yacc.c:1646  */
+#line 1509 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 126 "gram.y" /* yacc.c:1646  */
+#line 127 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_3 }
-#line 1514 "gram.tab.c" /* yacc.c:1646  */
+#line 1515 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 127 "gram.y" /* yacc.c:1646  */
+#line 128 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_4 }
-#line 1520 "gram.tab.c" /* yacc.c:1646  */
+#line 1521 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 128 "gram.y" /* yacc.c:1646  */
+#line 129 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1526 "gram.tab.c" /* yacc.c:1646  */
+#line 1527 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 129 "gram.y" /* yacc.c:1646  */
+#line 130 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1532 "gram.tab.c" /* yacc.c:1646  */
+#line 1533 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 130 "gram.y" /* yacc.c:1646  */
+#line 131 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1538 "gram.tab.c" /* yacc.c:1646  */
+#line 1539 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 131 "gram.y" /* yacc.c:1646  */
+#line 132 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1544 "gram.tab.c" /* yacc.c:1646  */
+#line 1545 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 132 "gram.y" /* yacc.c:1646  */
+#line 133 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1550 "gram.tab.c" /* yacc.c:1646  */
+#line 1551 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 133 "gram.y" /* yacc.c:1646  */
+#line 134 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1556 "gram.tab.c" /* yacc.c:1646  */
+#line 1557 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 134 "gram.y" /* yacc.c:1646  */
+#line 135 "gram.y" /* yacc.c:1646  */
     { INSTR_TYPE_1 }
-#line 1562 "gram.tab.c" /* yacc.c:1646  */
+#line 1563 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 139 "gram.y" /* yacc.c:1646  */
+#line 140 "gram.y" /* yacc.c:1646  */
     {
 			assert(code_area_size <= CODE_AREA_SIZE);
 
 			code_area[code_area_size++] = (yyvsp[-1].instr);
 		}
-#line 1572 "gram.tab.c" /* yacc.c:1646  */
+#line 1573 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 152 "gram.y" /* yacc.c:1646  */
+#line 153 "gram.y" /* yacc.c:1646  */
     {
 			assert((yyvsp[-2].id)->pc < 0);
 			(yyvsp[-2].id)->pc = CODE_AREA_OFFSET + code_area_size;
             printf("%s:\n", (yyvsp[-2].id)->name);
 		}
-#line 1582 "gram.tab.c" /* yacc.c:1646  */
+#line 1583 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 161 "gram.y" /* yacc.c:1646  */
+#line 162 "gram.y" /* yacc.c:1646  */
     {
 			int i;
 
@@ -1598,11 +1599,11 @@ yyreduce:
 			assert(global_data_size <= DATA_AREA_SIZE);
             printf("Lglob. data %d\n", (yyvsp[-1].intVal));
 		}
-#line 1602 "gram.tab.c" /* yacc.c:1646  */
+#line 1603 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 180 "gram.y" /* yacc.c:1646  */
+#line 181 "gram.y" /* yacc.c:1646  */
     {
 			int i, size;
 
@@ -1618,11 +1619,11 @@ yyreduce:
 
 			assert(global_data_size <= DATA_AREA_SIZE);
 		}
-#line 1622 "gram.tab.c" /* yacc.c:1646  */
+#line 1623 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 199 "gram.y" /* yacc.c:1646  */
+#line 200 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand)); \
 			(yyval.operand)->reg = NULL; \
@@ -1630,11 +1631,11 @@ yyreduce:
 			(yyval.operand)->integer = yyvsp[0].intVal; \
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1634 "gram.tab.c" /* yacc.c:1646  */
+#line 1635 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 207 "gram.y" /* yacc.c:1646  */
+#line 208 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand)); \
 			(yyval.operand)->reg = NULL; \
@@ -1642,11 +1643,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * yyvsp[0].intVal; \
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1646 "gram.tab.c" /* yacc.c:1646  */
+#line 1647 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 218 "gram.y" /* yacc.c:1646  */
+#line 219 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1654,11 +1655,11 @@ yyreduce:
 			(yyval.operand)->integer = (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1658 "gram.tab.c" /* yacc.c:1646  */
+#line 1659 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 226 "gram.y" /* yacc.c:1646  */
+#line 227 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1666,11 +1667,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1670 "gram.tab.c" /* yacc.c:1646  */
+#line 1671 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 234 "gram.y" /* yacc.c:1646  */
+#line 235 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1678,11 +1679,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1682 "gram.tab.c" /* yacc.c:1646  */
+#line 1683 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 242 "gram.y" /* yacc.c:1646  */
+#line 243 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1690,11 +1691,11 @@ yyreduce:
 			(yyval.operand)->integer = (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1694 "gram.tab.c" /* yacc.c:1646  */
+#line 1695 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 250 "gram.y" /* yacc.c:1646  */
+#line 251 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = NULL;
@@ -1702,11 +1703,11 @@ yyreduce:
 			(yyval.operand)->integer = -1 * (yyvsp[0].intVal);
 			(yyval.operand)->is_integer_used = 1;
 		}
-#line 1706 "gram.tab.c" /* yacc.c:1646  */
+#line 1707 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 261 "gram.y" /* yacc.c:1646  */
+#line 262 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1714,11 +1715,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1718 "gram.tab.c" /* yacc.c:1646  */
+#line 1719 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 269 "gram.y" /* yacc.c:1646  */
+#line 270 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1726,11 +1727,11 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1730 "gram.tab.c" /* yacc.c:1646  */
+#line 1731 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 277 "gram.y" /* yacc.c:1646  */
+#line 278 "gram.y" /* yacc.c:1646  */
     {
 			(yyval.operand) = (struct operand*)malloc(sizeof(struct operand));
 			(yyval.operand)->reg = (yyvsp[0].id);
@@ -1738,65 +1739,65 @@ yyreduce:
 			(yyval.operand)->integer = 0;
 			(yyval.operand)->is_integer_used = 0;
 		}
-#line 1742 "gram.tab.c" /* yacc.c:1646  */
+#line 1743 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 287 "gram.y" /* yacc.c:1646  */
+#line 288 "gram.y" /* yacc.c:1646  */
     { }
-#line 1748 "gram.tab.c" /* yacc.c:1646  */
+#line 1749 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 288 "gram.y" /* yacc.c:1646  */
+#line 289 "gram.y" /* yacc.c:1646  */
     { }
-#line 1754 "gram.tab.c" /* yacc.c:1646  */
+#line 1755 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 289 "gram.y" /* yacc.c:1646  */
+#line 290 "gram.y" /* yacc.c:1646  */
     { }
-#line 1760 "gram.tab.c" /* yacc.c:1646  */
+#line 1761 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 290 "gram.y" /* yacc.c:1646  */
+#line 291 "gram.y" /* yacc.c:1646  */
     { }
-#line 1766 "gram.tab.c" /* yacc.c:1646  */
+#line 1767 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 291 "gram.y" /* yacc.c:1646  */
+#line 292 "gram.y" /* yacc.c:1646  */
     { }
-#line 1772 "gram.tab.c" /* yacc.c:1646  */
+#line 1773 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 292 "gram.y" /* yacc.c:1646  */
+#line 293 "gram.y" /* yacc.c:1646  */
     { }
-#line 1778 "gram.tab.c" /* yacc.c:1646  */
+#line 1779 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 293 "gram.y" /* yacc.c:1646  */
+#line 294 "gram.y" /* yacc.c:1646  */
     { }
-#line 1784 "gram.tab.c" /* yacc.c:1646  */
+#line 1785 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 294 "gram.y" /* yacc.c:1646  */
+#line 295 "gram.y" /* yacc.c:1646  */
     { }
-#line 1790 "gram.tab.c" /* yacc.c:1646  */
+#line 1791 "gram.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 295 "gram.y" /* yacc.c:1646  */
+#line 296 "gram.y" /* yacc.c:1646  */
     { }
-#line 1796 "gram.tab.c" /* yacc.c:1646  */
+#line 1797 "gram.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1800 "gram.tab.c" /* yacc.c:1646  */
+#line 1801 "gram.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2024,7 +2025,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 298 "gram.y" /* yacc.c:1906  */
+#line 299 "gram.y" /* yacc.c:1906  */
 
 
 void init_stack_machine(void)
@@ -2422,6 +2423,8 @@ int yyerror(char* s)
 }
 
 void print_inst(int opcode, struct operand* operand){
+    printf("%d : \n", line_no-1);
+    line_no++;
     switch(opcode) {
         case NEGATE: 
             printf("negate\n");

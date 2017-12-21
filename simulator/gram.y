@@ -29,6 +29,7 @@ struct operand {
 
 int code_area_size = 0;
 int global_data_size = 0;
+int line_no = 1;
 
 /*
 typedef union _stack_machine_data_type {
@@ -692,6 +693,8 @@ int yyerror(char* s)
 }
 
 void print_inst(int opcode, struct operand* operand){
+    printf("%d : \n", line_no-1);
+    line_no++;
     switch(opcode) {
         case NEGATE: 
             printf("negate\n");
