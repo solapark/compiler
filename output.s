@@ -53,7 +53,17 @@ str_2. string "\n"
 	push_reg fp
 	push_const 2
 	add
+	push_reg sp
 	fetch
+	push_reg sp
+	fetch
+	fetch
+	push_const 1
+	add
+	assign
+	fetch
+	push_const 1
+	sub
 	write_int
 str_4. string "\n"
     push_const str_4

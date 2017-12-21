@@ -1054,7 +1054,12 @@ unary:		'(' expr ')'
     if($1 != NULL){
         int errNum = checkIsIntOrChar($1->type);
         if(errNum == SUCCESS){
-            $$ = $1;
+            //$$ = $1;
+            if(checkIsInt($1->type) == SUCCESS){
+                $$ = makeIntConstDecl(0);
+            }else{
+                $$ = makeCharConstDecl("0");
+            }
         }else{
             semErr(errNum);
             $$ = NULL;
@@ -1062,6 +1067,19 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+
+    //code_gen
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_CONST, setNewInteger(1));
+    code_gen(ADD, NULL);
+    code_gen(ASSIGN, NULL);
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_CONST, setNewInteger(1));
+    code_gen(SUB, NULL);
 }
 | unary DECOP	
 {
@@ -1070,7 +1088,12 @@ unary:		'(' expr ')'
     if($1 != NULL){
         int errNum = checkIsIntOrChar($1->type);
         if(errNum == SUCCESS){
-            $$ = $1;
+             //$$ = $1;
+            if(checkIsInt($1->type) == SUCCESS){
+                $$ = makeIntConstDecl(0);
+            }else{
+                $$ = makeCharConstDecl("0");
+            }
         }else{
             semErr(errNum);
             $$ = NULL;
@@ -1087,7 +1110,12 @@ unary:		'(' expr ')'
     if($2 != NULL){
         int errNum = checkIsIntOrChar($2->type);
         if(errNum == SUCCESS){
-            $$ = $2;
+            //$$ = $2;
+             if(checkIsInt($2->type) == SUCCESS){
+                $$ = makeIntConstDecl(0);
+            }else{
+                $$ = makeCharConstDecl("0");
+            }
         }else{
             semErr(errNum);
             $$ = NULL;
@@ -1102,11 +1130,10 @@ unary:		'(' expr ')'
     code_gen(PUSH_REG, setNewRegType(SP));
     code_gen(FETCH, NULL);
     code_gen(FETCH, NULL);
-    int offset = getOffsetByDecl($2);
-    code_gen(PUSH_CONST, setNewInteger(offset));
+    code_gen(PUSH_CONST, setNewInteger(1));
     code_gen(ADD, NULL);
     code_gen(ASSIGN, NULL);
-
+    code_gen(FETCH, NULL);
 }
 | DECOP unary 
 {
@@ -1114,7 +1141,12 @@ unary:		'(' expr ')'
     if($2 != NULL){
         int errNum = checkIsIntOrChar($2->type);
         if(errNum == SUCCESS){
-            $$ = $2;
+             //$$ = $2;
+             if(checkIsInt($2->type) == SUCCESS){
+                $$ = makeIntConstDecl(0);
+            }else{
+                $$ = makeCharConstDecl("0");
+            }
         }else{
             semErr(errNum);
             $$ = NULL;
