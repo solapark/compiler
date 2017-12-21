@@ -1033,6 +1033,9 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+   
+    //code_gen()
+    code_gen(NEGATE, NULL);
 }
 | '!' unary  
 {
@@ -1047,6 +1050,8 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+    //code_gen()
+    code_gen(NOT, NULL);
 }
 | unary INCOP 
 {
