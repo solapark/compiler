@@ -300,6 +300,15 @@ void code_gen(int opcode, struct operand* operand){
          case WRITE_LABEL_END :
             fprintf(outputFile,"%s_end:\n", operand->label);
             break;
+         case VAR_GLOBAL_ACCESS :
+            code_gen(PUSH_CONST_LGLOB, setNewInteger(operand->integer));
+            break;
+         case VAR_LOCAL_ACCESS :
+         case VAR_PARAM_ACCESS :
+            code_gen(PUSH_REG, setNewRegType(FP));
+            code_gen(PUSH_CONST, setNewInteger(operand->integer));
+            code_gen(ADD, NULL);
+            break;
     }
 #endif
 #if print
@@ -495,7 +504,24 @@ void code_gen(int opcode, struct operand* operand){
          case WRITE_LABEL_END :
             printf( "%s_end:\n", operand->label);
             break;
+/*         case VAR_GLOBAL_ACCESS :
+            code_gen(PUSH_CONST_LGLOB, setNewInteger(operand->integer));
+            break;
+         case VAR_LOCAL_ACCESS :
+            printf("var_local_access\n");
+            //code_gen(PUSH_REG, setNewRegType(FP));
+            code_gen(PUSH_CONST, setNewInteger(operand->integer));
+            code_gen(ADD, NULL);
+            break;
+         case VAR_PARAM_ACCESS :
+            printf("var_param_access\n");
+            code_gen(PUSH_REG, setNewRegType(FP));
+            code_gen(PUSH_CONST, setNewInteger(operand->integer));
+            code_gen(ADD, NULL);
+            break;
+            */
     }
+    return;
 #endif
 }
 

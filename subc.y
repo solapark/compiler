@@ -43,8 +43,8 @@
 %left	LOGICAL_OR
 %left	LOGICAL_AND	
 %left	'&'
-%left	EQUOP
-%left	RELOP
+%left	EQUOP_EQUAL EQUOP_NOT_EQUAL
+%left	RELOP_LESS RELOP_LESS_EQUAL RELOP_GREATER RELOP_GREATER_EQUAL
 %left	'+' '-'
 %left	'*' '/' '%'
 %right	'!' INCOP DECOP 
@@ -1009,29 +1009,9 @@ unary:		'(' expr ')'
 
     //code_Gen()
     struct decl* declPtr = findDecl($1);
-    int offset = getOffset($1);
-    //printf("declClass = %d\n", declPtr->declClass);
-    switch(declPtr->declClass){
-        case DECL_FUNC :
-            //printf("decl_func\n");
-          break;
-        case DECL_VAR :
-        case DECL_CONST :
-            if(checkIsGlobal($1)){//global
-                //printf("global\n");
-                code_gen(PUSH_CONST_LGLOB, setNewInteger(offset-1));
-            }else{
-                code_gen(PUSH_REG, setNewRegType(FP));
-                if(!checkIsParam($1)){//local
-                    //printf("local\n");
-                    offset += getRecentFuncParamSize();
-                }else{//param
-                    //printf("param\n");
-                }
-                code_gen(PUSH_CONST, setNewInteger(offset));
-                code_gen(ADD, NULL);
-            }
-            break;
+    if(declPtr->declClass == DECL_VAR || declPtr->declClass == DECL_CONST)
+    {
+        code_gen( getVarScope(declPtr), setNewInteger(getRealOffset(declPtr)));
     }
 }
 | STRING    %prec IFSIMPLE	{
@@ -1115,6 +1095,18 @@ unary:		'(' expr ')'
     }else{
         $$ = NULL;
     }
+
+    //code_gen
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(PUSH_REG, setNewRegType(SP));
+    code_gen(FETCH, NULL);
+    code_gen(FETCH, NULL);
+    int offset = getOffsetByDecl($2);
+    code_gen(PUSH_CONST, setNewInteger(offset));
+    code_gen(ADD, NULL);
+    code_gen(ASSIGN, NULL);
+
 }
 | DECOP unary 
 {

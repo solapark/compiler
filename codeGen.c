@@ -27,10 +27,7 @@ void setOffset(struct node *curSsTop, struct decl *curDecl){
     //printf("setOffset()\n");
     curDecl -> offset = curSsTop->size +1;
 }
-int getOffset(struct id* name){
-    struct decl* targetDecl = findDecl(name);
-    return targetDecl->offset;
-}
+
 
 int getGlobalSize(){
     return globalScope->size;
@@ -143,6 +140,18 @@ void setConstSize(struct decl* constDecl){
     constDecl->size = constDecl->type->size;
 }
 
+int checkIsParam(struct decl* declPtr){
+    struct ste* funcSte = findSteByStr("returnId")->prev;
+    struct ste* paramList = funcSte->decl->formals;
+    while(paramList){
+        if(paramList->decl == declPtr){
+            return 1;
+        }
+        paramList = paramList -> prev;
+    }
+    return 0;
+}
+/*
 int checkIsParam(struct id* name){
     struct ste* funcSte = findSteByStr("returnId")->prev;
     struct ste* paramList = funcSte->decl->formals;
@@ -152,7 +161,15 @@ int checkIsParam(struct id* name){
         return 0;
     }
 }
-
+*/
+int checkIsGlobal(struct decl* declPtr){
+   if(declPtr-> scope == globalScope ){
+       return 1;
+   }else{
+       return 0;
+   }
+}
+/*
 int checkIsGlobal(struct id* name){
    struct ste* targetSte = lookupSymbol(symbolTableHead, name);
    if(targetSte-> scope == globalScope ){
@@ -161,6 +178,7 @@ int checkIsGlobal(struct id* name){
        return 0;
    }
 }
+*/
 
 int getParamSize(struct decl* funcDecl){
     struct ste* paramList = funcDecl->formals;
@@ -182,3 +200,43 @@ int getRecentFuncParamSize(){
     }
     return paramSize;
 }
+
+int getOffsetByDecl(struct decl* targetDecl){
+    return targetDecl->offset;
+}
+
+int getOffsetById(struct id* name){
+    struct decl* targetDecl = findDecl(name);
+    return getOffsetByDecl(targetDecl);
+}
+int getVarScope(struct decl* declPtr){
+    if(checkIsGlobal(declPtr)){//global
+        //printf("global\n");
+        return VAR_GLOBAL;
+    }else{
+        if(!checkIsParam(declPtr)){//local
+            //printf("local\n");
+            return VAR_LOCAL;
+        }else{//param
+            //printf("param\n");
+            return VAR_PARAM;
+        }
+    }
+
+}
+int getRealOffset(struct decl* declPtr){
+    int offset = getOffsetByDecl(declPtr);
+    switch(getVarScope(declPtr)){
+        case VAR_GLOBAL :
+            offset  = offset-1;
+            break;
+        case VAR_LOCAL :
+            offset += getRecentFuncParamSize();
+            break;
+        case VAR_PARAM :
+            break;
+    }
+    return offset;
+}
+
+

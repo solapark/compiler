@@ -216,8 +216,9 @@ int declare(struct id* name, struct decl* type){
 void setSteScope(){
     //1. add new ste to scope stack
     ssTop->data = symbolTableHead;
-    //2. set scope of new ste.
+    //2. set scope of new ste(decl).
     symbolTableHead->scope = ssTop; 
+    symbolTableHead->decl->scope = ssTop;
     //printf("ssTop :%p\n", ssTop);
 }
 
@@ -678,7 +679,6 @@ struct ste* findSteByStr(char* name){
     }	
     return curSte;
 }
-
 char* findFuncName(struct decl* funcDecl){
     struct ste* curSte = symbolTableHead;
     while(curSte){

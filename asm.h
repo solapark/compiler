@@ -55,6 +55,11 @@
 #define WRITE_LABEL_FINAL   300 
 #define WRITE_LABEL_END     301 
 #define PUSH_CONST_STRING     305 
+
+#define VAR_GLOBAL_ACCESS     40
+#define VAR_PARAM_ACCESS     41
+#define VAR_LOCAL_ACCESS     42
+
 //num of define : 307
 
 struct operand

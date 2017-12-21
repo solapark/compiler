@@ -54,6 +54,10 @@
 #define NOT_INT_CHAR_PTR    26
 #define NOT_VAR_CONST   27
 
+#define VAR_GLOBAL     40
+#define VAR_PARAM     41
+#define VAR_LOCAL     42
+
 /* structure for ID */
 struct id {
       char *name;
@@ -101,7 +105,7 @@ struct decl {
 	struct decl	*ptrTo;
 	int		size;
     int     offset;
-	struct ste	**scope;
+	struct node	**scope;
 	struct decl	*next;
     struct Value* value;
 };

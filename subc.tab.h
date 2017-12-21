@@ -70,9 +70,7 @@ extern int yydebug;
     INTEGER_CONST = 280,
     STRING = 281,
     CHAR_CONST = 282,
-    IFSIMPLE = 283,
-    EQUOP = 284,
-    RELOP = 285
+    IFSIMPLE = 283
   };
 #endif
 
@@ -92,7 +90,7 @@ union YYSTYPE
         struct operand  *operandPtr;
     
 
-#line 96 "subc.tab.h" /* yacc.c:1909  */
+#line 94 "subc.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
