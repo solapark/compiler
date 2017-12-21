@@ -197,13 +197,17 @@ void code_gen(int opcode, struct operand* operand){
             fprintf(outputFile," %s_final", operand->label);
             fprintf(outputFile,"\n");
             break;
+        case JUMP_TO_RETURN_LABEL: 
+            fprintf(outputFile,"	jump");
+            fprintf(outputFile," %s%d\n", operand->label, operand->integer);
+            break;
         case BRANCH_TRUE: 
             fprintf(outputFile,"	branch_true");
             if(operand->isLabelUsed){
                 fprintf(outputFile," %s", operand->label);
             }
             if(operand->isIntUsed){
-                fprintf(outputFile," %d", operand->integer);
+                fprintf(outputFile,"%d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
@@ -213,7 +217,7 @@ void code_gen(int opcode, struct operand* operand){
                 fprintf(outputFile," %s", operand->label);
             }
             if(operand->isIntUsed){
-                fprintf(outputFile," %d", operand->integer);
+                fprintf(outputFile,"%d", operand->integer);
             }
             fprintf(outputFile,"\n");
             break;
@@ -235,6 +239,7 @@ void code_gen(int opcode, struct operand* operand){
             break;
         case PUSH_CONST_STRING :
             fprintf(outputFile,"    push_const str_%d\n", operand->integer);
+            str_area_size++;
             break;
         case PUSH_CONST_LGLOB :
             fprintf(outputFile,"    push_const Lglob+%d\n", operand->integer);
@@ -277,7 +282,7 @@ void code_gen(int opcode, struct operand* operand){
             break;
         case STRING_SAVE:
             fprintf(outputFile,"str_%d. string %s\n", str_area_size, operand->string);
-            setInteger(operand, str_area_size++);
+            setInteger(operand, str_area_size);
             break;
  
         case WRITE_LABEL :
@@ -315,155 +320,180 @@ void code_gen(int opcode, struct operand* operand){
             printf("	sub\n");
             break;
         case MUL:
-            printf("	mul\n");
+            printf( "	mul\n");
             break;
         case DIV:
-            printf("	div\n");
+            printf( "	div\n");
             break;
         case MOD: 
-            printf("	mod\n");
+            printf( "	mod\n");
             break;
         case AND: 
-            printf("	and\n");
+            printf( "	and\n");
             break;
         case OR:
-            printf("	or\n");
+            printf( "	or\n");
             break;
         case EQUAL: 
-            printf("	equal\n");
+            printf( "	equal\n");
             break;
         case NOT_EQUAL: 
-            printf("	not_equal\n");
+            printf( "	not_equal\n");
             break;
         case GREATER: 
-            printf("	greater\n");
+            printf( "	greater\n");
             break;
         case GREATER_EQUAL:
-            printf("	greater_equal\n");
+            printf( "	greater_equal\n");
             break;
         case LESS: 
-            printf("	less\n");
+            printf( "	less\n");
             break;
         case LESS_EQUAL:
-            printf("	less_equal\n");
+            printf( "	less_equal\n");
             break;
         case EXIT:
-            printf("	exit\n");
+            printf( "	exit\n");
             break;
         case ASSIGN: 
-            printf("	assign\n");
+            printf( "	assign\n");
             break;
         case FETCH:
-            printf("	fetch\n");
+            printf( "	fetch\n");
             break;
         case READ_INT: 
-            printf("	read_int\n");
+            printf( "	read_int\n");
             break;
         case READ_CHAR:
-            printf("	read_char\n");
+            printf( "	read_char\n");
             break;
         case WRITE_INT: 
-            printf("	write_int\n");
+            printf( "	write_int\n");
             break;
         case WRITE_CHAR: 
-            printf("	wrtie_char\n");
+            printf( "	wrtie_char\n");
             break;
         case WRITE_STRING:
-            printf("	write_string\n");
+            printf( "	write_string\n");
             break;
 
-        case JUMP: 
-            printf("	jump");
+         case JUMP: 
+            printf( "	jump");
             if(operand->isLabelUsed){
-                printf(" %s", operand->label);
+                printf( " %s", operand->label);
             }
             if(operand->isIntUsed){
-                printf(" %d", operand->integer);
+                printf( " %d", operand->integer);
             }
-            printf("\n");
+            printf( "\n");
+            break;
+        case JUMP_TO_FINAL: 
+            printf( "	jump");
+            printf( " %s_final", operand->label);
+            printf( "\n");
+            break;
+        case JUMP_TO_RETURN_LABEL: 
+            printf( "	jump");
+            printf( " %s%d\n", operand->label, operand->integer);
             break;
         case BRANCH_TRUE: 
-            printf("	branch_true");
+            printf( "	branch_true");
             if(operand->isLabelUsed){
-                printf(" %s", operand->label);
+                printf( " %s", operand->label);
             }
             if(operand->isIntUsed){
-                printf(" %d", operand->integer);
+                printf( "%d", operand->integer);
             }
-            printf("\n");
+            printf( "\n");
             break;
         case BRANCH_FALSE:
-            printf("	branch_false");
+            printf( "	branch_false");
             if(operand->isLabelUsed){
-                printf(" %s", operand->label);
+                printf( " %s", operand->label);
             }
             if(operand->isIntUsed){
-                printf(" %d", operand->integer);
+                printf( "%d", operand->integer);
             }
-            printf("\n");
+            printf( "\n");
             break;
         case PUSH_CONST:
-            printf("	push_const");
+            printf( "	push_const");
             if(operand->isLabelUsed){
-                printf(" %s", operand->label);
+                printf( " %s", operand->label);
             }
             if(operand->isIntUsed){
-                printf(" %d", operand->integer);
+                printf( " %d", operand->integer);
             }
-            printf("\n");
+            printf( "\n");
             break;
-
+        case PUSH_CONST_RETURN_LABEL:
+            printf( "	push_const");
+            printf( " %s", operand->label);
+            printf( "%d", operand->integer);
+            printf( "\n");
+            break;
+        case PUSH_CONST_STRING :
+            printf( "    push_const str_%d\n", operand->integer);
+            str_area_size++;
+            break;
+        case PUSH_CONST_LGLOB :
+            printf( "    push_const Lglob+%d\n", operand->integer);
+            break;
         case PUSH_REG: 
-            printf("	push_reg");
+            printf( "	push_reg");
             switch(operand->regType) {
                 case PC:
-                    printf(" pc\n");	
+                    printf( " pc\n");	
                     break;
                 case SP:
-                    printf(" sp\n");	
+                    printf( " sp\n");	
                     break;
                 case FP:
-                    printf(" fp\n");	
+                    printf( " fp\n");	
                     break;
             }
             break;
         case POP_REG:
-            printf("	pop_reg");
+            printf( "	pop_reg");
             switch(operand->regType) {
                 case PC:
-                    printf(" pc\n");	
+                    printf( " pc\n");	
                     break;
                 case SP:
-                    printf(" sp\n");	
+                    printf( " sp\n");	
                     break;
                 case FP:
-                    printf(" fp\n");	
+                    printf( " fp\n");	
                     break;
             }
             break;
 
         case SHIFT_SP:
-            printf("	shift_sp %d\n", operand->integer);
+            printf( "	shift_sp %d\n", operand->integer);
             break;
 
         case DATA_SAVE:
-            printf("Lglob. data %d\n", operand->integer);
+            printf( "Lglob. data %d\n", operand->integer);
             break;
         case STRING_SAVE:
-            printf("str_%d. string %s\n", str_area_size++, operand->string);
+            printf( "str_%d. string %s\n", str_area_size, operand->string);
+            setInteger(operand, str_area_size);
             break;
  
         case WRITE_LABEL :
-            printf("%s:\n", operand->label);
+            printf( "%s:\n", operand->label);
+            break;
+        case WRITE_RETURN_LABEL :
+            printf( "%s%d:\n", operand->label, operand->integer);
             break;
         case WRITE_LABEL_START :
-            printf("%s_start:\n", operand->label);
+            printf( "%s_start:\n", operand->label);
             break;
         case WRITE_LABEL_FINAL :
-            printf("%s_final:\n", operand->label);
+            printf( "%s_final:\n", operand->label);
             break;
          case WRITE_LABEL_END :
-            printf("%s_end:\n", operand->label);
+            printf( "%s_end:\n", operand->label);
             break;
     }
 #endif

@@ -540,7 +540,7 @@ stmt:		expr ';'
 {
     //code_gen
     struct operand* opPtr = setNewReturnLabel();
-    code_gen(JUMP, opPtr);
+    code_gen(JUMP_TO_RETURN_LABEL, opPtr);
     code_gen(WRITE_RETURN_LABEL, $5);
     $<operandPtr>$ = opPtr;
 }
