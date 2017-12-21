@@ -443,7 +443,7 @@ void code_gen(int opcode, struct operand* operand){
             break;
         case PUSH_CONST_STRING :
             printf( "    push_const str_%d\n", operand->integer);
-            str_area_size++;
+            //str_area_size++;
             break;
         case PUSH_CONST_LGLOB :
             printf( "    push_const Lglob+%d\n", operand->integer);

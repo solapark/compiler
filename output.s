@@ -47,8 +47,8 @@ str_0. string "\n"
 	add
 	fetch
 	write_int
-str_2. string "\n"
-    push_const str_2
+str_1. string "\n"
+    push_const str_1
 	write_string
 	push_reg fp
 	push_const 2
@@ -65,16 +65,16 @@ str_2. string "\n"
 	push_const 1
 	sub
 	write_int
-str_4. string "\n"
-    push_const str_4
+str_2. string "\n"
+    push_const str_2
 	write_string
 	push_reg fp
 	push_const 2
 	add
 	fetch
 	write_int
-str_6. string "\n"
-    push_const str_6
+str_3. string "\n"
+    push_const str_3
 	write_string
 main_final:
 	push_reg fp
