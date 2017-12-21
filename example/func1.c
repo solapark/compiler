@@ -12,5 +12,6 @@ int main(){
 	
 	i = outprint(l);
 	write_int(k);
-	write_string("\n");
+	write_char('d');
+	write_string("aa");
 }

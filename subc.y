@@ -566,12 +566,26 @@ stmt %prec ELSE
 {
     REDUCE("stmt->CONTINUE ';'");
 }
+| 'write_char' '(' CHAR_CONST ')' 
+{
+    REDUCE("unary->write_char '(' CHAR_CONST ')'");
+    //code_gen()
+    //remove ')'
+    $3[strlen($3)-1] = '\0';
+    //$3[0] = '"';
+    //$3[strlen($3)-1] = '"';
+    struct operand* opPtr = setNewString($3);
+    code_gen(STRING_SAVE, opPtr);
+    code_gen(PUSH_CONST_STRING, opPtr);
+    code_gen(WRITE_CHAR, NULL);
+}
 | 'write_string' '(' STRING ')' 
 {
     REDUCE("unary->write_string '(' STRING ')'");
     //code_gen()
     //remove ')'
     $3[strlen($3)-1] = '\0';
+    printf("%s\n", $3);
     struct operand* opPtr = setNewString($3);
     code_gen(STRING_SAVE, opPtr);
     code_gen(PUSH_CONST_STRING, opPtr);

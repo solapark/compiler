@@ -278,7 +278,7 @@ void code_gen(int opcode, struct operand* operand){
             break;
 
         case DATA_SAVE:
-            fprintf(outputFile,"Lglob. data %d\n", operand->integer);
+            fprintf(outputFile,"Lglob.  data %d\n", operand->integer);
             break;
         case STRING_SAVE:
             fprintf(outputFile,"str_%d. string %s\n", str_area_size, operand->string);
