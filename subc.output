@@ -68,12 +68,12 @@ Grammar
 
    41 stmt: RETURN $@5 expr ';'
    42     | ';'
-   43     | IF if_label '(' expr branch_false ')' stmt
+   43     | IF cond_label '(' expr branch_false ')' stmt
 
    44 @6: %empty
 
-   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 stmt
-   46     | WHILE '(' expr ')' stmt
+   45 stmt: IF cond_label '(' expr branch_false ')' stmt ELSE @6 stmt
+   46     | WHILE cond_label '(' expr branch_false ')' stmt
    47     | FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt
    48     | BREAK ';'
    49     | CONTINUE ';'
@@ -81,7 +81,7 @@ Grammar
    51     | 'w' '(' STRING ')'
    52     | 'w' '(' expr ')'
 
-   53 if_label: %empty
+   53 cond_label: %empty
 
    54 branch_false: %empty
 
@@ -241,10 +241,10 @@ $@5 (67)
     on left: 40, on right: 41
 @6 (68)
     on left: 44, on right: 45
-if_label (69)
-    on left: 53, on right: 43 45
+cond_label (69)
+    on left: 53, on right: 43 45 46
 branch_false (70)
-    on left: 54, on right: 43 45
+    on left: 54, on right: 43 45 46
 expr_e (71)
     on left: 55 56, on right: 47
 const_expr (72)
@@ -805,19 +805,21 @@ State 52
 
 State 53
 
-   43 stmt: IF . if_label '(' expr branch_false ')' stmt
-   45     | IF . if_label '(' expr branch_false ')' stmt ELSE @6 stmt
+   43 stmt: IF . cond_label '(' expr branch_false ')' stmt
+   45     | IF . cond_label '(' expr branch_false ')' stmt ELSE @6 stmt
 
-    $default  reduce using rule 53 (if_label)
+    $default  reduce using rule 53 (cond_label)
 
-    if_label  go to state 87
+    cond_label  go to state 87
 
 
 State 54
 
-   46 stmt: WHILE . '(' expr ')' stmt
+   46 stmt: WHILE . cond_label '(' expr branch_false ')' stmt
 
-    '('  shift, and go to state 88
+    $default  reduce using rule 53 (cond_label)
+
+    cond_label  go to state 88
 
 
 State 55
@@ -1208,35 +1210,17 @@ State 86
 
 State 87
 
-   43 stmt: IF if_label . '(' expr branch_false ')' stmt
-   45     | IF if_label . '(' expr branch_false ')' stmt ELSE @6 stmt
+   43 stmt: IF cond_label . '(' expr branch_false ')' stmt
+   45     | IF cond_label . '(' expr branch_false ')' stmt ELSE @6 stmt
 
     '('  shift, and go to state 126
 
 
 State 88
 
-   46 stmt: WHILE '(' . expr ')' stmt
+   46 stmt: WHILE cond_label . '(' expr branch_false ')' stmt
 
-    INCOP          shift, and go to state 58
-    DECOP          shift, and go to state 59
-    ID             shift, and go to state 60
-    INTEGER_CONST  shift, and go to state 61
-    STRING         shift, and go to state 62
-    CHAR_CONST     shift, and go to state 63
-    '&'            shift, and go to state 64
-    '-'            shift, and go to state 65
-    '*'            shift, and go to state 66
-    '!'            shift, and go to state 67
-    '('            shift, and go to state 68
-
-    expr      go to state 127
-    or_expr   go to state 76
-    or_list   go to state 77
-    and_expr  go to state 78
-    and_list  go to state 79
-    binary    go to state 80
-    unary     go to state 81
+    '('  shift, and go to state 127
 
 
 State 89
@@ -1840,8 +1824,8 @@ State 125
 
 State 126
 
-   43 stmt: IF if_label '(' . expr branch_false ')' stmt
-   45     | IF if_label '(' . expr branch_false ')' stmt ELSE @6 stmt
+   43 stmt: IF cond_label '(' . expr branch_false ')' stmt
+   45     | IF cond_label '(' . expr branch_false ')' stmt ELSE @6 stmt
 
     INCOP          shift, and go to state 58
     DECOP          shift, and go to state 59
@@ -1866,9 +1850,27 @@ State 126
 
 State 127
 
-   46 stmt: WHILE '(' expr . ')' stmt
+   46 stmt: WHILE cond_label '(' . expr branch_false ')' stmt
 
-    ')'  shift, and go to state 159
+    INCOP          shift, and go to state 58
+    DECOP          shift, and go to state 59
+    ID             shift, and go to state 60
+    INTEGER_CONST  shift, and go to state 61
+    STRING         shift, and go to state 62
+    CHAR_CONST     shift, and go to state 63
+    '&'            shift, and go to state 64
+    '-'            shift, and go to state 65
+    '*'            shift, and go to state 66
+    '!'            shift, and go to state 67
+    '('            shift, and go to state 68
+
+    expr      go to state 159
+    or_expr   go to state 76
+    or_list   go to state 77
+    and_expr  go to state 78
+    and_list  go to state 79
+    binary    go to state 80
+    unary     go to state 81
 
 
 State 128
@@ -2341,8 +2343,8 @@ State 157
 
 State 158
 
-   43 stmt: IF if_label '(' expr . branch_false ')' stmt
-   45     | IF if_label '(' expr . branch_false ')' stmt ELSE @6 stmt
+   43 stmt: IF cond_label '(' expr . branch_false ')' stmt
+   45     | IF cond_label '(' expr . branch_false ')' stmt ELSE @6 stmt
 
     $default  reduce using rule 54 (branch_false)
 
@@ -2351,38 +2353,11 @@ State 158
 
 State 159
 
-   46 stmt: WHILE '(' expr ')' . stmt
+   46 stmt: WHILE cond_label '(' expr . branch_false ')' stmt
 
-    RETURN         shift, and go to state 52
-    IF             shift, and go to state 53
-    WHILE          shift, and go to state 54
-    FOR            shift, and go to state 55
-    BREAK          shift, and go to state 56
-    CONTINUE       shift, and go to state 57
-    INCOP          shift, and go to state 58
-    DECOP          shift, and go to state 59
-    ID             shift, and go to state 60
-    INTEGER_CONST  shift, and go to state 61
-    STRING         shift, and go to state 62
-    CHAR_CONST     shift, and go to state 63
-    '&'            shift, and go to state 64
-    '-'            shift, and go to state 65
-    '*'            shift, and go to state 66
-    '!'            shift, and go to state 67
-    '('            shift, and go to state 68
-    ';'            shift, and go to state 69
-    '{'            shift, and go to state 70
-    'w'            shift, and go to state 72
+    $default  reduce using rule 54 (branch_false)
 
-    compound_stmt  go to state 73
-    stmt           go to state 172
-    expr           go to state 75
-    or_expr        go to state 76
-    or_list        go to state 77
-    and_expr       go to state 78
-    and_list       go to state 79
-    binary         go to state 80
-    unary          go to state 81
+    branch_false  go to state 172
 
 
 State 160
@@ -2518,24 +2493,24 @@ State 170
 
 State 171
 
-   43 stmt: IF if_label '(' expr branch_false . ')' stmt
-   45     | IF if_label '(' expr branch_false . ')' stmt ELSE @6 stmt
+   43 stmt: IF cond_label '(' expr branch_false . ')' stmt
+   45     | IF cond_label '(' expr branch_false . ')' stmt ELSE @6 stmt
 
     ')'  shift, and go to state 177
 
 
 State 172
 
-   46 stmt: WHILE '(' expr ')' stmt .
+   46 stmt: WHILE cond_label '(' expr branch_false . ')' stmt
 
-    $default  reduce using rule 46 (stmt)
+    ')'  shift, and go to state 178
 
 
 State 173
 
    47 stmt: FOR '(' expr_e ';' expr_e . ';' expr_e ')' stmt
 
-    ';'  shift, and go to state 178
+    ';'  shift, and go to state 179
 
 
 State 174
@@ -2561,7 +2536,7 @@ State 175
     '!'            shift, and go to state 67
     '('            shift, and go to state 68
 
-    expr      go to state 179
+    expr      go to state 180
     or_expr   go to state 76
     or_list   go to state 77
     and_expr  go to state 78
@@ -2579,8 +2554,8 @@ State 176
 
 State 177
 
-   43 stmt: IF if_label '(' expr branch_false ')' . stmt
-   45     | IF if_label '(' expr branch_false ')' . stmt ELSE @6 stmt
+   43 stmt: IF cond_label '(' expr branch_false ')' . stmt
+   45     | IF cond_label '(' expr branch_false ')' . stmt ELSE @6 stmt
 
     RETURN         shift, and go to state 52
     IF             shift, and go to state 53
@@ -2604,7 +2579,7 @@ State 177
     'w'            shift, and go to state 72
 
     compound_stmt  go to state 73
-    stmt           go to state 180
+    stmt           go to state 181
     expr           go to state 75
     or_expr        go to state 76
     or_list        go to state 77
@@ -2615,6 +2590,42 @@ State 177
 
 
 State 178
+
+   46 stmt: WHILE cond_label '(' expr branch_false ')' . stmt
+
+    RETURN         shift, and go to state 52
+    IF             shift, and go to state 53
+    WHILE          shift, and go to state 54
+    FOR            shift, and go to state 55
+    BREAK          shift, and go to state 56
+    CONTINUE       shift, and go to state 57
+    INCOP          shift, and go to state 58
+    DECOP          shift, and go to state 59
+    ID             shift, and go to state 60
+    INTEGER_CONST  shift, and go to state 61
+    STRING         shift, and go to state 62
+    CHAR_CONST     shift, and go to state 63
+    '&'            shift, and go to state 64
+    '-'            shift, and go to state 65
+    '*'            shift, and go to state 66
+    '!'            shift, and go to state 67
+    '('            shift, and go to state 68
+    ';'            shift, and go to state 69
+    '{'            shift, and go to state 70
+    'w'            shift, and go to state 72
+
+    compound_stmt  go to state 73
+    stmt           go to state 182
+    expr           go to state 75
+    or_expr        go to state 76
+    or_list        go to state 77
+    and_expr       go to state 78
+    and_list       go to state 79
+    binary         go to state 80
+    unary          go to state 81
+
+
+State 179
 
    47 stmt: FOR '(' expr_e ';' expr_e ';' . expr_e ')' stmt
 
@@ -2632,7 +2643,7 @@ State 178
 
     $default  reduce using rule 56 (expr_e)
 
-    expr_e    go to state 181
+    expr_e    go to state 183
     expr      go to state 129
     or_expr   go to state 76
     or_list   go to state 77
@@ -2642,40 +2653,47 @@ State 178
     unary     go to state 81
 
 
-State 179
+State 180
 
   100 args: args ',' expr .
 
     $default  reduce using rule 100 (args)
 
 
-State 180
+State 181
 
-   43 stmt: IF if_label '(' expr branch_false ')' stmt .
-   45     | IF if_label '(' expr branch_false ')' stmt . ELSE @6 stmt
+   43 stmt: IF cond_label '(' expr branch_false ')' stmt .
+   45     | IF cond_label '(' expr branch_false ')' stmt . ELSE @6 stmt
 
-    ELSE  shift, and go to state 182
+    ELSE  shift, and go to state 184
 
     $default  reduce using rule 43 (stmt)
 
 
-State 181
-
-   47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e . ')' stmt
-
-    ')'  shift, and go to state 183
-
-
 State 182
 
-   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE . @6 stmt
+   46 stmt: WHILE cond_label '(' expr branch_false ')' stmt .
 
-    $default  reduce using rule 44 (@6)
-
-    @6  go to state 184
+    $default  reduce using rule 46 (stmt)
 
 
 State 183
+
+   47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e . ')' stmt
+
+    ')'  shift, and go to state 185
+
+
+State 184
+
+   45 stmt: IF cond_label '(' expr branch_false ')' stmt ELSE . @6 stmt
+
+    $default  reduce using rule 44 (@6)
+
+    @6  go to state 186
+
+
+State 185
 
    47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' . stmt
 
@@ -2701,7 +2719,7 @@ State 183
     'w'            shift, and go to state 72
 
     compound_stmt  go to state 73
-    stmt           go to state 185
+    stmt           go to state 187
     expr           go to state 75
     or_expr        go to state 76
     or_list        go to state 77
@@ -2711,9 +2729,9 @@ State 183
     unary          go to state 81
 
 
-State 184
+State 186
 
-   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 . stmt
+   45 stmt: IF cond_label '(' expr branch_false ')' stmt ELSE @6 . stmt
 
     RETURN         shift, and go to state 52
     IF             shift, and go to state 53
@@ -2737,7 +2755,7 @@ State 184
     'w'            shift, and go to state 72
 
     compound_stmt  go to state 73
-    stmt           go to state 186
+    stmt           go to state 188
     expr           go to state 75
     or_expr        go to state 76
     or_list        go to state 77
@@ -2747,15 +2765,15 @@ State 184
     unary          go to state 81
 
 
-State 185
+State 187
 
    47 stmt: FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt .
 
     $default  reduce using rule 47 (stmt)
 
 
-State 186
+State 188
 
-   45 stmt: IF if_label '(' expr branch_false ')' stmt ELSE @6 stmt .
+   45 stmt: IF cond_label '(' expr branch_false ')' stmt ELSE @6 stmt .
 
     $default  reduce using rule 45 (stmt)
