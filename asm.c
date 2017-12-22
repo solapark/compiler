@@ -114,7 +114,6 @@ void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
     //assume that stackTop is RHS address
     int offset = LHSoffset;
     for(int i = 0; i<structSize; i++){
-        offset += i;
         //push LHS addr
         code_gen( LHSscope, setNewInteger(offset));
         //push RHS addr
@@ -128,6 +127,8 @@ void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
         code_gen(FETCH, NULL);
         //assign
         code_gen(ASSIGN, NULL);
+
+        offset += 1;
     }
 }
 
