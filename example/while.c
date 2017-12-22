@@ -1,3 +1,4 @@
+/*
 void outprint(int j){
 	int k;
 
@@ -12,18 +13,24 @@ void outprint(int j){
 	write_string("\n");
     return j;
 }
-
+*/
 int main(){
 	int k;
 
 	k = 3;
 
-	while(k > 0){
-		write_int(k);
+	while(1){
+		/*write_int(k);
 		write_string("\n");
+        */
+        if(k<0){
+            break;
+        }
 		k--;
 	}
+    /*
 	write_int(k);
 	write_string("\n");
     outprint(k);
+    */
 }

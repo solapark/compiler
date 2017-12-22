@@ -33,7 +33,7 @@
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
-%type 	<operandPtr>	cond_label func_label branch_false     
+%type 	<operandPtr>	new_label func_label branch_true branch_false     
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -491,7 +491,7 @@ stmt:		expr ';'
 {
     REDUCE("stmt->expr ';'");
     //code_gen()
-    code_gen(SHIFT_SP, setNewInteger(-1));
+    //code_gen(SHIFT_SP, setNewInteger(-1));
 }
 | compound_stmt	
 {
@@ -529,14 +529,14 @@ stmt:		expr ';'
     REDUCE("stmt->';'");
 }
 
-| IF cond_label '(' expr branch_false ')' stmt %prec IFSIMPLE	
+| IF new_label '(' expr branch_false ')' stmt %prec IFSIMPLE	
 {
     REDUCE("stmt->IF '(' expr ')' stmt	");
 
     //code_gen
     code_gen(WRITE_RETURN_LABEL, $5);
 }
-| IF cond_label '(' expr branch_false ')' stmt ELSE 
+| IF new_label '(' expr branch_false ')' stmt ELSE 
 {
     //code_gen
     struct operand* opPtr = setNewReturnLabel();
@@ -550,7 +550,7 @@ stmt %prec ELSE
     //code_gen
     code_gen(WRITE_RETURN_LABEL, $<operandPtr>9);
 }
-| WHILE cond_label '(' expr branch_false ')' stmt	
+| WHILE new_label '(' expr branch_false ')' stmt	
 {
     REDUCE("stmt->WHILE '(' expr ')' stmt");
     
@@ -558,9 +558,26 @@ stmt %prec ELSE
     code_gen(JUMP_TO_RETURN_LABEL, $2);
     code_gen(WRITE_RETURN_LABEL, $5);
 }
-| FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt	
+| FOR '(' expr_e ';' new_label expr_e ';' branch_false  
+{
+    //code_gen
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(JUMP_TO_RETURN_LABEL, opPtr);
+    $<operandPtr>$ = opPtr;
+}
+new_label expr_e
+{
+    code_gen(JUMP_TO_RETURN_LABEL, $5);
+}
+')' 	
+{
+   code_gen(WRITE_RETURN_LABEL, $<operandPtr>9);
+}
+stmt
 {
     REDUCE("stmt->FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt");
+    code_gen(JUMP_TO_RETURN_LABEL, $10);
+    code_gen(WRITE_RETURN_LABEL, $8);
 }
 | BREAK ';'	
 {
@@ -603,10 +620,19 @@ stmt %prec ELSE
 }
 ;
 
-cond_label: /*empty*/
+new_label: /*empty*/
 {
     struct operand* opPtr = setNewReturnLabel();
     code_gen(WRITE_RETURN_LABEL, opPtr);
+    $$ = opPtr;
+}
+;
+
+branch_true: /*empty*/  
+{
+    //code_gen
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(BRANCH_TRUE,opPtr);
     $$ = opPtr;
 }
 ;
@@ -622,11 +648,11 @@ branch_false: /*empty*/
 
 expr_e:		expr	
 {
-    REDUCE("test->expr");
+    REDUCE("expr_e->expr");
 }
 | /* empty */		
 {
-    REDUCE("test->epsilon");
+    REDUCE("expr_e->epsilon");
 }
 ;
 
@@ -682,6 +708,7 @@ expr:		unary '='
     //code_gen()
     code_gen(ASSIGN, NULL);
     code_gen(FETCH, NULL);
+    code_gen(SHIFT_SP, setNewInteger(-1));
 }
 | or_expr	
 {
@@ -1011,7 +1038,7 @@ unary:		'(' expr ')'
     //code_gen()
     code_gen(PUSH_CONST, setNewInteger($1));
 }
-| CHAR_CONST	{
+| CHAR_CONST	%prec IFSIMPLE{
     REDUCE("unary->CHAR_CONST");
     struct decl* constDecl = makeCharConstDecl($1);
     //constDecl->type = findDeclByStr("char");
