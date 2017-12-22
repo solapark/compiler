@@ -682,7 +682,7 @@ void simulate_stack_machine(void)
 		}
     print_inst(opcode, operand);
 	print_stack(sp, fp);
-    print_global();
+    //print_global();
 	}
 }
 

@@ -151,17 +151,6 @@ int checkIsParam(struct decl* declPtr){
     }
     return 0;
 }
-/*
-int checkIsParam(struct id* name){
-    struct ste* funcSte = findSteByStr("returnId")->prev;
-    struct ste* paramList = funcSte->decl->formals;
-    if(lookupSymbol(paramList, name)){
-        return 1;
-    }else{
-        return 0;
-    }
-}
-*/
 int checkIsGlobal(struct decl* declPtr){
    if(declPtr-> scope == globalScope ){
        return 1;
@@ -169,16 +158,6 @@ int checkIsGlobal(struct decl* declPtr){
        return 0;
    }
 }
-/*
-int checkIsGlobal(struct id* name){
-   struct ste* targetSte = lookupSymbol(symbolTableHead, name);
-   if(targetSte-> scope == globalScope ){
-       return 1;
-   }else{
-       return 0;
-   }
-}
-*/
 
 int getParamSize(struct decl* funcDecl){
     struct ste* paramList = funcDecl->formals;
@@ -196,12 +175,15 @@ int getParamSize(struct decl* funcDecl){
 
 int getRecentFuncParamSize(){
     struct ste* funcSte = findSteByStr("returnId")->prev;
+    /*
     struct ste* paramList = funcSte->decl->formals;
     int paramSize = 0;
     while(paramList){
         paramSize++;
         paramList = paramList->prev;
     }
+    */
+    int paramSize = getParamSize(funcSte->decl);
     return paramSize;
 }
 
