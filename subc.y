@@ -33,7 +33,7 @@
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
-%type 	<operandPtr>	new_label func_label branch_false     
+%type 	<operandPtr>	new_label branch_false     
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -1179,7 +1179,7 @@ unary:		'(' expr ')'
 }	
 | INCOP unary 
 {
-    REDUCE("unary->INCOP unary ");
+    REDUCE("urnary->INCOP unary ");
     if($2 != NULL){
         int errNum = checkIsIntOrChar($2->type);
         if(errNum == SUCCESS){
@@ -1361,7 +1361,14 @@ unary:		'(' expr ')'
     code_gen(PUSH_CONST,setNewInteger(strFieldOffset));
     code_gen(ADD, NULL);
 }//	<= The type of unary is a struct.
-| unary '(' func_label args ')' 
+| unary '(' {
+    //code_gen()
+    code_gen(SHIFT_SP, setNewInteger(1));
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
+    code_gen(PUSH_REG, setNewRegType(FP));
+    $<operandPtr>$ = opPtr;
+} args ')' 
 {
     REDUCE("unary->unary '(' args ')'");
     if($1 && $4) {
@@ -1389,9 +1396,16 @@ unary:		'(' expr ')'
     code_gen(ADD, NULL);
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
-    code_gen(WRITE_RETURN_LABEL,$3); 
+    code_gen(WRITE_RETURN_LABEL,$<operandPtr>3); 
 }//	<= The type of unary is a function.
-| unary '(' func_label ')'	
+| unary '(' {
+    //code_gen()
+    code_gen(SHIFT_SP, setNewInteger(1));
+    struct operand* opPtr = setNewReturnLabel();
+    code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
+    code_gen(PUSH_REG, setNewRegType(FP));
+    $<operandPtr>$ = opPtr;
+} ')'	
 {
     REDUCE("unary->unary '(' ')'");
     if($1 != NULL ){
@@ -1417,20 +1431,9 @@ unary:		'(' expr ')'
     code_gen(PUSH_REG, setNewRegType(SP));
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
-    code_gen(WRITE_RETURN_LABEL, $3);
+    code_gen(WRITE_RETURN_LABEL, $<operandPtr>3);
 }
 
-;
-
-func_label: /*empty*/   
-{
-    //code_gen()
-    code_gen(SHIFT_SP, setNewInteger(1));
-    struct operand* opPtr = setNewReturnLabel();
-    code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
-    code_gen(PUSH_REG, setNewRegType(FP));
-    $$ = opPtr;
-}
 ;
 
 args:		expr	
