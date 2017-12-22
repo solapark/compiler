@@ -184,7 +184,11 @@ int getParamSize(struct decl* funcDecl){
     struct ste* paramList = funcDecl->formals;
     int paramSize = 0;
     while(paramList){
-        paramSize++;
+        if(checkIsStruct(paramList->decl->type) == SUCCESS){
+            paramSize += paramList->decl->type->size;
+        }else{
+            paramSize++;
+        }
         paramList = paramList->prev;
     }
     return paramSize;

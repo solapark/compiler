@@ -132,6 +132,30 @@ void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
     }
 }
 
+void code_gen_structParam(int structSize){
+    //assume that stackTop is RHS address
+    if(structSize>1){
+        for(int i = 0; i<structSize-1; i++){
+            //push struct field addr
+            code_gen(PUSH_REG, setNewRegType(SP));
+            code_gen(FETCH, NULL);
+            code_gen( PUSH_CONST, setNewInteger(1));
+            code_gen(ADD, NULL);
+        }
+
+        for(int i = 0; i<structSize; i++){
+            //push RHS addr
+            code_gen(FETCH, NULL);
+            code_gen(SHIFT_SP, setNewInteger(-1));
+        }
+        code_gen(SHIFT_SP, setNewInteger(structSize));
+
+    }else {
+        code_gen(FETCH, NULL);
+    }
+
+}
+
 #define fprint  1
 #define print  1
 

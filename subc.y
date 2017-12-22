@@ -1382,7 +1382,7 @@ unary:		'(' expr ')'
     }
     resetArgList();
 
-
+    //code_gen
     code_gen(PUSH_REG, setNewRegType(SP));
     int paramSize = -1 * getParamSize($1);
     code_gen(PUSH_CONST, setNewInteger(paramSize));
@@ -1442,6 +1442,10 @@ args:		expr
         printf("expr = NULL\n");
         $$ = NULL;
     }
+
+    //code_gen()
+    printf("struct size : %d\n", $1->size);
+    code_gen_structParam($1->size);
 }
 | args ',' expr		
 {
