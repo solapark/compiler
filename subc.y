@@ -713,9 +713,16 @@ expr:		unary '='
     }
     
     //code_gen()
-    code_gen(ASSIGN, NULL);
-    code_gen(FETCH, NULL);
-    code_gen(SHIFT_SP, setNewInteger(-1));
+    if(checkIsStruct($1->type) == SUCCESS){
+        int LHSscope = getVarScope($1);
+        int LHSoffset = getRealOffset($1);
+        int structSize = getStructSize($1->type);
+        structAssign(LHSscope, LHSoffset, structSize);
+    }else{
+        code_gen(ASSIGN, NULL);
+        code_gen(FETCH, NULL);
+        code_gen(SHIFT_SP, setNewInteger(-1));
+    }
 }
 | or_expr	
 {
@@ -1010,9 +1017,7 @@ binary:		binary RELOP_LESS binary
     }    
 
     //code_gen()
-    //if(checkIsConst($1) == SUCCESS && checkIsInt($1->type)==SUCCESS){
-    //    code_gen(PUSH_CONST, 
-    if(checkIsVar($1)==SUCCESS){
+    if(checkIsVar($1)==SUCCESS && checkIsStruct($1->type) != SUCCESS){
         code_gen(FETCH, NULL);
     }
 }

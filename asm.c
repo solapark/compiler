@@ -102,6 +102,35 @@ void writeFuncFinalCode(struct operand* funcName){
     code_gen(WRITE_LABEL_END, funcName);
 }
 
+
+void structAssign(int LHSscope, int LHSoffset, int structSize){
+    structFieldAssign(LHSscope, LHSoffset, structSize);
+    //erase residual
+    code_gen(SHIFT_SP, setNewInteger(-3));
+}
+
+void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
+    printf("LHS offset : %d\n", LHSoffset);
+    //assume that stackTop is RHS address
+    int offset = LHSoffset;
+    for(int i = 0; i<structSize; i++){
+        offset += i;
+        //push LHS addr
+        code_gen( LHSscope, setNewInteger(offset));
+        //push RHS addr
+        code_gen( PUSH_REG, setNewRegType(SP));
+        code_gen( PUSH_CONST, setNewInteger(-1));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+        code_gen( PUSH_CONST, setNewInteger(i));
+        code_gen(ADD, NULL);
+        //RHS fetch
+        code_gen(FETCH, NULL);
+        //assign
+        code_gen(ASSIGN, NULL);
+    }
+}
+
 #define fprint  1
 #define print  1
 

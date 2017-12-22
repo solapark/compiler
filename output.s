@@ -5,77 +5,41 @@
 	jump main
 EXIT:
 	exit
+funcA:
+funcA_start:
+	push_reg fp
+	push_const -1
+	add
+	push_const -1
+	add
+	push_reg fp
+	push_const 1
+	add
+	assign
+	jump funcA_final
+funcA_final:
+	push_reg fp
+	pop_reg sp
+	pop_reg fp
+	pop_reg pc
+funcA_end:
 main:
-	shift_sp 2
+	shift_sp 8
 main_start:
 	push_reg fp
-	push_const 1
+	push_const 5
 	add
-	push_reg sp
-	fetch
 	push_const 0
+	add
+	push_reg sp
+	fetch
+	push_const 50
 	assign
 	fetch
 	shift_sp -1
 	push_reg fp
-	push_const 1
+	push_const 5
 	add
-	push_reg sp
-	fetch
-	push_const 0
-	assign
-	fetch
-	shift_sp -1
-label_0:
-	push_reg fp
-	push_const 1
-	add
-	fetch
-	push_const 10
-	less
-	branch_false label_1
-	jump label_2
-label_3:
-	push_reg fp
-	push_const 1
-	add
-	push_reg sp
-	fetch
-	push_reg sp
-	fetch
-	fetch
-	push_const 1
-	add
-	assign
-	fetch
-	push_const 1
-	sub
-	jump label_0
-label_2:
-	push_reg fp
-	push_const 1
-	add
-	push_reg sp
-	fetch
-	push_reg fp
-	push_const 1
-	add
-	fetch
-	assign
-	fetch
-	shift_sp -1
-label_4:
-	push_reg fp
-	push_const 1
-	add
-	fetch
-	push_const 3
-	equal
-	branch_false label_5
-	jump label_3
-	jump label_6
-label_5:
-	push_reg fp
 	push_const 1
 	add
 	push_reg sp
@@ -84,17 +48,107 @@ label_5:
 	assign
 	fetch
 	shift_sp -1
-label_6:
 	push_reg fp
+	push_const 5
+	add
+	push_const 2
+	add
+	push_reg sp
+	fetch
+	push_const 150
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 5
+	add
+	push_const 3
+	add
+	push_reg sp
+	fetch
+	push_const 200
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_reg fp
+	push_const 5
+	add
+	push_reg fp
+	push_const 1
+	add
+	push_reg sp
+	push_const -1
+	add
+	fetch
+	push_const 0
+	add
+	fetch
+	assign
+	push_reg fp
+	push_const 2
+	add
+	push_reg sp
+	push_const -1
+	add
+	fetch
+	push_const 1
+	add
+	fetch
+	assign
+	push_reg fp
+	push_const 4
+	add
+	push_reg sp
+	push_const -1
+	add
+	fetch
+	push_const 2
+	add
+	fetch
+	assign
+	push_reg fp
+	push_const 7
+	add
+	push_reg sp
+	push_const -1
+	add
+	fetch
+	push_const 3
+	add
+	fetch
+	assign
+	shift_sp -3
+str_0. string "x.b : "
+    push_const str_0
+	write_string
+	push_reg fp
+	push_const 1
+	add
+	push_const 3
+	add
+	fetch
+	write_int
+str_1. string "\n"
+    push_const str_1
+	write_string
+str_2. string "x.a[1] : "
+    push_const str_2
+	write_string
+	push_reg fp
+	push_const 1
+	add
 	push_const 1
 	add
 	fetch
 	write_int
-str_0. string "\n"
-    push_const str_0
+str_3. string "\n"
+    push_const str_3
 	write_string
-	jump label_3
-label_1:
 main_final:
 	push_reg fp
 	pop_reg sp

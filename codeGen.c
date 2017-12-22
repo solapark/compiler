@@ -239,4 +239,6 @@ int getRealOffset(struct decl* declPtr){
     return offset;
 }
 
-
+int getStructSize(struct decl* declPtr){
+    return declPtr -> size;
+}
