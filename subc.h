@@ -71,6 +71,8 @@ struct node {
 	struct node	*prev;
 	void		*data;	
     int         size; //for scope stack
+    int        contLabel;
+    int        breakLabel; 
 };
 
 /* structure for symbol table entry */

@@ -43,7 +43,12 @@ struct operand* makeOperand(){
    struct operand* opPtr = (struct operand*) malloc(sizeof(struct operand));
    return opPtr;
 }
-
+struct operand* setReturnLabelInt(int integer){
+   struct operand* opPtr = makeOperand();
+   setInteger(opPtr, integer);
+   setLabel(opPtr, "label_"); 
+   return opPtr;
+}
 struct operand* setNewReturnLabel(){
    struct operand* opPtr = makeOperand();
    setReturnLabel(opPtr);
@@ -73,16 +78,11 @@ struct operand* setNewRegType(int regType){
    setRegType(opPtr, regType);
    return opPtr;
 }
-/*
-struct operand* getReturnLabel(){
-   struct operand* opPtr = makeOperand();
-   opPtr -> label = "label_";
-   opPtr -> isLabelUsed = 1;
-   opPtr -> integer = mustReturnLabel--;
-   opPtr -> isIntUsed = 1;
-   return opPtr;
+
+int getInteger(struct operand* opPtr){
+    return opPtr -> integer;
 }
-*/
+
 void writeInitCode(){
     code_gen(PUSH_CONST, setNewLabel("EXIT"));
     code_gen(PUSH_REG,setNewRegType(FP));

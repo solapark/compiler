@@ -14,8 +14,8 @@ all : subc
 clean :
 	rm -f *.o lex.yy.c subc.tab.c subc.tab.h subc.output subc
 
-subc : lex.yy.o hash.o subc.tab.o symbol.o codeGen.o asm.o
-	${CC} -o subc lex.yy.o hash.o subc.tab.o symbol.o codeGen.o asm.o ${LINK_OPTION}
+subc : lex.yy.o hash.o subc.tab.o symbol.o codeGen.o asm.o loopStack.o
+	${CC} -o subc lex.yy.o hash.o subc.tab.o symbol.o codeGen.o asm.o loopStack.o ${LINK_OPTION}
 
 subc.tab.o : subc.tab.c subc.h asm.h
 	${CC} -c ${COMPILE_OPTION} subc.tab.c
@@ -34,6 +34,9 @@ codeGen.o : codeGen.c subc.h
 
 asm.o : asm.c asm.h 
 	${CC} -c ${COMPILE_OPTION} asm.c
+
+loopStack.o : loopStack.c subc.h 
+	${CC} -c ${COMPILE_OPTION} loopStack.c
 
 lex.yy.c : subc.l
 	${LEX} subc.l

@@ -31,7 +31,7 @@ label_0:
 	push_const 1
 	add
 	fetch
-	push_const 3
+	push_const 10
 	less
 	branch_false label_1
 	jump label_2
@@ -64,6 +64,27 @@ label_2:
 	assign
 	fetch
 	shift_sp -1
+label_4:
+	push_reg fp
+	push_const 1
+	add
+	fetch
+	push_const 3
+	equal
+	branch_false label_5
+	jump label_3
+	jump label_6
+label_5:
+	push_reg fp
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_const 100
+	assign
+	fetch
+	shift_sp -1
+label_6:
 	push_reg fp
 	push_const 1
 	add

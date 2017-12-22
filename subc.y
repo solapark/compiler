@@ -33,7 +33,7 @@
 %type   <stePtr>    param_decl param_list
 %type	<nodePtr>	args		
 %type 	<intVal>	pointers
-%type 	<operandPtr>	new_label func_label branch_true branch_false     
+%type 	<operandPtr>	new_label func_label branch_false     
 
 /* Precedences and Associativities */	
 %nonassoc	IFSIMPLE
@@ -550,13 +550,20 @@ stmt %prec ELSE
     //code_gen
     code_gen(WRITE_RETURN_LABEL, $<operandPtr>9);
 }
-| WHILE new_label '(' expr branch_false ')' stmt	
+| WHILE new_label '(' expr branch_false ')' 
+{
+    int contLabel = getInteger($2);
+    int breakLabel = getInteger($5);
+    pushLoop(contLabel, breakLabel);
+}
+stmt	
 {
     REDUCE("stmt->WHILE '(' expr ')' stmt");
     
     //code_gen
     code_gen(JUMP_TO_RETURN_LABEL, $2);
     code_gen(WRITE_RETURN_LABEL, $5);
+    popLoop();
 }
 | FOR '(' expr_e ';' new_label expr_e ';' branch_false  
 {
@@ -572,20 +579,29 @@ new_label expr_e
 ')' 	
 {
    code_gen(WRITE_RETURN_LABEL, $<operandPtr>9);
+    int contLabel = getInteger($10);
+    int breakLabel = getInteger($8);
+    pushLoop(contLabel, breakLabel);
 }
 stmt
 {
     REDUCE("stmt->FOR '(' expr_e ';' expr_e ';' expr_e ')' stmt");
     code_gen(JUMP_TO_RETURN_LABEL, $10);
     code_gen(WRITE_RETURN_LABEL, $8);
+    popLoop();
 }
 | BREAK ';'	
 {
     REDUCE("stmt->BREAK ';'");
+    printf("break_label : %d\n", getBreakLabel());
+    struct operand* opPtr = setReturnLabelInt(getBreakLabel());
+    code_gen(JUMP_TO_RETURN_LABEL, opPtr);
 }
 | CONTINUE ';'		
 {
     REDUCE("stmt->CONTINUE ';'");
+    struct operand* opPtr = setReturnLabelInt(getContLabel());
+    code_gen(JUMP_TO_RETURN_LABEL, opPtr);
 }
 | 'write_char' '(' CHAR_CONST ')' 
 {
@@ -624,15 +640,6 @@ new_label: /*empty*/
 {
     struct operand* opPtr = setNewReturnLabel();
     code_gen(WRITE_RETURN_LABEL, opPtr);
-    $$ = opPtr;
-}
-;
-
-branch_true: /*empty*/  
-{
-    //code_gen
-    struct operand* opPtr = setNewReturnLabel();
-    code_gen(BRANCH_TRUE,opPtr);
     $$ = opPtr;
 }
 ;
