@@ -29,7 +29,6 @@ int main() {
     y.a[1] = 100;
     y.a[2] = 150;
     y.b = 200;
-    x = y;
 /*    x = funcA(y);*/
    for(i = 0; i<3; i++){
         write_string("x.def[1].a[");
@@ -56,4 +55,5 @@ int main() {
     write_string("\n");
 
  
+    x = y;
 }

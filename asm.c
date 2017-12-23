@@ -103,13 +103,104 @@ void writeFuncFinalCode(struct operand* funcName){
 }
 
 
-void structAssign(int LHSscope, int LHSoffset, int structSize){
-    structFieldAssign(LHSscope, LHSoffset, structSize);
+void code_gen_structLHSAssign(int structSize){
+    //assume that stackTop is like below
+    //RHS <-sp
+    //RHS
+    //LHS_addr
+    //LHS_addr
+
+    //LHS ptr = sp - structSize
+
+    if(structSize == 0){
+        code_gen(ASSIGN, NULL);
+        return;
+    }
+
+    for(int i = 0; i<structSize; i++){
+        //LHS
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*(structSize+i)));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+
+        //RHS
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*(i+1)));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+
+        //assign
+        code_gen(ASSIGN, NULL);
+    }
+
     //erase residual
-    code_gen(SHIFT_SP, setNewInteger(-3));
+    code_gen(SHIFT_SP, setNewInteger(-1*(structSize*2)));
 }
+void code_gen_structAssign(int structSize){
+    //assume that stackTop is like below
+    //RHS <-sp
+    //RHS
+    //LHS_addr
+    //LHS_addr
+
+    //LHS ptr = sp - structSize
+
+    if(structSize == 0){
+        code_gen(ASSIGN, NULL);
+        return;
+    }
+
+    for(int i = 0; i<structSize; i++){
+        //LHS
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*(structSize+i)));
+        code_gen(ADD, NULL);
+
+        //RHS
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*(i+1)));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+
+        //assign
+        code_gen(ASSIGN, NULL);
+    }
+
+    //erase residual
+    code_gen(SHIFT_SP, setNewInteger(-1*(structSize)));
+}
+/*
+void code_gen_structLHSAssign(int LHSscope, int LHSoffset, int structSize){
+    //assume that stackTop is like below
+    //RHS <-sp
+    //RHS
+
+    printf("LHS offset : %d\n", LHSoffset);
+    //assume that stackTop is RHS address
+    int offset = LHSoffset;
+    for(int i = structSize; i>0; i--){
+        //push LHS addr
+        code_gen( LHSscope, setNewInteger(offset));
+        //push RHS addr
+        code_gen( PUSH_REG, setNewRegType(SP));
+        code_gen( PUSH_CONST, setNewInteger(-1*(i)));
+        code_gen(ADD, NULL);
+        //RHS fetch
+        code_gen(FETCH, NULL);
+        //assign
+        code_gen(ASSIGN, NULL);
+
+        offset += 1;
+    }
+}
+*/
 
 void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
+    //assume that stackTop is like below
+    //RHS <-sp
+    //RHS
+
     printf("LHS offset : %d\n", LHSoffset);
     //assume that stackTop is RHS address
     int offset = LHSoffset;
@@ -118,10 +209,7 @@ void structFieldAssign(int LHSscope, int LHSoffset, int structSize){
         code_gen( LHSscope, setNewInteger(offset));
         //push RHS addr
         code_gen( PUSH_REG, setNewRegType(SP));
-        code_gen( PUSH_CONST, setNewInteger(-1));
-        code_gen(ADD, NULL);
-        code_gen(FETCH, NULL);
-        code_gen( PUSH_CONST, setNewInteger(i));
+        code_gen( PUSH_CONST, setNewInteger(-1*(structSize -i)));
         code_gen(ADD, NULL);
         //RHS fetch
         code_gen(FETCH, NULL);
@@ -156,6 +244,64 @@ void code_gen_structParam(int structSize){
 
 }
 
+void code_gen_structReturn(int structSize){
+    //assume that stackTop is RHS address
+    int LHSaddr = -1*structSize;
+    for(int i = 0; i<structSize; i++){
+        //push LHS
+        code_gen(PUSH_REG, setNewRegType(FP));
+        code_gen(PUSH_CONST, setNewInteger(-1));
+        code_gen(ADD, NULL);
+        code_gen(PUSH_CONST, setNewInteger(LHSaddr++));
+        code_gen(ADD, NULL);
+        //push RHS addr
+        //access to top RHS
+        code_gen( PUSH_REG, setNewRegType(SP));
+        code_gen( PUSH_CONST, setNewInteger(-1));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+        //access to targer RHS
+        code_gen( PUSH_CONST, setNewInteger(i));
+        code_gen(ADD, NULL);
+        //RHS fetch
+        code_gen(FETCH, NULL);
+        //assign
+        code_gen(ASSIGN, NULL);
+    }
+
+    //remove residual
+    code_gen(SHIFT_SP, setNewInteger(-2));
+}
+
+void code_gen_structSpace(int structSize){
+    //assume that stackTop is addr of struct 1st member.
+    if(structSize == 0 || structSize == 1){
+        return;
+    }
+    for(int i = 1; i<structSize; i++){
+        code_gen( PUSH_REG, setNewRegType(SP));
+        code_gen(FETCH, NULL);
+        code_gen( PUSH_CONST, setNewInteger(1));
+        code_gen(ADD, NULL);
+    }
+}
+void code_gen_LHSStructSpace(int structSize){
+    code_gen_structSpace(structSize);
+}
+void code_gen_RHSStructSpace(int structSize){
+    //assume that stackTop is addr of struct 1st member.
+    if(structSize == 0){
+        code_gen(FETCH, NULL);
+        return;
+    }
+    code_gen_structSpace(structSize);
+
+    code_gen(SHIFT_SP, setNewInteger(-1*(structSize-1)));
+    for(int i = 0; i<structSize; i++){
+        code_gen(FETCH, NULL);
+        code_gen(SHIFT_SP, setNewInteger(1));
+    }
+}
 #define fprint  1
 #define print  1
 

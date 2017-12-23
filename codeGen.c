@@ -158,6 +158,9 @@ int checkIsGlobal(struct decl* declPtr){
        return 0;
    }
 }
+int getReturnSize(struct decl* funcDecl){
+    return funcDecl->returnType->type->size;
+}
 
 int getParamSize(struct decl* funcDecl){
     struct ste* paramList = funcDecl->formals;
@@ -173,6 +176,19 @@ int getParamSize(struct decl* funcDecl){
     return paramSize;
 }
 
+int getRecentFuncReturnSize(){
+    struct ste* retSte = findSteByStr("returnId");
+    /*
+    struct ste* paramList = funcSte->decl->formals;
+    int paramSize = 0;
+    while(paramList){
+        paramSize++;
+        paramList = paramList->prev;
+    }
+    */
+    int returnSize = retSte->decl->size;
+    return returnSize;
+}
 int getRecentFuncParamSize(){
     struct ste* funcSte = findSteByStr("returnId")->prev;
     /*
@@ -186,6 +202,12 @@ int getRecentFuncParamSize(){
     int paramSize = getParamSize(funcSte->decl);
     return paramSize;
 }
+
+struct decl* getRecentFuncReturnType(){
+    struct ste* funcSte = findSteByStr("returnId");
+    return funcSte->decl;
+}
+
 
 int getOffsetByDecl(struct decl* targetDecl){
     return targetDecl->offset;

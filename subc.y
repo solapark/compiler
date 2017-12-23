@@ -511,7 +511,9 @@ stmt:		expr ';'
     code_gen(PUSH_REG, setNewRegType(FP));
     code_gen(PUSH_CONST, setNewInteger(-1));
     code_gen(ADD, NULL);
-    code_gen(PUSH_CONST, setNewInteger(-1));
+    //access to retrun space
+    int retStart = -1*getRecentFuncReturnSize();
+    code_gen(PUSH_CONST, setNewInteger(retStart));
     code_gen(ADD, NULL);
 } expr ';'	
 {
@@ -520,9 +522,15 @@ stmt:		expr ';'
     semErr(errNum);
     
     //code_gen()
-    code_gen(ASSIGN, NULL);
+    if(checkIsStruct($3) == SUCCESS){
+        int structSize = getStructSize($3);
+        code_gen_structReturn(structSize);
+        //code_gen_structAssign(structSize);
+    }else{
+        code_gen(FETCH, NULL);
+        code_gen(ASSIGN, NULL);
+    }
     code_gen(JUMP_TO_FINAL, setNewLabel(findRecentFuncName()));
-
 }
 | ';'	
 {
@@ -690,9 +698,14 @@ INTEGER_CONST
 
 expr:		unary '=' 
 {
-                //code_gen
-                code_gen(PUSH_REG, setNewRegType(SP));
-                code_gen(FETCH, NULL);
+    //code_gen
+    if(checkIsStruct($1->type)==SUCCESS){
+        int structSize = getStructSize($1->type);
+        code_gen_LHSStructSpace(structSize);
+    }else{
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(FETCH, NULL);
+    }
 } expr	
 {
     REDUCE("expr->unary '=' expr");
@@ -714,10 +727,14 @@ expr:		unary '='
     
     //code_gen()
     if(checkIsStruct($1->type) == SUCCESS){
+        /*
         int LHSscope = getVarScope($1);
         int LHSoffset = getRealOffset($1);
         int structSize = getStructSize($1->type);
         structAssign(LHSscope, LHSoffset, structSize);
+        */
+       int structSize = getStructSize($1->type);
+       code_gen_structLHSAssign(structSize);
     }else{
         code_gen(ASSIGN, NULL);
         code_gen(FETCH, NULL);
@@ -1020,6 +1037,12 @@ binary:		binary RELOP_LESS binary
     if(checkIsVar($1)==SUCCESS && checkIsStruct($1->type) != SUCCESS){
         code_gen(FETCH, NULL);
     }
+/*
+    if(checkIsStruct($1->type) == SUCCESS){
+        int structSize = getStructSize($1->type);
+        code_gen_RHSStructSpace(structSize);
+    }
+    */
 }
 ;
 
@@ -1063,12 +1086,11 @@ unary:		'(' expr ')'
     if($$ == NULL){
         semErr(NOT_DECLARED);
     }
-
-    //code_Gen()
+    
+    //code_gen
     struct decl* declPtr = findDecl($1);
-    if(declPtr->declClass == DECL_VAR || declPtr->declClass == DECL_CONST)
-    {
-        code_gen( getVarScope(declPtr), setNewInteger(getRealOffset(declPtr)));
+    if(declPtr->declClass ==DECL_VAR || declPtr->declClass == DECL_CONST){
+        code_gen(getVarScope(declPtr), setNewInteger(getRealOffset(declPtr)));
     }
 }
 | STRING    %prec IFSIMPLE	{
@@ -1363,7 +1385,7 @@ unary:		'(' expr ')'
 }//	<= The type of unary is a struct.
 | unary '(' {
     //code_gen()
-    code_gen(SHIFT_SP, setNewInteger(1));
+    code_gen(SHIFT_SP, setNewInteger(getReturnSize($1)));
     struct operand* opPtr = setNewReturnLabel();
     code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
     code_gen(PUSH_REG, setNewRegType(FP));
@@ -1400,7 +1422,8 @@ unary:		'(' expr ')'
 }//	<= The type of unary is a function.
 | unary '(' {
     //code_gen()
-    code_gen(SHIFT_SP, setNewInteger(1));
+    printf("retrun size : %d\n", getReturnSize($1));
+    code_gen(SHIFT_SP, setNewInteger(getReturnSize($1)));
     struct operand* opPtr = setNewReturnLabel();
     code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
     code_gen(PUSH_REG, setNewRegType(FP));
@@ -1460,6 +1483,9 @@ args:		expr
         $$ = NULL;
     }
 
+    //code_gen()
+    printf("struct size : %d\n", $3->size);
+    code_gen_structParam($3->size);
 }
 ;
 %%

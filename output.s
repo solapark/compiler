@@ -6,7 +6,7 @@
 EXIT:
 	exit
 funcA:
-	shift_sp 4
+	shift_sp 5
 funcA_start:
 	push_reg fp
 	push_const 1
@@ -55,36 +55,15 @@ funcA_start:
 	push_reg fp
 	push_const -1
 	add
+	push_const -4
+	add
+	push_reg fp
+	push_const 1
+	add
+	push_reg fp
 	push_const -1
 	add
-	push_reg fp
-	push_const 1
-	add
-	assign
-	jump funcA_final
-funcA_final:
-	push_reg fp
-	pop_reg sp
-	pop_reg fp
-	pop_reg pc
-funcA_end:
-main:
-	shift_sp 4
-main_start:
-	push_reg fp
-	push_const 1
-	add
-	push_reg sp
-	fetch
-	shift_sp 1
-	push_const label_0
-	push_reg fp
-	push_reg sp
-	pop_reg fp
-	jump funcA
-label_0:
-	push_reg fp
-	push_const 1
+	push_const -4
 	add
 	push_reg sp
 	push_const -1
@@ -95,7 +74,9 @@ label_0:
 	fetch
 	assign
 	push_reg fp
-	push_const 2
+	push_const -1
+	add
+	push_const -3
 	add
 	push_reg sp
 	push_const -1
@@ -106,7 +87,9 @@ label_0:
 	fetch
 	assign
 	push_reg fp
-	push_const 3
+	push_const -1
+	add
+	push_const -2
 	add
 	push_reg sp
 	push_const -1
@@ -117,7 +100,9 @@ label_0:
 	fetch
 	assign
 	push_reg fp
-	push_const 4
+	push_const -1
+	add
+	push_const -1
 	add
 	push_reg sp
 	push_const -1
@@ -127,7 +112,198 @@ label_0:
 	add
 	fetch
 	assign
-	shift_sp -3
+	shift_sp -2
+	jump funcA_final
+funcA_final:
+	push_reg fp
+	pop_reg sp
+	pop_reg fp
+	pop_reg pc
+funcA_end:
+main:
+	shift_sp 5
+main_start:
+	push_reg fp
+	push_const 1
+	add
+	push_const 0
+	add
+	push_reg sp
+	fetch
+	push_const 10
+	negate
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_const 70
+	negate
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_const 2
+	add
+	push_reg sp
+	fetch
+	push_const 30
+	negate
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_const 3
+	add
+	push_reg sp
+	fetch
+	push_const 100
+	negate
+	assign
+	fetch
+	shift_sp -1
+	push_reg fp
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_const 1
+	add
+	push_reg sp
+	fetch
+	push_const 1
+	add
+	shift_sp 4
+	push_const label_0
+	push_reg fp
+	push_reg sp
+	pop_reg fp
+	jump funcA
+label_0:
+	push_reg sp
+	push_const -4
+	add
+	fetch
+	push_reg sp
+	push_const -1
+	add
+	fetch
+	assign
+	push_reg sp
+	push_const -5
+	add
+	fetch
+	push_reg sp
+	push_const -2
+	add
+	fetch
+	assign
+	push_reg sp
+	push_const -6
+	add
+	fetch
+	push_reg sp
+	push_const -3
+	add
+	fetch
+	assign
+	push_reg sp
+	push_const -7
+	add
+	fetch
+	push_reg sp
+	push_const -4
+	add
+	fetch
+	assign
+	shift_sp -8
+	push_reg fp
+	push_const 5
+	add
+	push_reg sp
+	fetch
+	push_const 0
+	assign
+	fetch
+	shift_sp -1
+label_1:
+	push_reg fp
+	push_const 5
+	add
+	fetch
+	push_const 3
+	less
+	branch_false label_2
+	jump label_3
+label_4:
+	push_reg fp
+	push_const 5
+	add
+	push_reg sp
+	fetch
+	push_reg sp
+	fetch
+	fetch
+	push_const 1
+	add
+	assign
+	fetch
+	push_const 1
+	sub
+	jump label_1
+label_3:
+str_0. string "y.a["
+    push_const str_0
+	write_string
+	push_reg fp
+	push_const 5
+	add
+	fetch
+	write_int
+str_1. string "] : "
+    push_const str_1
+	write_string
+	push_reg fp
+	push_const 1
+	add
+	push_reg fp
+	push_const 5
+	add
+	fetch
+	add
+	fetch
+	write_int
+str_2. string "\n"
+    push_const str_2
+	write_string
+	jump label_4
+label_2:
+str_3. string "y.b : "
+    push_const str_3
+	write_string
+	push_reg fp
+	push_const 1
+	add
+	push_const 3
+	add
+	fetch
+	write_int
+str_4. string "\n"
+    push_const str_4
+	write_string
 main_final:
 	push_reg fp
 	pop_reg sp
