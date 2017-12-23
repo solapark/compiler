@@ -1,7 +1,7 @@
 int global1;
 
-int aa(void){
-    return 3-3;
+int aa(int a){
+    return 100;
 }
 int* outprint(int* j){
     int a;
@@ -15,23 +15,33 @@ int* outprint(int* j){
 	write_string("\n");
     write_int(global1);
 	write_string("\n");
-	*j = *j + 10;
-    a = aa();
+    a = aa(a);
     write_int(a);
 	write_string("\n");
-    return j;
+	*j = *j + 10;
+   return j;
 }
 
 int main(){
 	int i;
 	int k;
 	int *l;
+    int *result;
 
 	k = 10;
 	l = &k;
 
-/*	i = outprint(l);*/
-	i = outprint(outprint(l));
+    /*
+	result = outprint(l);
+    */
+	result = outprint(&outprint(outprint(l)));
+    /*
+    k = aa(aa(k));
 	write_int(k);
 	write_string("\n");
+    */
+
+    write_int(*result);
+	write_string("\n");
+
 }

@@ -401,6 +401,13 @@ int checkIsType(struct decl* declPtr){
     }
     return SUCCESS;
 }
+int checkIsVoid(struct decl* declPtr){
+    if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->typeClass != DECL_TYPE_VOID){
+        //printf("return type : %d\n", declPtr->declClass);
+        return NOT_VOID;	
+    }
+    return SUCCESS;
+}
 int checkIsInt(struct decl* declPtr){
     if(declPtr == NULL || declPtr->declClass != DECL_TYPE || declPtr->typeClass != DECL_TYPE_INT){
         return NOT_INT;	
@@ -713,6 +720,10 @@ int checkSameType(struct decl* typeDecl1, struct decl* typeDecl2){
     //printf("decl1->typeClass = %d, decl2->typeClass = %d\n", decl1->typeClass, decl2->typeClass);
     if(typeDecl1== typeDecl2){
         return SUCCESS;
+    }else if(checkIsPtr(typeDecl1) == SUCCESS && checkIsPtr(typeDecl1) == SUCCESS 
+            && checkSameType(typeDecl1->ptrTo, typeDecl2->ptrTo)==SUCCESS){
+        return SUCCESS;
+
     }else{
         return WRONG_RETURN_VALUE;
     }
@@ -723,6 +734,9 @@ int checkCompatible(struct decl* formalType, struct decl* argType){
 
     if(formalType== argType){//int, char, void, struct
         //printf("int, char, void, struct\n");
+        return SUCCESS;
+    }
+    else if(checkSameType(formalType,argType) == SUCCESS){
         return SUCCESS;
     }
     else if(formalType -> typeClass== argType -> typeClass && argType -> typeClass == DECL_TYPE_PTR){//pointer

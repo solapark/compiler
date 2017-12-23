@@ -513,11 +513,13 @@ stmt:		expr ';'
     code_gen(ADD, NULL);
     //access to retrun space
     int retStart = -1*getRecentFuncReturnSize();
+    if(retStart == 0) retStart = -1;
     code_gen(PUSH_CONST, setNewInteger(retStart));
     code_gen(ADD, NULL);
 } expr ';'	
 {
     REDUCE("stmt->RETURN expr ';'");
+    struct decl* declPtr = $3;
     int errNum = checkSameType(findDeclByStr("returnId"), $3);
     semErr(errNum);
     
@@ -527,7 +529,7 @@ stmt:		expr ';'
         code_gen_structReturn(structSize);
         //code_gen_structAssign(structSize);
     }else{
-        code_gen(FETCH, NULL);
+        //code_gen(FETCH, NULL);
         code_gen(ASSIGN, NULL);
     }
     code_gen(JUMP_TO_FINAL, setNewLabel(findRecentFuncName()));
@@ -1383,8 +1385,11 @@ unary:		'(' expr ')'
     code_gen(ADD, NULL);
 }//	<= The type of unary is a struct.
 | unary '(' {
-    //code_gen()
-    code_gen(SHIFT_SP, setNewInteger(getReturnSize($1)));
+    //code_gen()i
+    struct decl* declPtr = $1;
+    int returnSize =  getReturnSize($1);
+    if(returnSize == 0) returnSize = 1;
+    code_gen(SHIFT_SP, setNewInteger(returnSize));
     struct operand* opPtr = setNewReturnLabel();
     code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
     code_gen(PUSH_REG, setNewRegType(FP));
@@ -1418,11 +1423,18 @@ unary:		'(' expr ')'
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
     code_gen(WRITE_RETURN_LABEL,$<operandPtr>3); 
+    if(checkIsVoid($1->returnType->type) == SUCCESS){
+        code_gen(SHIFT_SP, setNewInteger(-1));
+    }
+
+
 }//	<= The type of unary is a function.
 | unary '(' {
     //code_gen()
     printf("retrun size : %d\n", getReturnSize($1));
-    code_gen(SHIFT_SP, setNewInteger(getReturnSize($1)));
+    int returnSize =  getReturnSize($1);
+    if(returnSize == 0) returnSize = 1;
+    code_gen(SHIFT_SP, setNewInteger(returnSize));
     struct operand* opPtr = setNewReturnLabel();
     code_gen(PUSH_CONST_RETURN_LABEL, opPtr);
     code_gen(PUSH_REG, setNewRegType(FP));
@@ -1454,6 +1466,10 @@ unary:		'(' expr ')'
     code_gen(POP_REG, setNewRegType(FP));
     code_gen(JUMP, setNewLabel(findFuncName($1)));
     code_gen(WRITE_RETURN_LABEL, $<operandPtr>3);
+    if(checkIsVoid($1->returnType->type) == SUCCESS){
+        code_gen(SHIFT_SP, setNewInteger(-1));
+    }
+
 }
 
 ;
@@ -1469,8 +1485,10 @@ args:		expr
     }
 
     //code_gen()
-    printf("struct size : %d\n", $1->size);
-    code_gen_structParam($1->size);
+    if(checkIsStruct($1) == SUCCESS){
+        printf("struct size : %d\n", $1->size);
+        code_gen_structParam($1->size);
+    }
 }
 | args ',' expr		
 {
@@ -1483,8 +1501,10 @@ args:		expr
     }
 
     //code_gen()
-    printf("struct size : %d\n", $3->size);
-    code_gen_structParam($3->size);
+    if(checkIsStruct($1) == SUCCESS){
+        printf("struct size : %d\n", $3->size);
+        code_gen_structParam($3->size);
+    }
 }
 ;
 %%

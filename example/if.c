@@ -5,7 +5,7 @@ int main(){
 	int x;
 
 	a = 1;
-	b = 2;
+	b = 0;
 
 	if (a == b) {
 		x = 1;

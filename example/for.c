@@ -1,10 +1,10 @@
 int main(){
     int i;
     int j;
+    int a;
     i = 0;
 
-    for(i=0; i<10; i++){
-        int a;
+    for(i=0; i<4; i++){
         a = i;
        if(a == 3){
             continue;
@@ -16,9 +16,7 @@ int main(){
         write_string("\n");
  
     }
-    /*
     write_int(i);
     write_string("\n");
-    */
 
 }
