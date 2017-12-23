@@ -23,3 +23,4 @@ int main(){
 	write_int(i);
 	write_string("\n");
 }
+/*1000*/

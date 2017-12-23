@@ -1,4 +1,5 @@
 void print(int a){
+    /*10*/
     write_int(a);
 }
 

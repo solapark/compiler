@@ -15,3 +15,9 @@ int main(){
 	write_int(b);
 	write_string("\n");
 }
+/*
+   18
+   18
+   17
+   18
+   */

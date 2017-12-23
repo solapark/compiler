@@ -1,4 +1,3 @@
-/*
 void outprint(int j){
 	int k;
 
@@ -13,7 +12,6 @@ void outprint(int j){
 	write_string("\n");
     return j;
 }
-*/
 int main(){
 	int k;
     int a;
@@ -46,8 +44,25 @@ int main(){
     
 	write_int(k);
 	write_string("\n");
-    /*
     outprint(k);
-    */
    
 }
+/*
+   3
+   2
+   1
+   0
+   -1
+a : 1
+   continue
+   -1
+a : 0
+break
+-1
+3
+2
+1
+0
+*/
+
+

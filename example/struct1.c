@@ -25,3 +25,4 @@ int main(){
 	write_int(j);
 	write_string("\n");
 }
+/*-3*/

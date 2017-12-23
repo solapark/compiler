@@ -83,15 +83,6 @@ struct ste {
 	struct node 	*scope;
 };
 
-struct Value {
-    int integer;
-    char* character;
-    struct ste* ptr;
-    struct Value* array;
-    struct ste* str;
-};
-
-
 /* structure for declaration */
 struct decl {
 	int		declClass;
@@ -109,7 +100,6 @@ struct decl {
     int     offset;
 	struct node	**scope;
 	struct decl	*next;
-    struct Value* value;
 };
 struct ste *symbolTableHead;
 struct node *ssTop;

@@ -5,14 +5,15 @@ int main(){
 	int x;
 
 	a = 1;
-	b = 0;
+	b = 1;
 
 	if (a == b) {
-		x = 1;
+		x = 10;
 	} else {
-		x = 0;
+		x = -10;
 	}
 
 	write_int(x);
 	write_string("\n");
 }
+/*-10*/
