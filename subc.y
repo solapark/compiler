@@ -1037,12 +1037,11 @@ binary:		binary RELOP_LESS binary
     if(checkIsVar($1)==SUCCESS && checkIsStruct($1->type) != SUCCESS){
         code_gen(FETCH, NULL);
     }
-/*
-    if(checkIsStruct($1->type) == SUCCESS){
+
+    if(checkIsVar($1)==SUCCESS && checkIsStruct($1->type) == SUCCESS){
         int structSize = getStructSize($1->type);
         code_gen_RHSStructSpace(structSize);
     }
-    */
 }
 ;
 

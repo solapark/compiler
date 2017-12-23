@@ -18,9 +18,8 @@ int main() {
     struct abc y;
     int i;
     int a;
-    
     a= 10;
-
+    
     y.def[1].a[0] = 1;
     y.def[1].a[1] = 2;
     y.def[1].a[2] = 3;
@@ -30,6 +29,7 @@ int main() {
     y.a[2] = 150;
     y.b = 200;
 /*    x = funcA(y);*/
+    x = y;
    for(i = 0; i<3; i++){
         write_string("x.def[1].a[");
         write_int(i);
@@ -40,7 +40,6 @@ int main() {
    write_string("*(x.def[1].b) : ");
    write_int(*x.def[1].b);
    write_string("\n");
-
 
    for(i = 0; i<3; i++){
         write_string("x.a[");
@@ -53,7 +52,5 @@ int main() {
     write_string("x.b : ");
     write_int(x.b);
     write_string("\n");
-
  
-    x = y;
 }

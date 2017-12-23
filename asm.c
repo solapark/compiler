@@ -107,8 +107,8 @@ void code_gen_structLHSAssign(int structSize){
     //assume that stackTop is like below
     //RHS <-sp
     //RHS
-    //LHS_addr
-    //LHS_addr
+    //LHS_addr_addr
+    //LHS_addr_addr
 
     //LHS ptr = sp - structSize
 
@@ -145,6 +145,8 @@ void code_gen_structAssign(int structSize){
     //LHS_addr
 
     //LHS ptr = sp - structSize
+
+    //calc top -> bottm
 
     if(structSize == 0){
         code_gen(ASSIGN, NULL);
@@ -243,7 +245,7 @@ void code_gen_structParam(int structSize){
     }
 
 }
-
+/*
 void code_gen_structReturn(int structSize){
     //assume that stackTop is RHS address
     int LHSaddr = -1*structSize;
@@ -272,6 +274,40 @@ void code_gen_structReturn(int structSize){
     //remove residual
     code_gen(SHIFT_SP, setNewInteger(-2));
 }
+*/
+void code_gen_structReturn(int structSize){
+    //assume that stackTop is like below
+    //RHS <- sp
+    //RHS
+    //RHS
+    //LHS_addr_addr
+
+    //calc top->bottom
+    int LHSaddr = -1*structSize;
+    for(int i = 0; i<structSize; i++){
+        //push LHS
+        //acess to bottom LHS
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*structSize));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+        //access to targer LHS
+        code_gen( PUSH_CONST, setNewInteger(structSize-i-1));
+        code_gen(ADD, NULL);
+ 
+        //push RHS addr
+        code_gen(PUSH_REG, setNewRegType(SP));
+        code_gen(PUSH_CONST, setNewInteger(-1*(i+1)));
+        code_gen(ADD, NULL);
+        code_gen(FETCH, NULL);
+
+        //assign
+        code_gen(ASSIGN, NULL);
+    }
+
+    //remove residual
+    code_gen(SHIFT_SP, setNewInteger(-1*(structSize+1)));
+}
 
 void code_gen_structSpace(int structSize){
     //assume that stackTop is addr of struct 1st member.
@@ -297,10 +333,11 @@ void code_gen_RHSStructSpace(int structSize){
     code_gen_structSpace(structSize);
 
     code_gen(SHIFT_SP, setNewInteger(-1*(structSize-1)));
-    for(int i = 0; i<structSize; i++){
+    for(int i = 0; i<structSize-1; i++){
         code_gen(FETCH, NULL);
         code_gen(SHIFT_SP, setNewInteger(1));
     }
+    code_gen(FETCH, NULL);
 }
 #define fprint  1
 #define print  1
